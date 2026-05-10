@@ -7,10 +7,10 @@
  */
 
 import { prisma } from "../index.js";
-import { NICHO_SEED, CLUSTERS_SEED } from "./taxonomia.js";
-import { PERSONAS_SEED } from "./personas.js";
-import { MENSAGENS_SEED } from "./mensagens.js";
-import { IMAGENS_SEED } from "./imagens.js";
+import { NICHO_SEED, CLUSTERS_SEED } from "./taxonomia";
+import { PERSONAS_SEED } from "./personas";
+import { MENSAGENS_SEED } from "./mensagens";
+import { IMAGENS_SEED } from "./imagens";
 
 async function seedNichoETaxonomia() {
   console.log("\n[seed] nicho + clusters + complementos");

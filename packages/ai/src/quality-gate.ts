@@ -18,7 +18,7 @@
  * via Prisma — quality-gate fica puro (sem I/O).
  */
 
-import type { TipoMensagem } from "./prompts.js";
+import type { TipoMensagem } from "./prompts";
 
 const BANNED_OPENINGS = [
   /^hoje\s+celebro/i,

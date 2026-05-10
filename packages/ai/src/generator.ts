@@ -3,9 +3,9 @@
  */
 
 import { z } from "zod";
-import { getClient, MODEL, MAX_TOKENS } from "./client.js";
-import { buildSystemPrompt, buildUserPrompt, type BuildPromptInput, type TipoMensagem } from "./prompts.js";
-import { checkQuality, type QualityResult } from "./quality-gate.js";
+import { getClient, MODEL, MAX_TOKENS } from "./client";
+import { buildSystemPrompt, buildUserPrompt, type BuildPromptInput, type TipoMensagem } from "./prompts";
+import { checkQuality, type QualityResult } from "./quality-gate";
 import { createHash } from "node:crypto";
 
 // Schema permissivo: parser não falha por SEO fora do range — quality-gate é a fonte da verdade.

@@ -17,7 +17,7 @@ import { resolve } from "node:path";
 import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
 import { prisma } from "@nivertotal/db";
-import { mapearCategoriaWP } from "./wp-categoria-map.js";
+import { mapearCategoriaWP } from "./wp-categoria-map";
 
 const Args = z.object({
   file: z.string(),

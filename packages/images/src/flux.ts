@@ -7,7 +7,7 @@
 
 import Replicate from "replicate";
 import sharp from "sharp";
-import { uploadBuffer } from "./r2.js";
+import { uploadBuffer } from "./r2";
 
 let _client: Replicate | null = null;
 function client(): Replicate {
