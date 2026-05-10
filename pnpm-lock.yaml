@@ -331,6 +331,34 @@ importers:
         specifier: ^5.7.2
         version: 5.9.3
 
+  workers/main:
+    dependencies:
+      '@nivertotal/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@nivertotal/worker-generator':
+        specifier: workspace:*
+        version: link:../generator
+      '@nivertotal/worker-imagery':
+        specifier: workspace:*
+        version: link:../imagery
+      '@nivertotal/worker-publisher':
+        specifier: workspace:*
+        version: link:../publisher
+      '@nivertotal/worker-scheduler':
+        specifier: workspace:*
+        version: link:../scheduler
+    devDependencies:
+      '@types/node':
+        specifier: ^22.10.0
+        version: 22.19.17
+      tsx:
+        specifier: ^4.19.2
+        version: 4.21.0
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
   workers/publisher:
     dependencies:
       '@nivertotal/db':
