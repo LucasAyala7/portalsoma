@@ -46,4 +46,4 @@ COPY --from=builder /app/node_modules/.pnpm/@prisma+client*/node_modules/.prisma
 COPY --from=builder /app/node_modules/.pnpm/@prisma+client*/node_modules/@prisma ./node_modules/@prisma
 
 EXPOSE 3001
-CMD ["node", "apps/admin/server.js"]
+CMD ["node", "server.js"]
