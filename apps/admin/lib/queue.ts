@@ -16,10 +16,10 @@ function conn(): IORedis {
 }
 
 export const QUEUES = {
-  AI: "nivertotal:generate-content",
-  IMAGE: "nivertotal:generate-image",
-  WEBSTORY: "nivertotal:generate-webstory",
-  PUBLISH: "nivertotal:publish",
+  AI: "nivertotal-generate-content",
+  IMAGE: "nivertotal-generate-image",
+  WEBSTORY: "nivertotal-generate-webstory",
+  PUBLISH: "nivertotal-publish",
 } as const;
 
 let _ai: Queue | null = null;
