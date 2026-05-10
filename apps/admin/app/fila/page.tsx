@@ -37,11 +37,11 @@ export default async function FilaPage() {
           <Card key={q.nome} className="p-5">
             <h3 className="font-semibold text-stone-900 mb-3">{q.nome}</h3>
             <div className="grid grid-cols-5 gap-2 text-center">
-              <Stat label="Espera" n={q.stats.waiting} tone="amber" />
-              <Stat label="Ativos" n={q.stats.active} tone="blue" />
-              <Stat label="Done" n={q.stats.completed} tone="green" />
-              <Stat label="Falhas" n={q.stats.failed} tone="red" />
-              <Stat label="Atraso" n={q.stats.delayed} tone="stone" />
+              <Stat label="Espera" n={q.stats.waiting ?? 0} tone="amber" />
+              <Stat label="Ativos" n={q.stats.active ?? 0} tone="blue" />
+              <Stat label="Done" n={q.stats.completed ?? 0} tone="green" />
+              <Stat label="Falhas" n={q.stats.failed ?? 0} tone="red" />
+              <Stat label="Atraso" n={q.stats.delayed ?? 0} tone="stone" />
             </div>
           </Card>
         ))}
