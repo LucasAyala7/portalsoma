@@ -23,6 +23,14 @@ export const runtime = "nodejs";
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
+  // Redirect raiz → www (301): canonical é www.portalsoma.com.br
+  const host = req.headers.get("host") ?? "";
+  if (host === "portalsoma.com.br") {
+    const url = new URL(req.url);
+    url.host = "www.portalsoma.com.br";
+    return NextResponse.redirect(url, 301);
+  }
+
   // Só interesssa em URLs do nicho legado
   if (!path.startsWith("/mensagem-de-aniversario/")) {
     return NextResponse.next();
