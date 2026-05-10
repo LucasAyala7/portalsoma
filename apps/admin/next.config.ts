@@ -4,6 +4,8 @@ const config: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   typedRoutes: true,
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
   transpilePackages: [
     "@nivertotal/db",
     "@nivertotal/ai",

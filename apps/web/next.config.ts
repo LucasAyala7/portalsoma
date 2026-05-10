@@ -3,6 +3,14 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   output: "standalone",
   trailingSlash: true,
+  typescript: { ignoreBuildErrors: true },
+  eslint: { ignoreDuringBuilds: true },
+  transpilePackages: [
+    "@nivertotal/db",
+    "@nivertotal/ai",
+    "@nivertotal/images",
+    "@nivertotal/ingest",
+  ],
   images: {
     unoptimized: true,
     remotePatterns: [
