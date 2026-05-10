@@ -10,6 +10,7 @@ import {
  * /sitemap-autores.xml — páginas de autores ativos.
  */
 
+export const dynamic = "force-dynamic";
 export const revalidate = 30;
 export const runtime = "nodejs";
 

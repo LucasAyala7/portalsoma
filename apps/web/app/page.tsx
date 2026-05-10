@@ -44,6 +44,7 @@ export const metadata: Metadata = {
 
 // Revalida a cada 30s — counts (likes/copies/shares) ficam fresh sem perder performance.
 // Páginas individuais ainda são pré-renderizadas, mas refazem ao expirar o cache.
+export const dynamic = "force-dynamic";
 export const revalidate = 30;
 
 // Mantido pra MessageCardCompact recentes (avatar fallback) — será removido em futuro refactor

@@ -19,6 +19,7 @@ import {
  *   /sitemap-mensagens-:n.xml  →  /sitemap-mensagens/:n
  */
 
+export const dynamic = "force-dynamic";
 export const revalidate = 30;
 export const runtime = "nodejs";
 

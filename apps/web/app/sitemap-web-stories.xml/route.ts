@@ -13,6 +13,7 @@ import {
  * fica pronta pra Google descobrir assim que primeira história sair.
  */
 
+export const dynamic = "force-dynamic";
 export const revalidate = 30;
 export const runtime = "nodejs";
 

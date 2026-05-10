@@ -54,6 +54,7 @@ export const viewport: Viewport = {
 };
 
 // Layout também revalida — total de mensagens no header/footer fica fresh
+export const dynamic = "force-dynamic";
 export const revalidate = 30;
 
 async function getNavData() {

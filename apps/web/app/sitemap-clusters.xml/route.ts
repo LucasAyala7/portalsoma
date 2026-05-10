@@ -16,6 +16,7 @@ import {
  *  - /[nicho]/[cluster]/[complemento]/        (ex: .../para-mae/evangelica/)
  */
 
+export const dynamic = "force-dynamic";
 export const revalidate = 30;
 export const runtime = "nodejs";
 
