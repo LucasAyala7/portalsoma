@@ -23,7 +23,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
 COPY apps/admin/ ./apps/admin/
 COPY apps/web/ ./apps/web/
 
-RUN pnpm --filter @nivertotal/db db:generate
+RUN pnpm --filter @nivertotal/db generate
 
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm --filter @nivertotal/admin build

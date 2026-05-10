@@ -27,7 +27,7 @@ COPY apps/web/ ./apps/web/
 COPY apps/admin/ ./apps/admin/
 
 # Prisma client
-RUN pnpm --filter @nivertotal/db db:generate
+RUN pnpm --filter @nivertotal/db generate
 
 # Build Next 16 (output: standalone)
 ENV NEXT_TELEMETRY_DISABLED=1
