@@ -3,7 +3,7 @@
  * Cada builder retorna um objeto pronto pra <script type="application/ld+json">.
  */
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portalsoma.com.br";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "Portal Soma";
 
 export function organizationSchema() {

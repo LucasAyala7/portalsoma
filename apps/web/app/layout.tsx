@@ -12,7 +12,7 @@ const fraunces = Fraunces({
   weight: ["400", "500", "600", "700"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portalsoma.com.br";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "Portal Soma";
 
 export const metadata: Metadata = {

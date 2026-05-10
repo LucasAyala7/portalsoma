@@ -175,7 +175,7 @@ export function MensagemEditor({
   const cluster = clusters.find((c) => c.id === data.clusterId);
   const complemento = filteredComplementos.find((c) => c.id === data.complementoId);
   const previewUrl = cluster
-    ? `portalsoma.com.br/mensagem-de-aniversario/${cluster.slug}${complemento ? "/" + complementos.find((c) => c.id === data.complementoId)?.nome.toLowerCase() : ""}/${data.slug || "{slug}"}/`
+    ? `www.portalsoma.com.br/mensagem-de-aniversario/${cluster.slug}${complemento ? "/" + complementos.find((c) => c.id === data.complementoId)?.nome.toLowerCase() : ""}/${data.slug || "{slug}"}/`
     : "—";
 
   return (

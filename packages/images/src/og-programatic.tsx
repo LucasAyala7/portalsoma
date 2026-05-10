@@ -101,7 +101,7 @@ export async function generateOgProgramatic(input: OgInput): Promise<OgOutput> {
               Portal Soma
             </div>
             <div style={{ fontSize: 22, color: paleta.text, opacity: 0.7 }}>
-              portalsoma.com.br
+              www.portalsoma.com.br
             </div>
           </div>
           {input.autorNome ? (

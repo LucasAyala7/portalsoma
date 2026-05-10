@@ -11,7 +11,7 @@ interface Props {
 
 export function ShareMenu({ text, url, mensagemId }: Props) {
   const [open, setOpen] = useState(false);
-  const fullUrl = url.startsWith("http") ? url : `https://portalsoma.com.br${url}`;
+  const fullUrl = url.startsWith("http") ? url : `https://www.portalsoma.com.br${url}`;
   const encodedText = encodeURIComponent(`${text}\n\n${fullUrl}`);
   const encodedUrl = encodeURIComponent(fullUrl);
 

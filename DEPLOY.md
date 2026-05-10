@@ -51,7 +51,7 @@ R2_PUBLIC_URL=https://media.portalsoma.com.br
 
 NEXTAUTH_SECRET=<openssl rand -base64 32>
 ADMIN_URL=https://admin.portalsoma.com.br
-NEXT_PUBLIC_SITE_URL=https://portalsoma.com.br
+NEXT_PUBLIC_SITE_URL=https://www.portalsoma.com.br
 NEXT_PUBLIC_SITE_NAME=Portal Soma
 
 LIMITE_GLOBAL_DIA=50
@@ -116,17 +116,17 @@ NODE_TLS_REJECT_UNAUTHORIZED=0 npx tsx scripts/upload-images-r2.ts
 
 ## 9. Pós-deploy — checklist
 
-- [ ] Acessar `https://portalsoma.com.br/` → home com clusters principais
-- [ ] Acessar `https://portalsoma.com.br/mensagem-de-aniversario/para-amiga/` → category page
+- [ ] Acessar `https://www.portalsoma.com.br/` → home com clusters principais
+- [ ] Acessar `https://www.portalsoma.com.br/mensagem-de-aniversario/para-amiga/` → category page
 - [ ] Acessar uma mensagem aleatória, ver hero+OG
 - [ ] Acessar `https://admin.portalsoma.com.br/login` → autenticar com user `lucas`
 - [ ] Verificar `/sitemap.xml` retornar XML válido
-- [ ] Testar redirect 301: `https://portalsoma.com.br/mensagem-de-aniversario/pai/celebre-seu-pai-neste-aniversario-especial/` → deve redirecionar pra cluster novo
+- [ ] Testar redirect 301: `https://www.portalsoma.com.br/mensagem-de-aniversario/pai/celebre-seu-pai-neste-aniversario-especial/` → deve redirecionar pra cluster novo
 
 ## 10. Search Console + IndexNow
 
 Após DNS apontar e site no ar:
-1. **Search Console**: adicionar `portalsoma.com.br`, verificar via DNS TXT. Submeter sitemap `https://portalsoma.com.br/sitemap.xml`.
+1. **Search Console**: adicionar `portalsoma.com.br`, verificar via DNS TXT. Submeter sitemap `https://www.portalsoma.com.br/sitemap.xml`.
 2. **IndexNow**: gerar chave 32 chars hex, salvar em `apps/web/public/<chave>.txt` com conteúdo da chave. Worker ping IndexNow toda PUBLISHED nova.
 3. **Bing Webmaster**: mesmo procedimento, importa do GSC.
 

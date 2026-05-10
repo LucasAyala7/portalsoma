@@ -11,7 +11,7 @@ import { Worker, type Job } from "bullmq";
 import { prisma } from "@nivertotal/db";
 import { redis, QUEUES, logJob, type PublishJobPayload } from "@nivertotal/workers-shared";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portalsoma.com.br";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY;
 
 async function notificarIndexNow(urls: string[]): Promise<{ ok: boolean; status?: number; erro?: string }> {

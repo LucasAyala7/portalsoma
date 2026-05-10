@@ -130,7 +130,7 @@ function Watermark({ light = false }: { light?: boolean }) {
       <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
         <span style={{ fontFamily: "Fraunces", fontWeight: 700, fontSize: 16 }}>Portal Soma</span>
         <span style={{ fontSize: 10, opacity: 0.75, marginTop: 2, fontFamily: "Inter" }}>
-          portalsoma.com.br
+          www.portalsoma.com.br
         </span>
       </div>
     </div>

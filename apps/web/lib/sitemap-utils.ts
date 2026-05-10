@@ -8,7 +8,7 @@
  */
 
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://portalsoma.com.br";
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
 
 export const MAX_URLS_PER_SITEMAP = 5000;
 

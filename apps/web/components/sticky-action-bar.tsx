@@ -45,7 +45,7 @@ export function StickyActionBar({ text, url, mensagemId, initialLikes }: Props) 
   const [copied, setCopied] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikes);
-  const fullUrl = url.startsWith("http") ? url : `https://portalsoma.com.br${url}`;
+  const fullUrl = url.startsWith("http") ? url : `https://www.portalsoma.com.br${url}`;
 
   useEffect(() => {
     setLiked(readLiked().has(mensagemId));
