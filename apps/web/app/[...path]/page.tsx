@@ -32,9 +32,9 @@ interface PageProps {
 }
 
 // ISR: revalida a cada 30s pra counts (likes/copies/shares) ficarem fresh.
-// Pages ainda são pré-renderizadas no build, mas refazem ao expirar.
+// Rotas geradas on-demand no runtime (não no build) — Postgres pode não estar acessível no build time em prod.
 export const revalidate = 30;
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 type Resolved =
   | { kind: "nicho"; nicho: NichoData }
@@ -141,6 +141,9 @@ async function resolveRoute(path: string[]): Promise<Resolved | null> {
 }
 
 export async function generateStaticParams(): Promise<{ path: string[] }[]> {
+  // Skip DB no build — pages geradas on-demand via ISR
+  if (process.env.SKIP_STATIC_PARAMS === "true" || !process.env.DATABASE_URL) return [];
+  try {
   const params: { path: string[] }[] = [];
   const nichos = await prisma.nicho.findMany({
     where: { ativo: true },
@@ -170,6 +173,10 @@ export async function generateStaticParams(): Promise<{ path: string[] }[]> {
     }
   }
   return params;
+  } catch (e) {
+    console.warn("[generateStaticParams] DB unavailable at build, skipping:", e instanceof Error ? e.message : e);
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

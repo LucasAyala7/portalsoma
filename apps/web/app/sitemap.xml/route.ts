@@ -20,7 +20,6 @@ import {
  */
 
 export const revalidate = 30;
-export const dynamic = "force-static";
 export const runtime = "nodejs";
 
 export async function GET() {
