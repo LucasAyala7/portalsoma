@@ -1,0 +1,431 @@
+// =====================================================
+// Portal Soma — Prisma Schema
+// Stack: Next 16 SSG + Postgres 16 + Prisma 6
+// URL pattern: /[head-nicho]/[mod-1]/[mod-2]/[slug]/
+// =====================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================================
+// TAXONOMIA
+// =====================================================
+
+/// Hub do nicho (ex: "mensagem-de-aniversario", futuro "mensagem-de-bom-dia")
+model Nicho {
+  id            String    @id @default(cuid())
+  slug          String    @unique               // "mensagem-de-aniversario"
+  nome          String                          // "Mensagem de Aniversário"
+  headTerm      String                          // keyword head exato
+  volumeMensal  Int       @default(0)           // 1.200.000
+  descricao     String?   @db.Text
+  metaTitle     String?
+  metaDesc      String?
+  hero          String?                         // URL da imagem hero
+  ativo         Boolean   @default(true)
+  ordem         Int       @default(0)
+  clusters      Cluster[]
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+}
+
+/// Cluster nivel 1 (ex: "para-mae", "evangelica", "no-whatsapp", "de-15-anos")
+model Cluster {
+  id              String        @id @default(cuid())
+  slug            String                                // "para-mae"
+  nome            String                                // "Para Mãe"
+  prefixoSlug     String?                               // "para-" | "de-" | "" (composição da URL)
+  tipo            ClusterTipo                           // DESTINATARIO | TOM | OCASIAO | CANAL | FALECIDO
+  headKeyword     String                                // "mensagem de aniversário para mãe"
+  volumeMensal    Int           @default(0)
+  permiteEmpilhar Boolean       @default(false)         // auto true se volumeMensal >= 1000
+  descricao       String?       @db.Text
+  intro           String?       @db.Text                // texto da hero da página (gerado IA contextual)
+  metaTitle       String?
+  metaDesc        String?
+  hero            String?
+  faq             Json?                                 // schema FAQPage [{q,a}]
+  serpScore       Float         @default(0)
+  cotaDiaria      Int           @default(0)
+  ordem           Int           @default(0)
+  ativo           Boolean       @default(true)
+
+  nicho           Nicho         @relation(fields: [nichoId], references: [id], onDelete: Cascade)
+  nichoId         String
+
+  complementos    Complemento[]
+  mensagens       Mensagem[]    @relation("MensagemCluster")
+
+  criadoEm        DateTime      @default(now())
+  atualizadoEm    DateTime      @updatedAt
+
+  @@unique([nichoId, slug])
+  @@index([tipo])
+  @@index([volumeMensal])
+}
+
+/// Complemento nivel 2 (ex: "evangelica" dentro de "para-mae")
+model Complemento {
+  id           String     @id @default(cuid())
+  slug         String                              // "evangelica"
+  nome         String                              // "Evangélica"
+  headKeyword  String                              // "mensagem aniversário evangelica para mãe"
+  volumeMensal Int        @default(0)
+  descricao    String?    @db.Text
+  intro        String?    @db.Text
+  metaTitle    String?
+  metaDesc     String?
+  hero         String?
+  faq          Json?
+  serpScore    Float      @default(0)
+  ordem        Int        @default(0)
+  ativo        Boolean    @default(true)
+
+  cluster      Cluster    @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  clusterId    String
+
+  mensagens    Mensagem[] @relation("MensagemComplemento")
+
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
+
+  @@unique([clusterId, slug])
+  @@index([volumeMensal])
+}
+
+enum ClusterTipo {
+  DESTINATARIO    // para-mae, para-amiga
+  TOM             // evangelica, biblica, engracada
+  OCASIAO         // bodas-de-prata, de-15-anos
+  CANAL           // no-whatsapp, para-status
+  FALECIDO        // para-mae-falecida (silo proprio)
+}
+
+// =====================================================
+// CONTEÚDO
+// =====================================================
+
+model Mensagem {
+  id            String          @id @default(cuid())
+  slug          String          @unique
+
+  // SEO fields (separados pra controle fino)
+  titulo        String                               // h1 display (≤90 chars)
+  metaTitle     String?                              // <title> SEO (54-60 chars)
+  metaDescription String?                            // <meta desc> SEO (124-140 chars)
+
+  conteudo      String          @db.Text
+  resumo        String?                              // texto curto pra preview/quote
+  preview       String?                              // primeiras palavras pra typeahead
+
+  // Hashes pra detectar duplicidade DB-wide (uniqueness SEO crítico)
+  hashTitulo    String?         @unique              // hash sha256 do título normalizado
+  hashMetaTitle String?         @unique
+  hashConteudo  String?                              // hash do conteúdo (não unique pra permitir parecidos cross-cluster)
+
+  // Tipo da mensagem (pra mix curtas/médias/longas/poemas)
+  tipo          TipoMensagem    @default(MEDIA)
+  wordCount     Int?
+
+  cluster       Cluster         @relation("MensagemCluster", fields: [clusterId], references: [id])
+  clusterId     String
+  complemento   Complemento?    @relation("MensagemComplemento", fields: [complementoId], references: [id])
+  complementoId String?
+
+  autor         Author          @relation(fields: [autorId], references: [id])
+  autorId       String
+  persona       Persona?        @relation(fields: [personaId], references: [id])
+  personaId     String?
+
+  tags          MensagemTag[]
+
+  imagemHero    Image?          @relation("Hero", fields: [imagemHeroId], references: [id])
+  imagemHeroId  String?
+  imagemOg      Image?          @relation("Og", fields: [imagemOgId], references: [id])
+  imagemOgId    String?
+  imagemPin     Image?          @relation("Pin", fields: [imagemPinId], references: [id])
+  imagemPinId   String?
+
+  status        Status          @default(DRAFT)
+  tier          Tier            @default(TIER_3)
+  qualidade     Float?                                // score quality gate 0-1
+  origem        Origem          @default(IA)          // IA | MANUAL | IMPORT_WP | IMPORT_BULK
+
+  serpScore     Float?
+  copies        Int             @default(0)           // contador de copy
+  shares        Int             @default(0)           // contador de share
+  likes         Int             @default(0)           // contador de like
+  visualizacoes Int             @default(0)
+
+  publicadoEm   DateTime?
+  criadoEm      DateTime        @default(now())
+  atualizadoEm  DateTime        @updatedAt
+
+  @@index([status, publicadoEm])
+  @@index([clusterId, status])
+  @@index([complementoId, status])
+  @@index([autorId])
+  @@index([personaId])
+}
+
+enum Status {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum Tier {
+  TIER_1   // top 25% serpScore — Flux Pro hero+OG+Pin
+  TIER_2   // mid 35% — Flux Schnell hero + OG programatico
+  TIER_3   // cauda longa — só OG programatico
+}
+
+enum Origem {
+  IA
+  MANUAL
+  IMPORT_WP
+  IMPORT_BULK
+}
+
+enum TipoMensagem {
+  CURTA       // ≤80 palavras
+  MEDIA       // 81-150 palavras
+  LONGA       // >150 palavras
+  POEMA       // formato poético (versos, metáforas, ritmo)
+}
+
+// =====================================================
+// AUTORES & PERSONAS
+// =====================================================
+
+model Author {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  nome      String
+  real      Boolean    @default(false)         // true = humano (Lucas, Carlos)
+  email     String?
+  bio       String     @db.Text
+  fotoUrl   String?
+  redes     Json?                              // { instagram, linkedin, twitter, site }
+  ativo     Boolean    @default(true)
+  ordem     Int        @default(0)
+  mensagens Mensagem[]
+  persona   Persona?
+  criadoEm  DateTime   @default(now())
+  atualizadoEm DateTime @updatedAt
+}
+
+model Persona {
+  id           String     @id @default(cuid())
+  slug         String     @unique
+  nome         String                              // "Vó Lurdes"
+  vozPrompt    String     @db.Text                 // system prompt completo
+  fotoPrompt   String?    @db.Text                 // prompt Flux pra foto coerente
+  ativo        Boolean    @default(true)
+  pesos        Json                                // { evangelica: 0.9, engracada: 0.1, ... }
+  caracteristicas Json?                            // { idade, regiao, religiao, profissao, tom }
+
+  autor        Author?    @relation(fields: [autorId], references: [id])
+  autorId      String?    @unique
+
+  mensagens    Mensagem[]
+
+  criadoEm     DateTime   @default(now())
+  atualizadoEm DateTime   @updatedAt
+}
+
+// =====================================================
+// TAGS (facetas adicionais nao-canonicas)
+// =====================================================
+
+model Tag {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  nome         String
+  tipo         TipoTag
+  mensagens    MensagemTag[]
+  criadoEm     DateTime      @default(now())
+}
+
+model MensagemTag {
+  mensagem    Mensagem  @relation(fields: [mensagemId], references: [id], onDelete: Cascade)
+  mensagemId  String
+  tag         Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId       String
+
+  @@id([mensagemId, tagId])
+}
+
+enum TipoTag {
+  TOM
+  OCASIAO
+  IDADE
+  CANAL
+  RELACAO
+  EMOCAO
+}
+
+// =====================================================
+// MEDIA
+// =====================================================
+
+model Image {
+  id            String   @id @default(cuid())
+  url           String                       // URL R2 pública
+  formato       String                       // hero | og | pinterest | story_frame | persona
+  width         Int
+  height        Int
+  alt           String
+  promptUsado   String?  @db.Text
+  modelo        String?                      // flux-pro | flux-schnell | og-programatic
+  custo         Float?                       // R$ gasto na geração
+  hashContent   String?                      // dedupe
+  criadoEm      DateTime @default(now())
+
+  mensagensHero Mensagem[] @relation("Hero")
+  mensagensOg   Mensagem[] @relation("Og")
+  mensagensPin  Mensagem[] @relation("Pin")
+}
+
+// =====================================================
+// SERP INTELLIGENCE
+// =====================================================
+
+model KeywordCluster {
+  id             String     @id @default(cuid())
+  termo          String     @unique
+  volume         Int
+  competicao     Float?
+  cpc            Float?
+  intencao       String?
+  posicaoGsc     Int?                         // posição GSC atual
+  impressoesGsc  Int?
+  cliquesGsc     Int?
+  ctrGsc         Float?
+
+  clusterId      String?
+  complementoId  String?
+
+  features       Json?                        // { paa: [...], related: [...], featured_snippet: bool }
+
+  ultimaConsulta DateTime?
+  criadoEm       DateTime   @default(now())
+  atualizadoEm   DateTime   @updatedAt
+
+  @@index([volume])
+  @@index([clusterId])
+}
+
+// =====================================================
+// WEB STORIES (AMP, Discover)
+// =====================================================
+
+model WebStory {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  titulo      String
+  tema        String                              // "5 mensagens evangélicas para mãe"
+  poster      String?                             // URL imagem capa
+  frames      Json                                // [{ mensagemId?, texto, imagemId, cta }]
+  status      Status   @default(DRAFT)
+  publicadoEm DateTime?
+  views       Int      @default(0)
+  criadoEm    DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@index([status, publicadoEm])
+}
+
+// =====================================================
+// JOBS & IMPORTS
+// =====================================================
+
+model JobLog {
+  id        String   @id @default(cuid())
+  tipo      String                                // generate_content | generate_image | webstory | indexnow | import
+  status    String                                // pending | running | success | failed
+  payload   Json
+  resultado Json?
+  custo     Float?
+  duracao   Int?                                  // ms
+  erro      String?  @db.Text
+  criadoEm  DateTime @default(now())
+
+  @@index([tipo, status])
+  @@index([criadoEm])
+}
+
+model BulkImport {
+  id           String       @id @default(cuid())
+  arquivo      String                                // nome arquivo original
+  totalLinhas  Int
+  processadas  Int          @default(0)
+  sucessos     Int          @default(0)
+  falhas       Int          @default(0)
+  status       ImportStatus @default(PENDING)
+  payload      Json                                  // mapping de colunas + opções
+  errosLog     Json?                                 // [{ linha, erro }]
+  criadoEm     DateTime     @default(now())
+  iniciadoEm   DateTime?
+  finalizadoEm DateTime?
+}
+
+enum ImportStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// =====================================================
+// REDIRECTS (301 do site WP antigo)
+// =====================================================
+
+model Redirect {
+  id       String  @id @default(cuid())
+  origem   String  @unique                       // "/mensagem-de-aniversario/avo/..."
+  destino  String                                 // "/mensagem-de-aniversario/para-avo/..."
+  status   Int     @default(301)
+  ativo    Boolean @default(true)
+  hits     Int     @default(0)
+  criadoEm DateTime @default(now())
+
+  @@index([ativo])
+}
+
+// =====================================================
+// TELEMETRIA & AUTH
+// =====================================================
+
+model Evento {
+  id         String   @id @default(cuid())
+  tipo       String                              // copy | share | like | view | search
+  mensagemId String?
+  meta       Json?                               // { destino_share, query_search, ... }
+  ip         String?
+  userAgent  String?
+  criadoEm   DateTime @default(now())
+
+  @@index([tipo, criadoEm])
+  @@index([mensagemId])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  email        String?
+  role         String   @default("editor")        // admin | editor
+  ativo        Boolean  @default(true)
+  ultimoLogin  DateTime?
+  criadoEm     DateTime @default(now())
+}

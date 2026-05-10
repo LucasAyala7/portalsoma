@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nivertotal-postgres
+    environment:
+      POSTGRES_USER: nivertotal
+      POSTGRES_PASSWORD: nivertotal
+      POSTGRES_DB: nivertotal
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nivertotal"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: nivertotal-redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  bull-board:
+    image: deadly0/bull-board:latest
+    container_name: nivertotal-bullboard
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      BULL_PREFIX: ""
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "3030:3000"
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  redis_data:

@@ -1,0 +1,48 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+*.log
+.env
+.env.local
+.env.*.local
+.DS_Store
+.turbo/
+.cache/
+coverage/
+.vscode/
+.idea/
+
+# Prisma
+*.db
+*.db-journal
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Build outputs
+**/.next/
+**/out/
+**/dist/
+
+# Env per app
+apps/**/.env*
+packages/**/.env*
+workers/**/.env*
+
+# Imagens geradas (sobem pro R2 em prod, sem commitar)
+apps/web/public/img/mensagens/
+apps/admin/public/img/
+outputs/
+
+# Inputs grandes (WP dump, crawl)
+inputs/wp-export/
+inputs/serp/
+
+# Prisma generated client
+packages/db/src/generated/
+
+# tsbuildinfo
+*.tsbuildinfo

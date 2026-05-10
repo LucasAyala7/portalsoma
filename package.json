@@ -1,0 +1,42 @@
+{
+  "name": "portalsoma",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Portal Soma - mensagens de aniversario PT-BR com mini-CMS autopublisher",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev:web": "pnpm --filter @nivertotal/web dev",
+    "dev:admin": "pnpm --filter @nivertotal/admin dev",
+    "dev:workers": "pnpm --parallel --filter './workers/*' dev",
+    "db:generate": "pnpm --filter @nivertotal/db generate",
+    "db:migrate": "pnpm --filter @nivertotal/db migrate",
+    "db:studio": "pnpm --filter @nivertotal/db studio",
+    "db:seed": "pnpm --filter @nivertotal/db seed",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "prisma",
+      "bcrypt",
+      "esbuild",
+      "msgpackr-extract",
+      "sharp"
+    ]
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2"
+  }
+}

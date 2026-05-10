@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@theme {
+  --color-niver-500: #f97316;
+  --color-niver-600: #ea580c;
+  --color-niver-700: #c2410c;
+}
+
+body {
+  @apply bg-stone-50 text-stone-900;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
