@@ -25,10 +25,9 @@ export async function middleware(req: NextRequest) {
 
   // Redirect raiz → www (301): canonical é www.portalsoma.com.br
   const host = req.headers.get("host") ?? "";
-  if (host === "portalsoma.com.br") {
-    const url = new URL(req.url);
-    url.host = "www.portalsoma.com.br";
-    return NextResponse.redirect(url, 301);
+  if (host === "portalsoma.com.br" || host.startsWith("portalsoma.com.br:")) {
+    const target = `https://www.portalsoma.com.br${req.nextUrl.pathname}${req.nextUrl.search}`;
+    return NextResponse.redirect(target, 301);
   }
 
   // Só interesssa em URLs do nicho legado
