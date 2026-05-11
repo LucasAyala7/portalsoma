@@ -32,6 +32,7 @@ export interface MensagemEditorData {
   personaId: string | null;
   autorId: string;
   qualidade: number | null;
+  promoteOnShare?: boolean;
 }
 
 export interface OptionItem {
@@ -318,6 +319,24 @@ export function MensagemEditor({
           <Field label="Slug" hint="URL final. Auto-gerado do título se vazio." trailing={<span className="text-xs text-stone-500">{data.slug.length} chars</span>}>
             <Input value={data.slug} onChange={(e) => update("slug", e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").slice(0, 80))} className="font-mono" />
           </Field>
+
+          <label className="flex items-start gap-2.5 mt-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={!!data.promoteOnShare}
+              onChange={(e) => update("promoteOnShare", e.target.checked)}
+              className="mt-0.5 w-4 h-4 accent-niver-600"
+            />
+            <div>
+              <div className="text-sm font-medium text-stone-800">
+                Promover link ao compartilhar
+              </div>
+              <div className="text-xs text-stone-500 mt-0.5">
+                Append <code className="bg-stone-100 px-1 rounded">via portalsoma.com.br/{data.slug || "{slug}"}</code> no texto compartilhado.
+                Use só em mensagens TOP estratégicas — default OFF.
+              </div>
+            </div>
+          </label>
         </Card>
       </div>
 

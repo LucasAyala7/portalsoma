@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@nivertotal/db";
 import { MessageCardRich } from "@/components/message-card-rich";
+import { MessageCardListItem } from "@/components/message-card-list";
 import { FilterChips } from "@/components/filter-chips";
 import { SearchTypeahead } from "@/components/search-typeahead";
 import { FaqAccordion } from "@/components/faq-accordion";
@@ -12,6 +13,8 @@ import { PersonaBadge } from "@/components/persona-badge";
 import { CounterBoard } from "@/components/counter-board";
 import { CategoryGrid } from "@/components/category-grid";
 import { StickyActionBar } from "@/components/sticky-action-bar";
+import { ViewTracker } from "@/components/view-tracker";
+import { ShareImageButton } from "@/components/share-image-button";
 import { getCategoryIcon } from "@/lib/icons";
 import {
   jsonLdScript,
@@ -444,11 +447,29 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         </h2>
 
         {mensagens.length > 0 ? (
-          <div className="grid lg:grid-cols-2 gap-5">
-            {mensagens.map((m) => (
-              <MessageCardRich key={m.id} mensagem={m} nichoSlug={nicho.slug} />
-            ))}
-          </div>
+          <>
+            {/* Modo feed: primeiras 8 em lista com thumb (scan rápido, mobile-friendly) */}
+            <div className="space-y-3 mb-10">
+              {mensagens.slice(0, 8).map((m) => (
+                <MessageCardListItem key={m.id} mensagem={m} nichoSlug={nicho.slug} />
+              ))}
+            </div>
+            {/* Modo discover: resto em grid 2-col com card rico (desktop emphasis) */}
+            {mensagens.length > 8 && (
+              <>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-px flex-1 bg-warm-200" />
+                  <span className="text-xs uppercase tracking-wider text-stone-500 font-medium">Explore mais</span>
+                  <div className="h-px flex-1 bg-warm-200" />
+                </div>
+                <div className="grid lg:grid-cols-2 gap-5">
+                  {mensagens.slice(8).map((m) => (
+                    <MessageCardRich key={m.id} mensagem={m} nichoSlug={nicho.slug} />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         ) : (
           <div className="card-feature text-center py-16">
             <p className="text-stone-600 mb-2">Estamos preparando mensagens com cuidado pra esta categoria.</p>
@@ -655,6 +676,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
 
   return (
     <>
+      <ViewTracker mensagemId={mensagem.id} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLdScript([
@@ -731,6 +753,14 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
                 alt={mensagem.imagemHero.alt}
                 className="w-full aspect-[3/2] object-cover"
               />
+              <div className="absolute top-3 right-3 z-10">
+                <ShareImageButton
+                  imageUrl={mensagem.imagemHero.url}
+                  titulo={mensagem.titulo}
+                  mensagemId={mensagem.id}
+                  slug={mensagem.slug}
+                />
+              </div>
               <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-5 pt-16">
                 <span className="text-white/95 text-sm italic font-display">
                   {mensagem.imagemHero.alt}
@@ -752,7 +782,12 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
               mensagemId={mensagem.id}
               label="Copiar mensagem"
             />
-            <ShareMenu text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
+            <ShareMenu
+              text={mensagem.conteudo}
+              url={url}
+              mensagemId={mensagem.id}
+              promoteOnShare={(mensagem as { promoteOnShare?: boolean }).promoteOnShare ?? false}
+            />
             <LikeButton mensagemId={mensagem.id} initialCount={mensagem.likes} />
           </div>
 

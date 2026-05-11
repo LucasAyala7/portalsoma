@@ -82,6 +82,7 @@ export default async function EditarMensagem({
           personaId: m.personaId,
           autorId: m.autorId,
           qualidade: m.qualidade,
+          promoteOnShare: (m as { promoteOnShare?: boolean }).promoteOnShare ?? false,
         }}
         clusters={clusters}
         complementos={complementos}

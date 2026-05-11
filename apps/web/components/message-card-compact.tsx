@@ -49,19 +49,32 @@ export function MessageCardCompact({ mensagem, nichoSlug, index = 0, showActions
       id={`m-${mensagem.id}`}
       className={`group bg-gradient-to-r ${grad} via-white to-white border border-stone-100 rounded-2xl hover:border-niver-200 hover:shadow-md transition-all overflow-hidden`}
     >
-      <a href={url} className="block p-5 pb-3">
-        <div className="flex items-start gap-4">
+      <a href={url} className="block p-5 pb-3 overflow-hidden">
+        <div className="flex items-start gap-3 min-w-0">
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-stone-500 mb-1.5 flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-niver-700">{mensagem.autor.nome}</span>
-              {"nome" in mensagem.cluster && mensagem.cluster.nome && (
-                <>
-                  <span>·</span>
-                  <span>{mensagem.cluster.nome}</span>
-                </>
-              )}
+            <div className="flex items-start justify-between gap-2 mb-1.5 min-w-0">
+              <div className="text-xs text-stone-500 flex items-center gap-2 flex-wrap min-w-0">
+                <span className="font-medium text-niver-700 truncate">{mensagem.autor.nome}</span>
+                {"nome" in mensagem.cluster && mensagem.cluster.nome && (
+                  <>
+                    <span>·</span>
+                    <span className="truncate">{mensagem.cluster.nome}</span>
+                  </>
+                )}
+              </div>
+              {/* Counts canto sup direito */}
+              <div className="flex shrink-0 items-center gap-2 text-[11px] text-stone-500 tabular-nums">
+                <span className="inline-flex items-center gap-0.5">
+                  <Heart size={10} className="text-rose-500" strokeWidth={2.4} fill={mensagem.likes > 0 ? "currentColor" : "none"} />
+                  <strong className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
+                </span>
+                <span className="inline-flex items-center gap-0.5">
+                  <Copy size={10} className="text-niver-500" strokeWidth={2.4} />
+                  <strong className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
+                </span>
+              </div>
             </div>
-            <p className="text-stone-800 leading-relaxed line-clamp-3 text-[15px]">
+            <p className="text-stone-800 leading-relaxed line-clamp-3 text-[15px] break-words">
               {mensagem.conteudo}
             </p>
           </div>
@@ -74,27 +87,15 @@ export function MessageCardCompact({ mensagem, nichoSlug, index = 0, showActions
       </a>
 
       {showActions && (
-        <div className="px-5 pb-4 flex items-center justify-between gap-2 border-t border-stone-100/80 pt-3 mt-1">
-          <div className="flex items-center gap-3 text-xs text-stone-500 tabular-nums">
-            <span className="inline-flex items-center gap-1">
-              <Heart size={11} className="text-rose-500" strokeWidth={2.4} />
-              <strong className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <Copy size={11} className="text-niver-500" strokeWidth={2.4} />
-              <strong className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <CopyButton
-              text={mensagem.conteudo}
-              mensagemId={mensagem.id}
-              className="btn-ghost"
-              label="Copiar"
-            />
-            <ShareMenu text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
-            <LikeButton mensagemId={mensagem.id} initialCount={mensagem.likes} />
-          </div>
+        <div className="px-5 pb-4 flex items-center justify-end gap-1 border-t border-stone-100/80 pt-3 mt-1">
+          <CopyButton
+            text={mensagem.conteudo}
+            mensagemId={mensagem.id}
+            className="btn-ghost"
+            label="Copiar"
+          />
+          <ShareMenu text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
+          <LikeButton mensagemId={mensagem.id} initialCount={mensagem.likes} />
         </div>
       )}
     </article>

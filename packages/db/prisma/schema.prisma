@@ -163,6 +163,10 @@ model Mensagem {
   likes         Int             @default(0)           // contador de like
   visualizacoes Int             @default(0)
 
+  // Quando true, append "via portalsoma.com.br/{slug}" no texto compartilhado.
+  // Default off pra não incomodar usuários puristas; ativar manualmente em mensagens estratégicas.
+  promoteOnShare Boolean        @default(false)
+
   publicadoEm   DateTime?
   criadoEm      DateTime        @default(now())
   atualizadoEm  DateTime        @updatedAt

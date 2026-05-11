@@ -7,12 +7,18 @@ interface Props {
   text: string;
   url: string;
   mensagemId?: string;
+  /** Quando true, append "via portalsoma.com.br/{slug}" no texto compartilhado. */
+  promoteOnShare?: boolean;
 }
 
-export function ShareMenu({ text, url, mensagemId }: Props) {
+export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
   const [open, setOpen] = useState(false);
   const fullUrl = url.startsWith("http") ? url : `https://www.portalsoma.com.br${url}`;
-  const encodedText = encodeURIComponent(`${text}\n\n${fullUrl}`);
+  // Texto puro pra navigator.share / texto+link pra deep links (whatsapp/telegram).
+  // Se promoteOnShare: também adiciona linha "via portalsoma.com.br/{slug}" no texto puro.
+  const promoLine = promoteOnShare ? `\n\nvia portalsoma.com.br${url}` : "";
+  const sharedText = `${text}${promoLine}`;
+  const encodedText = encodeURIComponent(`${sharedText}\n\n${fullUrl}`);
   const encodedUrl = encodeURIComponent(fullUrl);
 
   function track(destino: string) {
@@ -29,7 +35,7 @@ export function ShareMenu({ text, url, mensagemId }: Props) {
   async function handleNative() {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
-        await navigator.share({ text, url: fullUrl });
+        await navigator.share({ text: sharedText, url: fullUrl });
         track("native");
         return;
       } catch {

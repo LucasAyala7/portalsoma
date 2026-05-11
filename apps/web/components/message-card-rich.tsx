@@ -68,53 +68,45 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge }: Props
         </a>
       )}
 
-      <div className="p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <PersonaBadge
-            nome={mensagem.autor.nome}
-            slug={mensagem.autor.slug}
-            fotoUrl={mensagem.autor.fotoUrl}
-            isReal={mensagem.autor.real}
-          />
-          <div className="hidden sm:flex items-center gap-3 text-xs text-stone-400">
-            <span className="stat" title="visualizações">
+      <div className="p-5 sm:p-6 overflow-hidden">
+        <div className="flex items-start justify-between gap-2 mb-3 min-w-0">
+          <div className="min-w-0 flex-1">
+            <PersonaBadge
+              nome={mensagem.autor.nome}
+              slug={mensagem.autor.slug}
+              fotoUrl={mensagem.autor.fotoUrl}
+              isReal={mensagem.autor.real}
+            />
+          </div>
+          {/* Counts canto sup direito (mobile + desktop) */}
+          <div className="flex shrink-0 items-center gap-2 sm:gap-2.5 text-[11px] sm:text-xs text-stone-500 tabular-nums">
+            <span className="inline-flex items-center gap-1" title="curtidas">
+              <Heart size={11} strokeWidth={2.4} className="text-rose-500" fill={mensagem.likes > 0 ? "currentColor" : "none"} />
+              <strong className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
+            </span>
+            <span className="inline-flex items-center gap-1" title="cópias">
+              <Copy size={11} strokeWidth={2.4} className="text-niver-500" />
+              <strong className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
+            </span>
+            <span className="hidden sm:inline-flex items-center gap-1 text-stone-400" title="visualizações">
               <Eye size={11} strokeWidth={2.4} />
               {mensagem.visualizacoes.toLocaleString("pt-BR")}
             </span>
           </div>
         </div>
 
-        <p className="text-stone-800 leading-relaxed whitespace-pre-line text-[15px]">
+        <p className="text-stone-800 leading-relaxed whitespace-pre-line text-[15px] break-words">
           {mensagem.conteudo}
         </p>
 
-        <div className="mt-5 pt-4 border-t border-stone-100">
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-3 text-xs text-stone-500">
-              <span className="stat" title="curtidas">
-                <Heart size={12} strokeWidth={2.4} className="text-rose-500" />
-                <strong className="text-stone-700">
-                  {mensagem.likes.toLocaleString("pt-BR")}
-                </strong>
-              </span>
-              <span className="stat" title="cópias">
-                <Copy size={12} strokeWidth={2.4} className="text-niver-500" />
-                <strong className="text-stone-700">
-                  {mensagem.copies.toLocaleString("pt-BR")}
-                </strong>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <CopyButton text={mensagem.conteudo} mensagemId={mensagem.id} />
-            <ShareMenu text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
-            <LikeButton mensagemId={mensagem.id} initialCount={mensagem.likes} />
-            <a href={url} className="btn-ghost ml-auto">
-              <span>Abrir</span>
-              <ArrowUpRight size={14} />
-            </a>
-          </div>
+        <div className="mt-5 pt-4 border-t border-stone-100 flex items-center gap-1.5 flex-wrap">
+          <CopyButton text={mensagem.conteudo} mensagemId={mensagem.id} />
+          <ShareMenu text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
+          <LikeButton mensagemId={mensagem.id} initialCount={mensagem.likes} />
+          <a href={url} className="btn-ghost ml-auto">
+            <span>Abrir</span>
+            <ArrowUpRight size={14} />
+          </a>
         </div>
       </div>
     </article>

@@ -34,7 +34,8 @@ export async function salvarMensagem(data: MensagemEditorData) {
         personaId: data.personaId,
         autorId: data.autorId,
         wordCount,
-      },
+        ...(data.promoteOnShare !== undefined ? { promoteOnShare: data.promoteOnShare } : {}),
+      } as Parameters<typeof prisma.mensagem.update>[0]["data"],
     });
     revalidatePath(`/mensagens/${data.id}`);
     revalidatePath("/mensagens");
