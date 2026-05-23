@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 export function ViewTracker({ mensagemId }: { mensagemId: string }) {
   useEffect(() => {
@@ -15,6 +16,10 @@ export function ViewTracker({ mensagemId }: { mensagemId: string }) {
         keepalive: true,
       }).catch(() => {});
     }
+    trackEvent("view_message", {
+      mensagem_id: mensagemId,
+      page_path: typeof window !== "undefined" ? window.location.pathname : "",
+    });
   }, [mensagemId]);
   return null;
 }

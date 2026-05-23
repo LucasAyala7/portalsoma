@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface SearchableMessage {
   id: string;
@@ -21,6 +22,7 @@ interface Props {
  */
 export function SearchTypeahead({ messages, placeholder = "Buscar mensagens...", onFilter }: Props) {
   const [query, setQuery] = useState("");
+  const trackTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const matchedIds = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -39,7 +41,19 @@ export function SearchTypeahead({ messages, placeholder = "Buscar mensagens...",
       const id = el.id.slice(2);
       el.style.display = matchedIds.has(id) ? "" : "none";
     });
-  }, [matchedIds, onFilter]);
+
+    // GA event debounced (não spammar a cada keystroke)
+    if (trackTimer.current) clearTimeout(trackTimer.current);
+    if (query.trim().length >= 2) {
+      trackTimer.current = setTimeout(() => {
+        trackEvent("search", {
+          search_term: query.trim().toLowerCase(),
+          results: matchedIds.size,
+          page_path: typeof window !== "undefined" ? window.location.pathname : "",
+        });
+      }, 800);
+    }
+  }, [matchedIds, onFilter, query]);
 
   return (
     <div className="relative">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Home, Layers, Search, Heart, Share2 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 /**
  * Bottom bar fixa no mobile (app-like).
@@ -26,26 +27,30 @@ export function BottomBar() {
   }, [lastY]);
 
   function openMenu() {
+    trackEvent("mobile_quick_action", { action: "categorias" });
     window.dispatchEvent(new CustomEvent("portalsoma:open-menu"));
   }
 
   async function shareApp() {
+    trackEvent("mobile_quick_action", { action: "share_app" });
+    const url = "https://www.portalsoma.com.br/?utm_source=share&utm_medium=app_share&utm_campaign=app_install";
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
           title: "Portal Soma — Mensagens de Aniversário",
           text: "Mensagens originais pra emocionar quem você ama",
-          url: "https://www.portalsoma.com.br/",
+          url,
         });
       } catch {
         /* user cancel */
       }
     } else {
-      await navigator.clipboard.writeText("https://www.portalsoma.com.br/");
+      await navigator.clipboard.writeText(url);
     }
   }
 
   function openSearch() {
+    trackEvent("mobile_quick_action", { action: "buscar" });
     // Foca no search-typeahead se existir na página; senão vai pra home
     const el = document.querySelector<HTMLInputElement>('input[type="search"], input[placeholder*="Buscar"]');
     if (el) {
@@ -67,6 +72,7 @@ export function BottomBar() {
       <div className="grid grid-cols-5 h-14">
         <a
           href="/"
+          onClick={() => trackEvent("mobile_quick_action", { action: "home" })}
           className="flex flex-col items-center justify-center gap-0.5 text-[10px] text-stone-600 hover:text-niver-700"
         >
           <Home size={20} strokeWidth={2.2} />
@@ -90,6 +96,7 @@ export function BottomBar() {
         </button>
         <a
           href="/favoritos/"
+          onClick={() => trackEvent("mobile_quick_action", { action: "salvas" })}
           className="flex flex-col items-center justify-center gap-0.5 text-[10px] text-stone-600 hover:text-niver-700"
         >
           <Heart size={20} strokeWidth={2.2} />

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Share2, MessageCircle, Send, Facebook, Link2, X } from "lucide-react";
+import { trackEvent, withUtm } from "@/lib/analytics";
 
 interface Props {
   text: string;
@@ -14,12 +15,21 @@ interface Props {
 export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
   const [open, setOpen] = useState(false);
   const fullUrl = url.startsWith("http") ? url : `https://www.portalsoma.com.br${url}`;
+  // URLs com UTM por destino — pra GA atribuir tráfego que volta via share.
+  const campaign = promoteOnShare ? "promote" : "user_share";
+  const urlWa = withUtm(fullUrl, "share", "whatsapp", campaign);
+  const urlTg = withUtm(fullUrl, "share", "telegram", campaign);
+  const urlFb = withUtm(fullUrl, "share", "facebook", campaign);
+  const urlNative = withUtm(fullUrl, "share", "native", campaign);
+  const urlLink = withUtm(fullUrl, "share", "link", campaign);
+
   // Texto puro pra navigator.share / texto+link pra deep links (whatsapp/telegram).
   // Se promoteOnShare: também adiciona linha "via portalsoma.com.br/{slug}" no texto puro.
   const promoLine = promoteOnShare ? `\n\nvia portalsoma.com.br${url}` : "";
   const sharedText = `${text}${promoLine}`;
-  const encodedText = encodeURIComponent(`${sharedText}\n\n${fullUrl}`);
-  const encodedUrl = encodeURIComponent(fullUrl);
+  const encodedTextWa = encodeURIComponent(`${sharedText}\n\n${urlWa}`);
+  const encodedUrlFb = encodeURIComponent(urlFb);
+  const encodedTextTgOnly = encodeURIComponent(sharedText);
 
   function track(destino: string) {
     if (mensagemId && navigator.sendBeacon) {
@@ -30,12 +40,18 @@ export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
         }),
       );
     }
+    trackEvent("share_message", {
+      method: destino,
+      mensagem_id: mensagemId,
+      promote_on_share: !!promoteOnShare,
+      page_path: typeof window !== "undefined" ? window.location.pathname : "",
+    });
   }
 
   async function handleNative() {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
-        await navigator.share({ text: sharedText, url: fullUrl });
+        await navigator.share({ text: sharedText, url: urlNative });
         track("native");
         return;
       } catch {
@@ -69,7 +85,7 @@ export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <a
-                href={`https://wa.me/?text=${encodedText}`}
+                href={`https://wa.me/?text=${encodedTextWa}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("whatsapp")}
@@ -79,7 +95,7 @@ export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
                 <span className="font-medium">WhatsApp</span>
               </a>
               <a
-                href={`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`}
+                href={`https://t.me/share/url?url=${encodeURIComponent(urlTg)}&text=${encodedTextTgOnly}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("telegram")}
@@ -89,7 +105,7 @@ export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
                 <span className="font-medium">Telegram</span>
               </a>
               <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrlFb}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => track("facebook")}
@@ -101,7 +117,7 @@ export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
               <button
                 type="button"
                 onClick={async () => {
-                  await navigator.clipboard.writeText(fullUrl);
+                  await navigator.clipboard.writeText(urlLink);
                   track("link");
                   setOpen(false);
                 }}

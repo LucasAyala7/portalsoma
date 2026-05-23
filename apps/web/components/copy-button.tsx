@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   text: string;
@@ -27,6 +28,11 @@ export function CopyButton({ text, mensagemId, className, label = "Copiar" }: Pr
           }),
         );
       }
+      trackEvent("copy_message", {
+        mensagem_id: mensagemId,
+        text_length: text.length,
+        page_path: typeof window !== "undefined" ? window.location.pathname : "",
+      });
     } catch (err) {
       console.error("Falha ao copiar:", err);
     }

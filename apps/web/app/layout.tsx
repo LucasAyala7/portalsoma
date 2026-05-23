@@ -6,6 +6,10 @@ import { Cake, Heart, Copy, Share2 } from "lucide-react";
 import { MobileMenu } from "@/components/mobile-menu";
 import { MegaNav } from "@/components/mega-nav";
 import { BottomBar } from "@/components/bottom-bar";
+import { GoogleAnalytics } from "@/components/google-analytics";
+import { ScrollDepthTracker } from "@/components/scroll-depth-tracker";
+
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-F00GTDMNNH";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 const fraunces = Fraunces({
@@ -112,6 +116,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
+        <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+        <ScrollDepthTracker />
         <div className="min-h-screen flex flex-col">
           <SiteHeader topClusters={navData.topClusters} totals={navData.totals} navSections={navData.navSections} />
           <main className="flex-1 pb-16 md:pb-0">{children}</main>

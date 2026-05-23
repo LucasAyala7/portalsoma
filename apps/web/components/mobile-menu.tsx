@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronDown, ChevronRight } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface NavItem {
   slug: string;
@@ -49,7 +50,10 @@ export function MobileMenu({ nichoSlug = "mensagem-de-aniversario", sections }: 
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={() => {
+          setOpen(true);
+          trackEvent("mobile_menu_open", { source: "hamburger" });
+        }}
         aria-label="Abrir menu"
         className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-xl border border-warm-200 bg-white/70 text-stone-700 hover:bg-warm-100 transition-colors"
       >
@@ -86,7 +90,10 @@ export function MobileMenu({ nichoSlug = "mensagem-de-aniversario", sections }: 
                   <div key={section.titulo} className="border-b border-warm-200/70 last:border-0">
                     <button
                       type="button"
-                      onClick={() => setActive(isOpen ? null : section.titulo)}
+                      onClick={() => {
+                        setActive(isOpen ? null : section.titulo);
+                        if (!isOpen) trackEvent("mobile_menu_section", { section: section.titulo });
+                      }}
                       className="w-full flex items-center justify-between px-3 py-3.5 text-left text-stone-800 font-medium"
                       aria-expanded={isOpen}
                     >

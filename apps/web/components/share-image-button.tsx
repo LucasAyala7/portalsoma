@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Image as ImageIcon, Download, Check } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   imageUrl: string;
@@ -29,6 +30,12 @@ export function ShareImageButton({ imageUrl, titulo, mensagemId, slug, className
         ),
       );
     }
+    trackEvent("share_image", {
+      method: destino,
+      mensagem_id: mensagemId,
+      slug,
+      page_path: typeof window !== "undefined" ? window.location.pathname : "",
+    });
   }
 
   async function handleShare() {

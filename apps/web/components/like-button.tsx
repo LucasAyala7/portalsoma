@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface Props {
   mensagemId: string;
@@ -55,6 +56,10 @@ export function LikeButton({ mensagemId, initialCount = 0 }: Props) {
         type: "application/json",
       }),
     );
+    trackEvent(willUnlike ? "unlike_message" : "like_message", {
+      mensagem_id: mensagemId,
+      page_path: typeof window !== "undefined" ? window.location.pathname : "",
+    });
   }
 
   return (
