@@ -7,9 +7,11 @@ import { MobileMenu } from "@/components/mobile-menu";
 import { MegaNav } from "@/components/mega-nav";
 import { BottomBar } from "@/components/bottom-bar";
 import { GoogleAnalytics } from "@/components/google-analytics";
+import { GoogleAdsense } from "@/components/google-adsense";
 import { ScrollDepthTracker } from "@/components/scroll-depth-tracker";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-F00GTDMNNH";
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-8917133059843595";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 const fraunces = Fraunces({
@@ -52,6 +54,9 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
   alternates: { canonical: SITE_URL },
+  other: {
+    "google-adsense-account": ADSENSE_CLIENT,
+  },
 };
 
 export const viewport: Viewport = {
@@ -117,6 +122,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
         <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
+        <GoogleAdsense client={ADSENSE_CLIENT} />
         <ScrollDepthTracker />
         <div className="min-h-screen flex flex-col">
           <SiteHeader topClusters={navData.topClusters} totals={navData.totals} navSections={navData.navSections} />
