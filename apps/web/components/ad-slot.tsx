@@ -14,7 +14,7 @@ interface Props {
   className?: string;
 }
 
-const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-8917133059843595";
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-3880875536722698";
 
 declare global {
   interface Window {

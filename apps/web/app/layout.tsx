@@ -11,7 +11,7 @@ import { GoogleAdsense } from "@/components/google-adsense";
 import { ScrollDepthTracker } from "@/components/scroll-depth-tracker";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-F00GTDMNNH";
-const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-8917133059843595";
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-3880875536722698";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
 const fraunces = Fraunces({

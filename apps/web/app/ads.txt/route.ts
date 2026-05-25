@@ -5,7 +5,7 @@
 export const dynamic = "force-static";
 export const revalidate = false;
 
-const ADSENSE_PUBLISHER = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "pub-8917133059843595";
+const ADSENSE_PUBLISHER = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "pub-3880875536722698";
 
 export async function GET() {
   const body = `google.com, ${ADSENSE_PUBLISHER}, DIRECT, f08c47fec0942fa0\n`;
