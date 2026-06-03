@@ -39,21 +39,25 @@ const r2 = new S3Client({
 
 interface Args {
   top: number;
+  offset: number;
   dryRun: boolean;
   force: boolean;
   concurrency: number;
+  model: "pro" | "schnell";
 }
 
 function parseArgs(argv: string[]): Args {
-  const out: Args = { top: 30, dryRun: false, force: false, concurrency: 2 };
+  const out: Args = { top: 30, offset: 0, dryRun: false, force: false, concurrency: 2, model: "pro" };
   for (const a of argv) {
     const m = a.match(/^--([^=]+)(?:=(.*))?$/);
     if (!m) continue;
     const [, k, v] = m;
     if (k === "top") out.top = Number(v);
+    else if (k === "offset") out.offset = Number(v);
     else if (k === "dry-run") out.dryRun = true;
     else if (k === "force") out.force = true;
     else if (k === "concurrency") out.concurrency = Number(v);
+    else if (k === "model") out.model = v === "schnell" ? "schnell" : "pro";
   }
   return out;
 }
@@ -150,16 +154,17 @@ async function processOne(msgId: string, args: Args): Promise<JobResult> {
   });
   if (!m) return { msgId, ok: false, custo: 0, err: "not found" };
 
-  if (!args.force && m.imagemHero?.modelo === "flux-pro-blueprint") {
+  const blueprintModelo = args.model === "pro" ? "flux-pro-blueprint" : "flux-schnell-blueprint";
+  if (!args.force && (m.imagemHero?.modelo === "flux-pro-blueprint" || m.imagemHero?.modelo === blueprintModelo)) {
     return { msgId, ok: true, custo: 0, err: "skip (já blueprint)" };
   }
 
   const prompt = promptBlueprint(m.cluster.slug, m.titulo);
-  const keyBase = `mensagens/${m.id}/blueprint`;
+  const keyBase = `mensagens/${m.id}/blueprint-${args.model}`;
 
   if (args.dryRun) {
-    console.log(`  [dry] ${m.id} | ${m.cluster.slug} | ${prompt.slice(0, 80)}...`);
-    return { msgId, ok: true, custo: 0.05 };
+    console.log(`  [dry] ${m.id} | ${m.cluster.slug} | ${args.model} | ${prompt.slice(0, 80)}...`);
+    return { msgId, ok: true, custo: args.model === "pro" ? 0.05 : 0.01 };
   }
 
   let custoTotal = 0;
@@ -168,7 +173,7 @@ async function processOne(msgId: string, args: Args): Promise<JobResult> {
   try {
     const flux = await generateFluxImage({
       prompt,
-      model: "pro",
+      model: args.model,
       formato: "hero",
       keyBase,
       alt: `Imagem editorial: ${m.titulo}`,
@@ -192,7 +197,7 @@ async function processOne(msgId: string, args: Args): Promise<JobResult> {
       formato: "hero",
       bgUrl: bgDataUrl,
     });
-    const key = `mensagens/${m.id}/hero-blueprint.png`;
+    const key = `mensagens/${m.id}/hero-blueprint-${args.model}.png`;
     const uploaded = await uploadBuffer({
       key,
       buffer: composed.buffer,
@@ -205,7 +210,7 @@ async function processOne(msgId: string, args: Args): Promise<JobResult> {
         width: composed.width,
         height: composed.height,
         alt: `${m.titulo} — Portal Soma`,
-        modelo: "flux-pro-blueprint",
+        modelo: blueprintModelo,
         promptUsado: prompt,
         custo: custoTotal,
       },
@@ -227,12 +232,12 @@ async function main() {
   const top = await prisma.mensagem.findMany({
     where: { status: "PUBLISHED" },
     orderBy: [{ likes: "desc" }, { copies: "desc" }, { visualizacoes: "desc" }],
-    take: args.top,
+    take: args.top + args.offset,
     select: { id: true },
   });
 
-  const ids = top.map((m) => m.id);
-  console.log(`Alvo: ${ids.length} mensagens TOP`);
+  const ids = top.slice(args.offset).map((m) => m.id);
+  console.log(`Alvo: ${ids.length} mensagens TOP (offset=${args.offset})`);
 
   let cursor = 0;
   let ok = 0, fail = 0, custoTotal = 0;
