@@ -71,7 +71,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 30;
 
 async function getNavData() {
-  const [topClusters, destinatarios, ocasioes, tons, agg] = await Promise.all([
+  const [topClusters, destinatarios, ocasioesAll, tonsAll, canais, agg] = await Promise.all([
     prisma.cluster.findMany({
       where: { ativo: true, tipo: "DESTINATARIO" },
       orderBy: { volumeMensal: "desc" },
@@ -81,19 +81,22 @@ async function getNavData() {
     prisma.cluster.findMany({
       where: { ativo: true, tipo: "DESTINATARIO" },
       orderBy: { volumeMensal: "desc" },
-      take: 10,
+      take: 18,
       select: { slug: true, nome: true },
     }),
     prisma.cluster.findMany({
       where: { ativo: true, tipo: "OCASIAO" },
       orderBy: { volumeMensal: "desc" },
-      take: 10,
+      select: { slug: true, nome: true },
+    }),
+    prisma.cluster.findMany({
+      where: { ativo: true, tipo: "TOM" },
+      orderBy: { volumeMensal: "desc" },
       select: { slug: true, nome: true },
     }),
     prisma.cluster.findMany({
       where: { ativo: true, tipo: "CANAL" },
       orderBy: { volumeMensal: "desc" },
-      take: 10,
       select: { slug: true, nome: true },
     }),
     prisma.mensagem.aggregate({
@@ -109,10 +112,26 @@ async function getNavData() {
     shares: agg._sum.shares ?? 0,
     views: agg._sum.visualizacoes ?? 0,
   };
+
+  // Sub-grupos de OCASIAO
+  const bodas = ocasioesAll.filter((c) => c.slug.startsWith("bodas-")).slice(0, 14);
+  const idades = ocasioesAll.filter((c) => /^de-\d+-(anos|meses|mes)/.test(c.slug)).slice(0, 18);
+  const relacionamentos = ocasioesAll.filter((c) => /-de-(namoro|amizade|relacionamento)$/.test(c.slug)).slice(0, 14);
+
+  // Sub-grupos de TOM
+  const religiao = tonsAll.filter((c) =>
+    /^(evangelica|biblica|gospel|crista|espirita|catolica|abencoada|gratidao|milagre|perdao)$/.test(c.slug),
+  );
+  const estilos = tonsAll.filter((c) => !religiao.some((r) => r.slug === c.slug));
+
   const navSections = [
     { titulo: "Destinatários", items: destinatarios },
-    { titulo: "Ocasiões", items: ocasioes },
-    { titulo: "Tons & Estilos", items: tons },
+    { titulo: "Idades", items: idades },
+    { titulo: "Bodas", items: bodas },
+    { titulo: "Namoro & Amizade", items: relacionamentos },
+    { titulo: "Religião & Fé", items: religiao },
+    { titulo: "Tons & Estilos", items: estilos },
+    { titulo: "Por Canal", items: canais },
   ].filter((s) => s.items.length > 0);
   return { topClusters, totals, navSections };
 }

@@ -40,6 +40,7 @@ export async function GET(
     where: { status: "PUBLISHED" },
     select: {
       slug: true,
+      publicadoEm: true,
       atualizadoEm: true,
       cluster: {
         select: {
@@ -59,7 +60,8 @@ export async function GET(
 
   const urls: SitemapUrl[] = mensagens.map((m) => ({
     loc: `${SITE_URL}/${m.cluster.nicho.slug}/${m.cluster.slug}/${m.slug}/`,
-    lastmod: m.atualizadoEm,
+    // Usa publicadoEm em vez de atualizadoEm pra Google não ver "fresh" sem conteúdo novo.
+    lastmod: m.publicadoEm ?? m.atualizadoEm,
     changefreq: "monthly",
     priority: 0.6,
   }));
