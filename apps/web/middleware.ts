@@ -30,8 +30,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(target, 301);
   }
 
-  // Só interesssa em URLs do nicho legado
-  if (!path.startsWith("/mensagem-de-aniversario/")) {
+  // Só interessa em URLs com redirects (nicho legado WP + dedup blog)
+  if (!path.startsWith("/mensagem-de-aniversario/") && !path.startsWith("/blog/")) {
     return NextResponse.next();
   }
 
