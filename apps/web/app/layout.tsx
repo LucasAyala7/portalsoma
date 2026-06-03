@@ -66,9 +66,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// Layout também revalida — total de mensagens no header/footer fica fresh
-export const dynamic = "force-dynamic";
-export const revalidate = 30;
+// Static build global — header/footer congelados no build, atualizados via cron daily rebuild
+export const dynamic = "force-static";
 
 async function getNavData() {
   const [topClusters, destinatarios, ocasioesAll, tonsAll, canais, agg] = await Promise.all([

@@ -8,13 +8,21 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// ISR: render on-demand, revalidate every 60s. Evita coletar DB no build time.
-export const revalidate = 60;
+// Static build: gera todos autores ativos no build.
+export const dynamic = "force-static";
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  // Não conecta DB no build — todas as rotas geradas on-demand no runtime
-  return [];
+  if (process.env.SKIP_STATIC_PARAMS === "true" || !process.env.DATABASE_URL) return [];
+  try {
+    const autores = await prisma.author.findMany({
+      where: { ativo: true },
+      select: { slug: true },
+    });
+    return autores.map((a) => ({ slug: a.slug }));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { prisma } from "@nivertotal/db";
 import { Clock, BookOpen } from "lucide-react";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 60;
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Blog — Reflexões, Tradições e Significados dos Aniversários",

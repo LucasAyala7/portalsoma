@@ -35,9 +35,10 @@ interface PageProps {
   params: Promise<RouteParams>;
 }
 
-// ISR: revalida a cada 30s pra counts (likes/copies/shares) ficarem fresh.
-// Rotas geradas on-demand no runtime (não no build) — Postgres pode não estar acessível no build time em prod.
-export const revalidate = 30;
+// Static build: gera todas mensagens/clusters/complementos no build.
+// Counts (likes/copies/shares) ficam do build — rebuild diário via cron.
+// dynamicParams=true: mensagens novas (após build) SSR primeira visita e cache depois.
+export const dynamic = "force-static";
 export const dynamicParams = true;
 
 type Resolved =
@@ -157,7 +158,13 @@ export async function generateStaticParams(): Promise<{ path: string[] }[]> {
         include: {
           complementos: { where: { ativo: true } },
           mensagens: {
-            where: { status: "PUBLISHED" },
+            where: {
+              status: "PUBLISHED",
+              NOT: [
+                { slug: { startsWith: "pending-" } },
+                { slug: { startsWith: "smoke-" } },
+              ],
+            },
             select: { slug: true },
           },
         },

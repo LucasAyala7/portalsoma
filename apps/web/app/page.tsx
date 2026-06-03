@@ -43,10 +43,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-// Revalida a cada 30s — counts (likes/copies/shares) ficam fresh sem perder performance.
-// Páginas individuais ainda são pré-renderizadas, mas refazem ao expirar o cache.
-export const dynamic = "force-dynamic";
-export const revalidate = 30;
+// Static build — home gerada no deploy. Counts atualizam via cron daily rebuild.
+export const dynamic = "force-static";
 
 // Mantido pra MessageCardCompact recentes (avatar fallback) — será removido em futuro refactor
 const EMOJI_DESTINATARIO: Record<string, string> = {
