@@ -124,13 +124,12 @@ async function getNavData() {
   const estilos = tonsAll.filter((c) => !religiao.some((r) => r.slug === c.slug));
 
   const navSections = [
-    { titulo: "Destinatários", items: destinatarios },
+    { titulo: "Pessoas", items: destinatarios },
     { titulo: "Idades", items: idades },
     { titulo: "Bodas", items: bodas },
-    { titulo: "Namoro & Amizade", items: relacionamentos },
-    { titulo: "Religião & Fé", items: religiao },
-    { titulo: "Tons & Estilos", items: estilos },
-    { titulo: "Por Canal", items: canais },
+    { titulo: "Namoro", items: relacionamentos },
+    { titulo: "Fé", items: religiao },
+    { titulo: "Tons", items: [...estilos, ...canais] },
   ].filter((s) => s.items.length > 0);
   return { topClusters, totals, navSections };
 }
