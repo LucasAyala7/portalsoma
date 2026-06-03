@@ -9,14 +9,47 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "Portal Soma";
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/logo.png`,
+    description:
+      "Portal brasileiro de mensagens de aniversário originais — emocionantes, evangélicas, engraçadas e únicas — para mãe, pai, amiga, filha e mais.",
+    inLanguage: "pt-BR",
+    sameAs: [
+      "https://www.instagram.com/portalsoma",
+      "https://www.facebook.com/portalsoma",
+      "https://twitter.com/portalsoma",
+    ],
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "contato@portalsoma.com.br",
+      availableLanguage: ["Portuguese"],
+      areaServed: "BR",
+    },
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "BR",
+    },
+  };
+}
+
+export function webSiteWithSearchSchema() {
+  return {
+    "@context": "https://schema.org",
     "@type": "WebSite",
     name: SITE_NAME,
     url: SITE_URL,
     inLanguage: "pt-BR",
+    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
     potentialAction: {
       "@type": "SearchAction",
-      target: `${SITE_URL}/busca/?q={query}`,
-      "query-input": "required name=query",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
     },
   };
 }
@@ -129,6 +162,105 @@ export function authorSchema(input: {
     image: input.fotoUrl ?? undefined,
     url: `${SITE_URL}/autor/${input.slug}/`,
     sameAs: sameAs.length > 0 ? sameAs : undefined,
+  };
+}
+
+export interface ItemListEntry {
+  url: string;
+  name: string;
+}
+
+export function itemListSchema(items: ItemListEntry[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    numberOfItems: items.length,
+    itemListElement: items.map((it, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      url: it.url.startsWith("http") ? it.url : `${SITE_URL}${it.url}`,
+      name: it.name,
+    })),
+  };
+}
+
+export interface CreativeWorkWithInteractionInput extends MensagemSchemaInput {
+  likes: number;
+  copies: number;
+  shares: number;
+  visualizacoes: number;
+  autorBio?: string | null;
+  autorFotoUrl?: string | null;
+  autorRedes?: Record<string, string> | null;
+}
+
+export function creativeWorkWithInteractionSchema(m: CreativeWorkWithInteractionInput) {
+  const base = mensagemSchema(m);
+  const sameAs = m.autorRedes
+    ? Object.values(m.autorRedes).filter((v): v is string => Boolean(v))
+    : [];
+  return {
+    ...base,
+    author: {
+      "@type": "Person",
+      name: m.autorNome,
+      url: m.autorUrl.startsWith("http") ? m.autorUrl : `${SITE_URL}${m.autorUrl}`,
+      description: m.autorBio ?? undefined,
+      image: m.autorFotoUrl ?? undefined,
+      sameAs: sameAs.length > 0 ? sameAs : undefined,
+    },
+    interactionStatistic: [
+      {
+        "@type": "InteractionCounter",
+        interactionType: { "@type": "LikeAction" },
+        userInteractionCount: m.likes,
+      },
+      {
+        "@type": "InteractionCounter",
+        interactionType: { "@type": "WriteAction" },
+        userInteractionCount: m.copies,
+      },
+      {
+        "@type": "InteractionCounter",
+        interactionType: { "@type": "ShareAction" },
+        userInteractionCount: m.shares,
+      },
+      {
+        "@type": "InteractionCounter",
+        interactionType: { "@type": "ReadAction" },
+        userInteractionCount: m.visualizacoes,
+      },
+    ],
+  };
+}
+
+export interface ProfilePageSchemaInput {
+  nome: string;
+  bio: string;
+  fotoUrl?: string | null;
+  slug: string;
+  redes?: Record<string, string> | null;
+}
+
+export function profilePageSchema(input: ProfilePageSchemaInput) {
+  const url = `${SITE_URL}/autor/${input.slug}/`;
+  const sameAs = input.redes
+    ? Object.values(input.redes).filter((v): v is string => Boolean(v))
+    : [];
+  return {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url,
+    inLanguage: "pt-BR",
+    isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+    mainEntity: {
+      "@type": "Person",
+      name: input.nome,
+      description: input.bio,
+      image: input.fotoUrl ?? undefined,
+      url,
+      sameAs: sameAs.length > 0 ? sameAs : undefined,
+    },
   };
 }
 

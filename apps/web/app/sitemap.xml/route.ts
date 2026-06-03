@@ -24,7 +24,7 @@ export const revalidate = 30;
 export const runtime = "nodejs";
 
 export async function GET() {
-  const [totalMensagens, latestMensagem, latestCluster, latestAutor, latestWebStory] =
+  const [totalMensagens, latestMensagem, latestCluster, latestAutor, latestWebStory, latestPost] =
     await Promise.all([
       prisma.mensagem.count({ where: { status: "PUBLISHED" } }),
       prisma.mensagem.findFirst({
@@ -43,6 +43,11 @@ export async function GET() {
         select: { atualizadoEm: true },
       }),
       prisma.webStory.findFirst({
+        where: { status: "PUBLISHED" },
+        orderBy: { atualizadoEm: "desc" },
+        select: { atualizadoEm: true },
+      }),
+      prisma.post.findFirst({
         where: { status: "PUBLISHED" },
         orderBy: { atualizadoEm: "desc" },
         select: { atualizadoEm: true },
@@ -72,6 +77,10 @@ export async function GET() {
     {
       loc: `${SITE_URL}/sitemap-autores.xml`,
       lastmod: latestAutor?.atualizadoEm ?? new Date(),
+    },
+    {
+      loc: `${SITE_URL}/sitemap-blog.xml`,
+      lastmod: latestPost?.atualizadoEm ?? new Date(),
     },
     {
       loc: `${SITE_URL}/sitemap-web-stories.xml`,

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { prisma } from "@nivertotal/db";
-import { jsonLdScript, organizationSchema } from "@/lib/seo";
+import { jsonLdScript, itemListSchema } from "@/lib/seo";
+import { mensagemUrl } from "@/lib/utils";
 import { Ticker } from "@/components/ticker";
 import { CounterBoard } from "@/components/counter-board";
 import { AuthorCarousel } from "@/components/author-carousel";
@@ -225,11 +226,35 @@ export default async function Home() {
     views: data.aggregates._sum.visualizacoes ?? 0,
   };
 
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
+  const destaquesItemList = data.mensagensDestaque.map((m) => ({
+    url: `${SITE_URL}${mensagemUrl({
+      nichoSlug: m.cluster.nicho.slug,
+      clusterSlug: m.cluster.slug,
+      slug: m.slug,
+    })}`,
+    name: m.titulo,
+  }));
+
+  const homeCollection = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Portal Soma — Mensagens de Aniversário",
+    description:
+      "Mensagens de aniversário emocionantes, evangélicas, engraçadas e únicas para mãe, pai, amiga, filha e mais.",
+    url: SITE_URL,
+    inLanguage: "pt-BR",
+    isPartOf: { "@type": "WebSite", name: "Portal Soma", url: SITE_URL },
+  };
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={jsonLdScript(organizationSchema())}
+        dangerouslySetInnerHTML={jsonLdScript([
+          homeCollection,
+          ...(destaquesItemList.length > 0 ? [itemListSchema(destaquesItemList)] : []),
+        ])}
       />
 
       {/* 1. HERO */}

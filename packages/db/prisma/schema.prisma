@@ -222,6 +222,7 @@ model Author {
   ativo     Boolean    @default(true)
   ordem     Int        @default(0)
   mensagens Mensagem[]
+  posts     Post[]
   persona   Persona?
   criadoEm  DateTime   @default(now())
   atualizadoEm DateTime @updatedAt
@@ -297,6 +298,72 @@ model Image {
   mensagensHero Mensagem[] @relation("Hero")
   mensagensOg   Mensagem[] @relation("Og")
   mensagensPin  Mensagem[] @relation("Pin")
+  postsHero     Post[]     @relation("PostHero")
+  postsOg       Post[]     @relation("PostOg")
+}
+
+// =====================================================
+// BLOG (long-form content pra E-E-A-T + AdSense approval)
+// =====================================================
+
+/// Categoria de blog (silo). Ex: "significado-da-data", "etiqueta-do-aniversario"
+model BlogCategory {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  nome         String
+  descricao    String?  @db.Text
+  intro        String?  @db.Text                  // hero text da página da categoria
+  metaTitle    String?
+  metaDesc     String?
+  hero         String?                            // URL imagem hero da categoria
+  ordem        Int      @default(0)
+  ativo        Boolean  @default(true)
+  posts        Post[]
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+}
+
+/// Post de blog (1500-2500 palavras, formato editorial)
+model Post {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  titulo          String
+  metaTitle       String?
+  metaDescription String?
+  conteudo        String   @db.Text                  // Markdown
+  resumo          String?  @db.Text                  // 1-2 frases pra preview/og
+  wordCount       Int?
+  tempoLeitura    Int?                               // minutos (estimado wordCount/200)
+
+  categoria       BlogCategory @relation(fields: [categoriaId], references: [id])
+  categoriaId     String
+
+  autor           Author @relation(fields: [autorId], references: [id])
+  autorId         String
+
+  imagemHero      Image?  @relation("PostHero", fields: [imagemHeroId], references: [id])
+  imagemHeroId    String?
+  imagemOg        Image?  @relation("PostOg", fields: [imagemOgId], references: [id])
+  imagemOgId      String?
+
+  tags            String[]                           // ["aniversário", "tradições", "psicologia"]
+
+  status          Status @default(DRAFT)
+  qualidade       Float?
+  origem          Origem @default(IA)
+
+  visualizacoes   Int @default(0)
+  likes           Int @default(0)
+  shares          Int @default(0)
+  copies          Int @default(0)
+
+  publicadoEm     DateTime?
+  criadoEm        DateTime @default(now())
+  atualizadoEm    DateTime @updatedAt
+
+  @@index([status, publicadoEm])
+  @@index([categoriaId, status])
+  @@index([autorId])
 }
 
 // =====================================================

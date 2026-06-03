@@ -21,7 +21,8 @@ import {
   breadcrumbSchema,
   collectionSchema,
   faqSchema,
-  mensagemSchema,
+  itemListSchema,
+  creativeWorkWithInteractionSchema,
 } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
 import { Heart, Copy, Share2, Eye, ChevronRight, Flame, Users, ArrowLeft } from "lucide-react";
@@ -341,6 +342,11 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       ? (cluster.faq as { pergunta: string; resposta: string }[])
       : faqDefault;
 
+  const clusterItemList = mensagens.map((m) => ({
+    url: `/${nicho.slug}/${cluster.slug}/${m.slug}/`,
+    name: m.titulo,
+  }));
+
   return (
     <>
       <script
@@ -357,6 +363,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             url: `/${nicho.slug}/${cluster.slug}/`,
             itemsCount: totalMensagens,
           }),
+          ...(clusterItemList.length > 0 ? [itemListSchema(clusterItemList)] : []),
           faqSchema(faqItems),
         ])}
       />
@@ -686,7 +693,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
             { name: mensagem.cluster.nome, url: `/${mensagem.cluster.nicho.slug}/${mensagem.cluster.slug}/` },
             { name: mensagem.titulo, url },
           ]),
-          mensagemSchema({
+          creativeWorkWithInteractionSchema({
             titulo: mensagem.titulo,
             conteudo: mensagem.conteudo,
             slug: mensagem.slug,
@@ -695,13 +702,24 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
             atualizadoEm: mensagem.atualizadoEm,
             autorNome: mensagem.autor.nome,
             autorUrl: `/autor/${mensagem.autor.slug}/`,
+            autorBio: mensagem.autor.bio,
+            autorFotoUrl: mensagem.autor.fotoUrl,
+            autorRedes: mensagem.autor.redes as Record<string, string> | null,
             imagemUrl: mensagem.imagemHero?.url ?? null,
             resumo: mensagem.resumo,
+            likes: mensagem.likes,
+            copies: mensagem.copies,
+            shares: mensagem.shares,
+            visualizacoes: mensagem.visualizacoes,
           }),
         ])}
       />
 
-      <article className="relative">
+      <article
+        itemScope
+        itemType="https://schema.org/CreativeWork"
+        className="relative"
+      >
         {/* HERO compacto */}
         <section className="bg-gradient-to-b from-niver-50 via-warm-100 to-warm-50 py-10 sm:py-14 border-b border-warm-200/40">
           <div className="container-niver max-w-3xl">
@@ -712,7 +730,10 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
               </a>
             </nav>
 
-            <h1 className="font-display text-3xl sm:text-4xl text-niver-800 leading-tight mb-5">
+            <h1
+              itemProp="name"
+              className="font-display text-3xl sm:text-4xl text-niver-800 leading-tight mb-5"
+            >
               {mensagem.titulo}
             </h1>
 
@@ -770,7 +791,10 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
           )}
 
           <div className="card-feature p-8 sm:p-10 mb-8">
-            <p className="font-display text-xl sm:text-2xl text-stone-800 leading-relaxed whitespace-pre-line">
+            <p
+              itemProp="text"
+              className="font-display text-xl sm:text-2xl text-stone-800 leading-relaxed whitespace-pre-line"
+            >
               {mensagem.conteudo}
             </p>
           </div>

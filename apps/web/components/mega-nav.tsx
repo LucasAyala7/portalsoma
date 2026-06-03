@@ -26,7 +26,11 @@ export function MegaNav({ sections, nichoSlug = "mensagem-de-aniversario" }: Pro
   const [active, setActive] = useState<string | null>(null);
 
   return (
-    <nav className="hidden md:flex items-center gap-1 text-sm relative">
+    <nav
+      itemScope
+      itemType="https://schema.org/SiteNavigationElement"
+      className="hidden md:flex items-center gap-1 text-sm relative"
+    >
       {sections.map((section) => {
         const isOpen = active === section.titulo;
         return (

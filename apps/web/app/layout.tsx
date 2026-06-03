@@ -9,6 +9,7 @@ import { BottomBar } from "@/components/bottom-bar";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { GoogleAdsense } from "@/components/google-adsense";
 import { ScrollDepthTracker } from "@/components/scroll-depth-tracker";
+import { jsonLdScript, organizationSchema, webSiteWithSearchSchema } from "@/lib/seo";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-F00GTDMNNH";
 const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-3880875536722698";
@@ -121,6 +122,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable}`}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript([organizationSchema(), webSiteWithSearchSchema()])}
+        />
         <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
         <GoogleAdsense client={ADSENSE_CLIENT} />
         <ScrollDepthTracker />
@@ -159,7 +164,11 @@ function SiteHeader({
   navSections: { titulo: string; items: { slug: string; nome: string }[] }[];
 }) {
   return (
-    <header className="sticky top-0 z-30 bg-warm-50/95 backdrop-blur-md border-b border-warm-200/60">
+    <header
+      itemScope
+      itemType="https://schema.org/WPHeader"
+      className="sticky top-0 z-30 bg-warm-50/95 backdrop-blur-md border-b border-warm-200/60"
+    >
       <div className="container-wide flex h-14 sm:h-16 items-center gap-3">
         <MobileMenu sections={navSections} />
         <a href="/" className="flex items-center gap-2 group">
@@ -203,9 +212,13 @@ function SiteHeader({
 
 function SiteFooter({ totalMensagens }: { totalMensagens: number }) {
   return (
-    <footer className="bg-stone-900 text-stone-300 mt-24">
-      <div className="container-wide py-14 grid md:grid-cols-4 gap-10 text-sm">
-        <div>
+    <footer
+      itemScope
+      itemType="https://schema.org/WPFooter"
+      className="bg-stone-900 text-stone-300 mt-24"
+    >
+      <div className="container-wide py-14 grid md:grid-cols-2 lg:grid-cols-5 gap-10 text-sm">
+        <div className="lg:col-span-1">
           <div className="flex items-center gap-2 mb-3">
             <span className="grid place-items-center w-9 h-9 rounded-xl bg-niver-600 text-white">
               <Cake size={18} strokeWidth={2.2} />
@@ -220,6 +233,11 @@ function SiteFooter({ totalMensagens }: { totalMensagens: number }) {
             <Heart size={12} className="text-niver-400" />
             <span className="tabular-nums">{totalMensagens.toLocaleString("pt-BR")} mensagens publicadas</span>
           </div>
+          <p className="text-xs text-stone-500 mt-5 leading-relaxed">
+            Mantido pela Agência Vencedores Digitais
+            <br />
+            CNPJ 34.600.484/0001-21 — Bacabal/MA
+          </p>
         </div>
         <div>
           <h4 className="font-semibold text-white mb-3 uppercase text-xs tracking-wider">Destinatários</h4>
@@ -242,12 +260,25 @@ function SiteFooter({ totalMensagens }: { totalMensagens: number }) {
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold text-white mb-3 uppercase text-xs tracking-wider">Portal Soma</h4>
+          <h4 className="font-semibold text-white mb-3 uppercase text-xs tracking-wider">Institucional</h4>
           <ul className="space-y-2">
             <li><a href="/sobre/" className="hover:text-white transition-colors">Sobre</a></li>
+            <li><a href="/proposito/" className="hover:text-white transition-colors">Propósito</a></li>
+            <li><a href="/equipe/" className="hover:text-white transition-colors">Nossa Equipe</a></li>
+            <li><a href="/depoimentos/" className="hover:text-white transition-colors">Depoimentos</a></li>
+            <li><a href="/imprensa/" className="hover:text-white transition-colors">Imprensa</a></li>
             <li><a href="/contato/" className="hover:text-white transition-colors">Contato</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold text-white mb-3 uppercase text-xs tracking-wider">Legal</h4>
+          <ul className="space-y-2">
             <li><a href="/politica-de-privacidade/" className="hover:text-white transition-colors">Privacidade</a></li>
-            <li><a href="/termos/" className="hover:text-white transition-colors">Termos</a></li>
+            <li><a href="/politica-de-cookies/" className="hover:text-white transition-colors">Cookies</a></li>
+            <li><a href="/termos-de-uso/" className="hover:text-white transition-colors">Termos de Uso</a></li>
+            <li><a href="/politica-de-transparencia/" className="hover:text-white transition-colors">Transparência</a></li>
+            <li><a href="/politica-de-conteudo/" className="hover:text-white transition-colors">Diretrizes editoriais</a></li>
+            <li><a href="/dmca/" className="hover:text-white transition-colors">DMCA</a></li>
           </ul>
         </div>
       </div>

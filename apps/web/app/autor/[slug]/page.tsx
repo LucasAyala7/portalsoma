@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@nivertotal/db";
-import { jsonLdScript, breadcrumbSchema, authorSchema } from "@/lib/seo";
+import { jsonLdScript, breadcrumbSchema, profilePageSchema } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
 
 interface Props {
@@ -54,7 +54,7 @@ export default async function AutorPage({ params }: Props) {
             { name: "Autores", url: "/autor/" },
             { name: autor.nome, url: `/autor/${autor.slug}/` },
           ]),
-          authorSchema({
+          profilePageSchema({
             nome: autor.nome,
             bio: autor.bio,
             fotoUrl: autor.fotoUrl,
@@ -65,9 +65,14 @@ export default async function AutorPage({ params }: Props) {
       />
 
       <section className="bg-niver-50 py-12">
-        <div className="container-niver flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+        <div
+          itemScope
+          itemType="https://schema.org/Person"
+          className="container-niver flex flex-col sm:flex-row gap-6 items-center sm:items-start"
+        >
           {autor.fotoUrl ? (
             <img
+              itemProp="image"
               src={autor.fotoUrl}
               alt={autor.nome}
               className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-md"
@@ -78,13 +83,17 @@ export default async function AutorPage({ params }: Props) {
             </div>
           )}
           <div className="text-center sm:text-left">
-            <h1 className="text-3xl text-niver-800">{autor.nome}</h1>
+            <h1 itemProp="name" className="text-3xl text-niver-800">
+              {autor.nome}
+            </h1>
             {autor.real && (
               <span className="inline-block mt-1 text-xs bg-white px-2 py-0.5 rounded-full text-stone-600">
                 Editor
               </span>
             )}
-            <p className="mt-4 text-stone-700 max-w-2xl leading-relaxed">{autor.bio}</p>
+            <p itemProp="description" className="mt-4 text-stone-700 max-w-2xl leading-relaxed">
+              {autor.bio}
+            </p>
           </div>
         </div>
       </section>
