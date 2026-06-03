@@ -33,6 +33,7 @@ function Sidebar({ username }: { username: string }) {
     { href: "/mensagens", label: "Mensagens" },
     { href: "/mensagens/nova", label: "Nova mensagem" },
     { href: "/mensagens/bulk-import", label: "Bulk import" },
+    { href: "/blog", label: "Blog" },
     { href: "/clusters", label: "Clusters" },
     { href: "/personas", label: "Personas" },
     { href: "/autores", label: "Autores" },
