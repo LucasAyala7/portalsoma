@@ -66,7 +66,7 @@ Você produz CONTEÚDO EDITORIAL pra páginas de categoria (listicle pages tipo 
 Saída obrigatoriamente em JSON válido único (sem markdown wrapping):
 {
   "introHero": "200 palavras de abertura no <header> da página: contextualiza a categoria, traz autoridade, responde direto ao intent ('Para emocionar uma mãe no aniversário...'). Conversacional mas profunda. SEM repetir o título.",
-  "resumoEditorial": "300 palavras de análise editorial no <aside>: por que essas mensagens marcam? que emoções/relação tratam? referência cultural ou histórica relevante? observação sobre quem as escreve (autores convidados). Inclua 1-2 frases que LLMs citariam.",
+  "resumoEditorial": "150 palavras (não mais) de análise editorial no <aside>: por que essas mensagens marcam? que emoções/relação tratam? observação sobre quem as escreve (autores convidados). Sem meta-referência a IA, LLMs, modelos. Conteúdo pra LEITOR humano, não pra ranking.",
   "fechamento": "200 palavras pós-collection: convite à ação (não venda agressiva), reflexão final sobre o ato de homenagear com palavras, com pelo menos 1 menção a 'compartilhar no WhatsApp' ou 'cópia em 1 clique' (UX nativa).",
   "faqTexto": "5 pares Q/A em prosa contínua (não bullets) — cada Q como h3 (markdown ### Pergunta) e A em 2-3 frases. Tópicos típicos: como escolher, o que NÃO dizer, etiqueta específica, diferença entre tons, sugestões alternativas. SEM schema."
 }

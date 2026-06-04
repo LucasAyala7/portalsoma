@@ -455,26 +455,44 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       {/* HEADER 2 — hero SEO/GEO opening */}
       <header className="cluster-hero relative bg-gradient-to-b from-niver-50 to-warm-50 py-12 sm:py-16 deco-confetti overflow-hidden">
         <div className="container-niver relative">
-          <nav className="text-sm text-stone-500 mb-4 flex items-center gap-2" aria-label="Breadcrumb">
-            <a href="/" className="hover:text-niver-700 transition-colors">Início</a>
+          <nav
+            className="text-sm text-stone-500 mb-4 flex items-center gap-2"
+            aria-label="Breadcrumb"
+            itemScope
+            itemType="https://schema.org/BreadcrumbList"
+          >
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a itemProp="item" href="/" className="hover:text-niver-700 transition-colors">
+                <span itemProp="name">Início</span>
+              </a>
+              <meta itemProp="position" content="1" />
+            </span>
             <ChevronRight size={14} />
-            <a href={`/${nicho.slug}/`} className="hover:text-niver-700 transition-colors">
-              {nicho.nome}
-            </a>
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a itemProp="item" href={`/${nicho.slug}/`} className="hover:text-niver-700 transition-colors">
+                <span itemProp="name">{nicho.nome}</span>
+              </a>
+              <meta itemProp="position" content="2" />
+            </span>
+            <ChevronRight size={14} />
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <span itemProp="name" className="text-stone-700">{cluster.nome}</span>
+              <meta itemProp="position" content="3" />
+            </span>
           </nav>
-          <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-tight max-w-3xl mb-4">
+          <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-[1.15] mb-5">
             {bucket} Mensagens de Aniversário {cluster.nome} — {anoAtual}
           </h1>
           {cluster.editorial?.introHero ? (
-            <p className="text-stone-700 leading-relaxed max-w-3xl text-lg whitespace-pre-line">
+            <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line lg:columns-2 lg:gap-10 lg:[&>br]:hidden">
               {cluster.editorial.introHero}
             </p>
           ) : cluster.intro ? (
-            <p className="text-stone-700 leading-relaxed max-w-2xl text-lg whitespace-pre-line">
+            <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
               {cluster.intro}
             </p>
           ) : (
-            <p className="text-stone-700 leading-relaxed max-w-2xl text-lg">
+            <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px]">
               {cluster.descricao ?? `Mais de ${bucket} mensagens de aniversário ${cluster.nome.toLowerCase()} cuidadosamente curadas — para copiar, compartilhar e emocionar. Atualizadas regularmente por nossos autores convidados.`}
             </p>
           )}
@@ -532,27 +550,39 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             </div>
           )}
         </div>
-        {topSemana[0] && topSemana[0].resumo && (
-          <blockquote className="mt-6 border-l-4 border-niver-400 pl-5 py-2 italic text-stone-700 max-w-3xl">
-            <p itemProp="description">"{topSemana[0].resumo}"</p>
-            <cite className="block not-italic text-sm text-stone-500 mt-2">
-              — <span itemProp="creator">{topSemana[0].autor.nome}</span>, em{" "}
-              <a
-                href={`/${nicho.slug}/${cluster.slug}/${topSemana[0].slug}/`}
-                className="text-niver-700 hover:underline"
+        {(topSemana[0]?.resumo || cluster.editorial?.resumoEditorial) && (
+          <details className="mt-5 group">
+            <summary className="inline-flex items-center gap-2 text-sm font-medium text-niver-700 cursor-pointer hover:text-niver-800 select-none list-none [&::-webkit-details-marker]:hidden">
+              <ChevronRight
+                size={14}
+                className="transition-transform group-open:rotate-90"
+                strokeWidth={2.4}
+              />
+              <span>Sobre essa coleção</span>
+            </summary>
+            {topSemana[0]?.resumo && (
+              <blockquote className="mt-4 border-l-4 border-niver-400 pl-5 py-2 italic text-stone-700 max-w-3xl">
+                <p itemProp="description">"{topSemana[0].resumo}"</p>
+                <cite className="block not-italic text-sm text-stone-500 mt-2">
+                  — <span itemProp="creator">{topSemana[0].autor.nome}</span>, em{" "}
+                  <a
+                    href={`/${nicho.slug}/${cluster.slug}/${topSemana[0].slug}/`}
+                    className="text-niver-700 hover:underline"
+                  >
+                    {topSemana[0].titulo}
+                  </a>
+                </cite>
+              </blockquote>
+            )}
+            {cluster.editorial?.resumoEditorial && (
+              <p
+                itemProp="articleBody"
+                className="mt-4 text-stone-600 leading-relaxed max-w-3xl whitespace-pre-line text-[15px]"
               >
-                {topSemana[0].titulo}
-              </a>
-            </cite>
-          </blockquote>
-        )}
-        {cluster.editorial?.resumoEditorial && (
-          <p
-            itemProp="articleBody"
-            className="mt-6 text-stone-700 leading-relaxed max-w-3xl whitespace-pre-line"
-          >
-            {cluster.editorial.resumoEditorial}
-          </p>
+                {cluster.editorial.resumoEditorial}
+              </p>
+            )}
+          </details>
         )}
       </aside>
 
@@ -776,16 +806,32 @@ async function ComplementoPage({
 
       <section className="relative bg-gradient-to-b from-niver-50 to-warm-50 py-12 sm:py-16 deco-confetti overflow-hidden">
         <div className="container-niver relative">
-          <nav className="text-sm text-stone-500 mb-4 flex items-center gap-2 flex-wrap">
-            <a href="/" className="hover:text-niver-700 transition-colors">Início</a>
+          <nav
+            className="text-sm text-stone-500 mb-4 flex items-center gap-2 flex-wrap"
+            aria-label="Breadcrumb"
+            itemScope
+            itemType="https://schema.org/BreadcrumbList"
+          >
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a itemProp="item" href="/" className="hover:text-niver-700 transition-colors">
+                <span itemProp="name">Início</span>
+              </a>
+              <meta itemProp="position" content="1" />
+            </span>
             <ChevronRight size={14} />
-            <a href={`/${nicho.slug}/`} className="hover:text-niver-700 transition-colors">
-              {nicho.nome}
-            </a>
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a itemProp="item" href={`/${nicho.slug}/`} className="hover:text-niver-700 transition-colors">
+                <span itemProp="name">{nicho.nome}</span>
+              </a>
+              <meta itemProp="position" content="2" />
+            </span>
             <ChevronRight size={14} />
-            <a href={`/${nicho.slug}/${cluster.slug}/`} className="hover:text-niver-700 transition-colors">
-              {cluster.nome}
-            </a>
+            <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+              <a itemProp="item" href={`/${nicho.slug}/${cluster.slug}/`} className="hover:text-niver-700 transition-colors">
+                <span itemProp="name">{cluster.nome}</span>
+              </a>
+              <meta itemProp="position" content="3" />
+            </span>
           </nav>
           <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-tight max-w-3xl mb-4">
             {cluster.nome} {complemento.nome.toLowerCase()}
@@ -921,11 +967,32 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
         {/* HERO compacto */}
         <section className="bg-gradient-to-b from-niver-50 via-warm-100 to-warm-50 py-10 sm:py-14 border-b border-warm-200/40">
           <div className="container-niver max-w-3xl">
-            <nav className="text-sm text-stone-500 mb-4 flex items-center gap-2 flex-wrap">
-              <a href={`/${mensagem.cluster.nicho.slug}/${mensagem.cluster.slug}/`} className="hover:text-niver-700 inline-flex items-center gap-1 transition-colors">
-                <ArrowLeft size={14} />
-                {mensagem.cluster.nome}
-              </a>
+            <nav
+              className="text-sm text-stone-500 mb-4 flex items-center gap-2 flex-wrap"
+              aria-label="Breadcrumb"
+              itemScope
+              itemType="https://schema.org/BreadcrumbList"
+            >
+              <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <a itemProp="item" href="/" className="hover:text-niver-700 transition-colors">
+                  <span itemProp="name">Início</span>
+                </a>
+                <meta itemProp="position" content="1" />
+              </span>
+              <ChevronRight size={14} />
+              <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <a itemProp="item" href={`/${mensagem.cluster.nicho.slug}/`} className="hover:text-niver-700 transition-colors">
+                  <span itemProp="name">{mensagem.cluster.nicho.nome}</span>
+                </a>
+                <meta itemProp="position" content="2" />
+              </span>
+              <ChevronRight size={14} />
+              <span itemProp="itemListElement" itemScope itemType="https://schema.org/ListItem">
+                <a itemProp="item" href={`/${mensagem.cluster.nicho.slug}/${mensagem.cluster.slug}/`} className="hover:text-niver-700 inline-flex items-center gap-1 transition-colors">
+                  <span itemProp="name">{mensagem.cluster.nome}</span>
+                </a>
+                <meta itemProp="position" content="3" />
+              </span>
             </nav>
 
             <h1
