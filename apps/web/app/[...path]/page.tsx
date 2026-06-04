@@ -658,15 +658,23 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
                 <h2 className="heading-section-bar mb-6">
                   <span>Perguntas frequentes sobre {cluster.nome.toLowerCase()}</span>
                 </h2>
-                <div
-                  className="prose-article text-stone-700 leading-relaxed [&_h3]:font-display [&_h3]:text-lg [&_h3]:text-niver-700 [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-semibold"
-                  dangerouslySetInnerHTML={{
-                    __html: cluster.editorial.faqTexto
-                      .replace(/### (.+)/g, "<h3>$1</h3>")
-                      .replace(/\n\n/g, "</p><p>")
-                      .replace(/^([^<].+)/m, "<p>$1</p>"),
-                  }}
-                />
+                <div className="prose-article text-stone-700 leading-relaxed [&_h3]:font-display [&_h3]:text-lg [&_h3]:text-niver-700 [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-semibold [&_p]:mb-4">
+                  {cluster.editorial.faqTexto
+                    .split(/###\s+/)
+                    .filter((b) => b.trim().length > 0)
+                    .map((block, idx) => {
+                      const qMatch = block.match(/^(.+?\?)\s*(.*)$/s);
+                      if (qMatch) {
+                        return (
+                          <div key={idx}>
+                            <h3>{qMatch[1].trim()}</h3>
+                            <p>{qMatch[2].trim()}</p>
+                          </div>
+                        );
+                      }
+                      return <p key={idx}>{block.trim()}</p>;
+                    })}
+                </div>
               </>
             )}
           </article>
