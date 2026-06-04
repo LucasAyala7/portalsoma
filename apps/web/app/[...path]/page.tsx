@@ -27,7 +27,7 @@ import {
   creativeWorkWithInteractionSchema,
 } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
-import { Heart, Copy, Share2, Eye, ChevronRight, Flame, Users, ArrowLeft } from "lucide-react";
+import { Heart, Copy, Share2, Eye, ChevronRight, Flame, Users, ArrowLeft, BookOpen } from "lucide-react";
 
 interface RouteParams {
   path: string[];
@@ -501,7 +501,8 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
           <div className="mt-6">
             <CounterBoard
               items={[
-                { icon: Heart, label: "mensagens", value: totalMensagens, highlight: true },
+                { icon: BookOpen, label: "mensagens", value: totalMensagens, highlight: true },
+                { icon: Heart, label: "curtidas", value: agg._sum.likes ?? 0 },
                 { icon: Copy, label: "cópias", value: agg._sum.copies ?? 0 },
                 { icon: Share2, label: "compartilhamentos", value: agg._sum.shares ?? 0 },
                 { icon: Eye, label: "visualizações", value: agg._sum.visualizacoes ?? 0 },

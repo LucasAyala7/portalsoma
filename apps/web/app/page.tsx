@@ -23,6 +23,7 @@ import {
   Heart,
   Copy,
   Share2,
+  Eye,
   Sparkles,
   Flame,
   Users,
@@ -334,10 +335,11 @@ export default async function Home() {
       <section className="container-niver py-12">
         <CounterBoard
           items={[
-            { icon: Heart, label: "mensagens", value: totals.mensagens, highlight: true },
+            { icon: BookOpen, label: "mensagens", value: totals.mensagens, highlight: true },
+            { icon: Heart, label: "curtidas", value: totals.likes },
             { icon: Copy, label: "cópias", value: totals.copies },
             { icon: Share2, label: "compartilhamentos", value: totals.shares },
-            { icon: Heart, label: "curtidas", value: totals.likes },
+            { icon: Eye, label: "visualizações", value: totals.views },
           ]}
         />
       </section>

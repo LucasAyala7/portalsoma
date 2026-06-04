@@ -16,8 +16,11 @@ interface Props {
  * Visual: cards arredondados com número proeminente + label discreta.
  */
 export function CounterBoard({ items }: Props) {
+  // Grid responsivo: 2 cols mobile, 3 sm, full lg (cabe 5 items linha única)
+  const cols = items.length;
+  const lgCols = cols >= 5 ? "lg:grid-cols-5" : cols === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3";
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+    <div className={`grid grid-cols-2 sm:grid-cols-3 ${lgCols} gap-3 sm:gap-4`}>
       {items.map((item, i) => {
         const Icon = item.icon;
         return (

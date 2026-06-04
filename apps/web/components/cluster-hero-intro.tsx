@@ -40,7 +40,7 @@ export function ClusterHeroIntro({ text }: Props) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-niver-700 hover:text-niver-800 transition-colors"
+        className="mt-4 mx-auto flex items-center gap-1.5 text-sm font-medium text-niver-700 hover:text-niver-800 transition-colors"
         aria-expanded={expanded}
       >
         {expanded ? (

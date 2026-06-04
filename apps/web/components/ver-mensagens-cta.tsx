@@ -45,7 +45,7 @@ export function VerMensagensCTA({
       <a
         href={`#${targetId}`}
         onClick={handleClick}
-        className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-niver-600 hover:bg-niver-700 text-white font-semibold rounded-full shadow-md transition-colors"
+        className="mt-6 mx-auto flex w-fit items-center gap-2 px-6 py-3 bg-niver-600 hover:bg-niver-700 text-white font-semibold rounded-full shadow-md transition-colors"
       >
         {label}
         <ArrowDown size={16} strokeWidth={2.4} />
