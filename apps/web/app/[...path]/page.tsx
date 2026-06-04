@@ -470,23 +470,23 @@ async function NichoHub({ data }: { data: NichoData }) {
           }),
           categoriasItemList,
           enrichedItemListSchema(
-            destaquesCards.map((m): ArticleListEntry => ({
-              id: m.id,
-              slug: m.slug,
+            destaquesCards.map((m, i): ArticleListEntry => ({
+              position: i + 1,
+              url: mensagemUrl({
+                nichoSlug: data.slug,
+                clusterSlug: m.cluster.slug,
+                slug: m.slug,
+              }),
               titulo: m.titulo,
               resumo: m.conteudo.slice(0, 155),
-              nichoSlug: data.slug,
-              clusterSlug: m.cluster.slug,
+              imageUrl: m.imagemHero?.url ?? null,
               autorNome: m.autor.nome,
-              autorSlug: m.autor.slug,
-              autorReal: m.autor.real,
+              autorUrl: `/autor/${m.autor.slug}/`,
               publicadoEm: m.publicadoEm,
-              atualizadoEm: new Date(),
               likes: m.likes,
               copies: m.copies,
               shares: m.shares,
               visualizacoes: m.visualizacoes,
-              imageUrl: m.imagemHero?.url ?? null,
             })),
           ),
         ])}
