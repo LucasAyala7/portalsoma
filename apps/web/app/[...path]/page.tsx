@@ -25,6 +25,7 @@ import {
   faqSchema,
   enrichedItemListSchema,
   creativeWorkWithInteractionSchema,
+  type ArticleListEntry,
 } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
 import { Heart, Copy, Share2, Eye, ChevronRight, Flame, Users, ArrowLeft, BookOpen } from "lucide-react";
@@ -64,6 +65,34 @@ async function loadNicho(slug: string) {
       },
     },
   });
+}
+
+/** Agregados e amostras pra renderizar o hub editorial do nicho. */
+async function loadNichoHubExtras(nichoId: string) {
+  const [agg, latestUpdate, destaques] = await Promise.all([
+    prisma.mensagem.aggregate({
+      where: { status: "PUBLISHED", cluster: { nichoId } },
+      _count: { id: true },
+      _sum: { likes: true, copies: true, shares: true, visualizacoes: true },
+    }),
+    prisma.mensagem.findFirst({
+      where: { status: "PUBLISHED", cluster: { nichoId } },
+      orderBy: { atualizadoEm: "desc" },
+      select: { atualizadoEm: true },
+    }),
+    prisma.mensagem.findMany({
+      where: { status: "PUBLISHED", cluster: { nichoId } },
+      orderBy: [{ likes: "desc" }, { copies: "desc" }],
+      take: 6,
+      include: {
+        autor: true,
+        persona: true,
+        cluster: { select: { slug: true } },
+        imagemHero: true,
+      },
+    }),
+  ]);
+  return { agg, latestUpdate, destaques };
 }
 
 async function loadCluster(nichoSlug: string, clusterSlug: string) {
@@ -198,12 +227,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!resolved) return {};
 
   switch (resolved.kind) {
-    case "nicho":
+    case "nicho": {
+      const ano = new Date().getFullYear();
+      const totalCats = resolved.nicho.clusters.length;
+      const totalMsgsAgg = await prisma.mensagem.count({
+        where: { status: "PUBLISHED", cluster: { nichoId: resolved.nicho.id } },
+      });
+      const titleAuto = `Mensagens de Aniversário ${ano} — ${totalMsgsAgg.toLocaleString("pt-BR")} em ${totalCats} categorias`;
+      const descAuto = `${totalMsgsAgg.toLocaleString("pt-BR")} mensagens de aniversário em ${totalCats} categorias — pra mãe, pai, amiga, marido, esposa, filhos. Curadoria editorial Portal Soma, atualizada em ${ano}.`;
       return {
-        title: resolved.nicho.metaTitle ?? `${resolved.nicho.nome} — Portal Soma`,
-        description: resolved.nicho.metaDesc ?? resolved.nicho.descricao ?? undefined,
+        title: resolved.nicho.metaTitle ?? titleAuto,
+        description: resolved.nicho.metaDesc ?? descAuto,
         alternates: { canonical: `/${resolved.nicho.slug}/` },
+        openGraph: {
+          title: resolved.nicho.metaTitle ?? titleAuto,
+          description: resolved.nicho.metaDesc ?? descAuto,
+          url: `https://www.portalsoma.com.br/${resolved.nicho.slug}/`,
+          type: "website",
+          siteName: "Portal Soma",
+          locale: "pt_BR",
+        },
       };
+    }
     case "cluster": {
       // Title/description dinâmicos com bucket de threshold + ano
       const c = await prisma.mensagem.count({
@@ -271,6 +316,7 @@ export default async function CatchAllPage({ params }: PageProps) {
   if (!resolved) notFound();
 
   if (resolved.kind === "nicho") return <NichoHub data={resolved.nicho} />;
+
   if (resolved.kind === "cluster")
     return <ClusterPage nicho={resolved.nicho} cluster={resolved.cluster} />;
   if (resolved.kind === "complemento")
@@ -285,10 +331,128 @@ export default async function CatchAllPage({ params }: PageProps) {
 }
 
 // =====================================================
-// NICHO HUB
+// NICHO HUB — pillar page editorial
 // =====================================================
 
-function NichoHub({ data }: { data: NichoData }) {
+const NICHO_FAQ: { q: string; a: string }[] = [
+  {
+    q: "Como escolher a mensagem de aniversário certa?",
+    a: "Comece pela relação com o aniversariante (mãe, amigo, namorada, chefe), depois pense no tom: emocional para pessoas próximas, leve e bem-humorada para colegas, religiosa quando a fé é parte da vida da pessoa. Por fim, ajuste o tamanho ao canal: curtas para status e WhatsApp, longas para cartões e cartas. Aqui o portal já organiza as mensagens por essas três dimensões.",
+  },
+  {
+    q: "Qual o tamanho ideal de uma mensagem de aniversário?",
+    a: "Para status, post e WhatsApp, ideal é até 280 caracteres — caibe na tela e é fácil de copiar. Para cartões físicos e mensagens mais íntimas, mensagens de 3 a 6 frases funcionam bem. Em homenagens públicas (post longo, discurso), 8 a 12 linhas dão espaço para histórias e referências pessoais.",
+  },
+  {
+    q: "Posso usar uma mensagem do Portal Soma e personalizar?",
+    a: "Sim. As mensagens existem para serem ponto de partida. Troque nomes, datas, lembranças específicas e ajustes de tom para o seu vínculo. Quanto mais detalhe pessoal você acrescenta, mais a mensagem soa autêntica para quem recebe.",
+  },
+  {
+    q: "Existe diferença entre mensagem evangélica, católica e bíblica?",
+    a: "Sim. Bíblica costuma trazer versículo literal (Salmos, Provérbios, Coríntios) sem afiliação denominacional. Católica tende a usar referências marianas, santos e linguagem litúrgica. Evangélica enfatiza a graça, o testemunho e expressões como 'Deus abençoe'. O portal mantém categorias separadas para você acertar o tom da pessoa.",
+  },
+  {
+    q: "Quando enviar uma mensagem de aniversário antecipada?",
+    a: "Quando você não vai poder cumprimentar no dia (viagem, fuso, agenda), a mensagem antecipada faz sentido — sempre marcando que é antecipada. Em geral, evitar antecipar para a véspera ou dois dias antes em culturas que consideram isso azar; o ideal é enviar no dia ou, se atrasou, no dia seguinte com uma justificativa breve.",
+  },
+  {
+    q: "Quantas mensagens estão disponíveis e com que frequência são atualizadas?",
+    a: "Hoje são mais de 3.700 mensagens distribuídas em 118 categorias. A curadoria editorial é contínua: novas mensagens entram semanalmente, e categorias com maior demanda (mãe, amiga, marido, evangélica) são reforçadas em ciclos mensais.",
+  },
+];
+
+const INTRO_EDITORIAL = `Mensagem de aniversário é um dos textos mais antigos e cotidianos que escrevemos. Está em cartões, em status do WhatsApp, em legenda de foto, em discurso de festa, em mensagem privada que ninguém vê. E ainda assim continua difícil — porque o gênero parece simples mas exige equilíbrio entre afeto, oportunidade e voz. Uma frase genérica esfria. Uma frase íntima demais constrange. Uma frase comprida demais cansa. Uma curta demais pode soar descuidada.
+
+O Portal Soma é uma curadoria editorial brasileira focada em ajudar a encontrar a mensagem certa para a pessoa certa. As mensagens são organizadas por três dimensões: para quem (relação), para quando (ocasião) e como (tom). Você encontra opções para mãe, pai, amiga, marido, esposa, filho, sobrinho, chefe, cliente, padrinho — mas também por idade, por estilo religioso, por humor, por ocasião marcante. Cada categoria abre uma lista longa de variações para você escolher a que combina com o vínculo.`;
+
+const COMO_ESCOLHER = `Antes de copiar a primeira mensagem que aparece, vale uma pergunta: como é o vínculo de vocês? Mensagem para uma amiga de quinze anos não é a mesma coisa que mensagem para um chefe que você admira mas não conhece de perto. O grau de intimidade define o vocabulário, o tom e o tamanho. Mensagens curtas funcionam bem para vínculos profissionais e cumprimentos cordiais; mensagens longas brilham nas relações íntimas, onde memórias específicas valem mais que ornamentos.
+
+Outra escolha que pesa: a pessoa tem fé como parte central da vida? Se sim, uma mensagem bíblica, católica ou evangélica costuma chegar mais fundo do que uma genérica. Se não, frases religiosas podem soar deslocadas. Em homenagens públicas, considere o que a pessoa gostaria de ler — não o que você acha bonito. E sempre que possível, acrescente um detalhe pessoal: uma lembrança compartilhada, uma piada interna, um agradecimento concreto. É o detalhe que transforma cumprimento em homenagem.`;
+
+const TIPO_SECOES: { tipo: string; titulo: string; intro: string }[] = [
+  {
+    tipo: "DESTINATARIO",
+    titulo: "Por relação — para quem é a mensagem",
+    intro: "A escolha mais importante. Mãe, marido, melhor amiga, sobrinho, chefe — cada vínculo pede tom, vocabulário e tamanho diferentes. Comece pelo destinatário e o restante se ajusta.",
+  },
+  {
+    tipo: "OCASIAO",
+    titulo: "Por ocasião — momento de vida e idade",
+    intro: "Aniversário de 15 anos não pede o mesmo discurso de aniversário de 60. Aqui as mensagens são organizadas por marcos: infância, vida adulta, virada de década, aniversário póstumo, datas que pedem palavras específicas.",
+  },
+  {
+    tipo: "TOM",
+    titulo: "Por tom e estilo de escrita",
+    intro: "Emocional, bíblica, evangélica, católica, romântica, engraçada, curta para status, formal para profissional. Filtre pelo registro que combina com a pessoa.",
+  },
+  {
+    tipo: "CANAL",
+    titulo: "Por canal de publicação",
+    intro: "Status do WhatsApp, post de Instagram, cartão escrito à mão. Cada canal tem sua extensão e o seu ritmo de leitura. Categorias específicas para quem precisa de algo pronto para colar.",
+  },
+  {
+    tipo: "FALECIDO",
+    titulo: "Em memória — homenagens póstumas",
+    intro: "Quando alguém querido já não está, o aniversário continua existindo na lembrança. Aqui ficam as mensagens que celebram a memória com respeito e afeto.",
+  },
+];
+
+async function NichoHub({ data }: { data: NichoData }) {
+  const { agg, latestUpdate, destaques } = await loadNichoHubExtras(data.id);
+
+  const totalMsgs = agg._count.id ?? 0;
+  const totalLikes = agg._sum.likes ?? 0;
+  const totalCopies = agg._sum.copies ?? 0;
+  const totalShares = agg._sum.shares ?? 0;
+  const totalViews = agg._sum.visualizacoes ?? 0;
+
+  // Agrupa clusters por tipo
+  const clustersByTipo: Record<string, typeof data.clusters> = {};
+  for (const c of data.clusters) {
+    const t = c.tipo ?? "OUTROS";
+    if (!clustersByTipo[t]) clustersByTipo[t] = [];
+    clustersByTipo[t].push(c);
+  }
+
+  const ano = new Date().getFullYear();
+  const ultimaAtualizacao = latestUpdate?.atualizadoEm ?? new Date();
+  const mesUltimo = MESES_PT[ultimaAtualizacao.getMonth()];
+
+  // Mensagens em destaque mapeadas pro card rich
+  const destaquesCards = destaques.map((m) => ({
+    id: m.id,
+    slug: m.slug,
+    titulo: m.titulo,
+    conteudo: m.conteudo,
+    likes: m.likes,
+    copies: m.copies,
+    shares: m.shares,
+    visualizacoes: m.visualizacoes,
+    autor: m.autor,
+    persona: m.persona,
+    cluster: m.cluster,
+    publicadoEm: m.publicadoEm,
+    imagemHero: m.imagemHero,
+  }));
+
+  // ItemList JSON-LD pra categorias top
+  const categoriasItemList = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Categorias de mensagens de aniversário",
+    numberOfItems: data.clusters.length,
+    itemListElement: data.clusters.slice(0, 30).map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Thing",
+        name: c.nome,
+        url: `https://www.portalsoma.com.br/${data.slug}/${c.slug}/`,
+        description: c.descricao ?? `${c._count.mensagens} mensagens de aniversário ${c.nome.toLowerCase()}`,
+      },
+    })),
+  };
+
   return (
     <>
       <script
@@ -300,33 +464,235 @@ function NichoHub({ data }: { data: NichoData }) {
           ]),
           collectionSchema({
             nome: data.nome,
-            descricao: data.descricao ?? "",
+            descricao: data.descricao ?? INTRO_EDITORIAL.slice(0, 160),
             url: `/${data.slug}/`,
-            itemsCount: data.clusters.length,
+            itemsCount: totalMsgs,
           }),
+          categoriasItemList,
+          enrichedItemListSchema(
+            destaquesCards.map((m): ArticleListEntry => ({
+              id: m.id,
+              slug: m.slug,
+              titulo: m.titulo,
+              resumo: m.conteudo.slice(0, 155),
+              nichoSlug: data.slug,
+              clusterSlug: m.cluster.slug,
+              autorNome: m.autor.nome,
+              autorSlug: m.autor.slug,
+              autorReal: m.autor.real,
+              publicadoEm: m.publicadoEm,
+              atualizadoEm: new Date(),
+              likes: m.likes,
+              copies: m.copies,
+              shares: m.shares,
+              visualizacoes: m.visualizacoes,
+              imageUrl: m.imagemHero?.url ?? null,
+            })),
+          ),
         ])}
       />
-      <section className="bg-gradient-to-b from-niver-50 to-warm-50 py-14">
-        <div className="container-niver">
-          <h1 className="font-display text-4xl text-niver-800 max-w-3xl">{data.nome}</h1>
-          {data.descricao && (
-            <p className="mt-4 text-stone-700 max-w-2xl text-lg leading-relaxed">{data.descricao}</p>
-          )}
-        </div>
-      </section>
-      <section className="container-niver py-12">
-        <h2 className="heading-section-bar mb-6">Todas as categorias</h2>
-        <CategoryGrid
-          nichoSlug={data.slug}
-          categorias={data.clusters.map((c) => ({
-            slug: c.slug,
-            nome: c.nome,
-            totalMensagens: c._count.mensagens,
-            descricao: c.descricao ?? undefined,
-            iconConfig: getCategoryIcon(c.slug),
-          }))}
-        />
-      </section>
+
+      <article
+        itemScope
+        itemType="https://schema.org/CollectionPage"
+      >
+        <meta itemProp="name" content={`${data.nome} — Portal Soma`} />
+        <meta itemProp="description" content={data.descricao ?? INTRO_EDITORIAL.slice(0, 160)} />
+        <meta itemProp="inLanguage" content="pt-BR" />
+        <meta itemProp="dateModified" content={ultimaAtualizacao.toISOString()} />
+
+        {/* Breadcrumb microdata */}
+        <nav
+          itemScope
+          itemType="https://schema.org/BreadcrumbList"
+          aria-label="Breadcrumb"
+          className="container-niver pt-4 text-xs text-stone-500"
+        >
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li
+              itemProp="itemListElement"
+              itemScope
+              itemType="https://schema.org/ListItem"
+            >
+              <a href="/" itemProp="item" className="hover:text-niver-700">
+                <span itemProp="name">Início</span>
+              </a>
+              <meta itemProp="position" content="1" />
+            </li>
+            <li aria-hidden className="text-stone-400">/</li>
+            <li
+              itemProp="itemListElement"
+              itemScope
+              itemType="https://schema.org/ListItem"
+              aria-current="page"
+            >
+              <span itemProp="name" className="text-stone-700 font-medium">{data.nome}</span>
+              <meta itemProp="position" content="2" />
+            </li>
+          </ol>
+        </nav>
+
+        {/* HERO */}
+        <header className="relative bg-gradient-to-b from-niver-50 to-warm-50 py-12 sm:py-16 overflow-hidden">
+          <div className="container-niver">
+            <div className="text-center mb-8">
+              <span className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-medium text-niver-700 bg-niver-100 px-3 py-1.5 rounded-full mb-4">
+                <BookOpen size={12} strokeWidth={2.4} /> Curadoria editorial Portal Soma
+              </span>
+              <h1
+                itemProp="headline"
+                className="font-display text-3xl sm:text-5xl text-niver-900 max-w-4xl mx-auto leading-tight"
+              >
+                Mensagens de Aniversário {ano}
+              </h1>
+              <p className="mt-4 text-stone-700 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
+                Mais de {totalMsgs.toLocaleString("pt-BR")} mensagens em {data.clusters.length} categorias —
+                pra mãe, pai, amiga, marido, esposa, filhos e todas as ocasiões da vida.
+              </p>
+              <p className="mt-3 text-xs text-stone-500">
+                Atualizado em {mesUltimo} de {ano}
+              </p>
+            </div>
+
+            <CounterBoard
+              items={[
+                { icon: BookOpen, label: "mensagens", value: totalMsgs, highlight: true },
+                { icon: Heart, label: "curtidas", value: totalLikes },
+                { icon: Copy, label: "cópias", value: totalCopies },
+                { icon: Share2, label: "compartilhamentos", value: totalShares },
+                { icon: Eye, label: "visualizações", value: totalViews },
+              ]}
+            />
+          </div>
+        </header>
+
+        {/* INTRO EDITORIAL */}
+        <section className="container-niver py-10 max-w-3xl">
+          <h2 className="heading-section-bar mb-5 text-niver-800">
+            O que é mensagem de aniversário?
+          </h2>
+          <div className="prose prose-stone max-w-none text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
+            {INTRO_EDITORIAL}
+          </div>
+        </section>
+
+        {/* MENSAGENS EM DESTAQUE */}
+        {destaquesCards.length > 0 && (
+          <section className="bg-white py-12 border-y border-stone-100">
+            <div className="container-niver">
+              <div className="flex items-end justify-between mb-6 flex-wrap gap-2">
+                <div>
+                  <h2 className="heading-section-bar text-niver-800">Mensagens em destaque</h2>
+                  <p className="text-sm text-stone-500 mt-1">
+                    As mais curtidas e copiadas entre as {totalMsgs.toLocaleString("pt-BR")} mensagens do portal
+                  </p>
+                </div>
+                <Flame size={28} className="text-orange-500" strokeWidth={2} />
+              </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {destaquesCards.map((m, i) => (
+                  <MessageCardRich
+                    key={m.id}
+                    mensagem={m}
+                    nichoSlug={data.slug}
+                    badge={i === 0 ? "trending" : i === 1 ? "top" : undefined}
+                    destacada={i === 0}
+                    priority={i === 0}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* SEÇÕES POR TIPO */}
+        {TIPO_SECOES.map((sec) => {
+          const cs = clustersByTipo[sec.tipo];
+          if (!cs || cs.length === 0) return null;
+          const showCount = sec.tipo === "DESTINATARIO" ? 12 : 8;
+          const visible = cs.slice(0, showCount);
+          const restantes = cs.length - visible.length;
+          return (
+            <section key={sec.tipo} className="container-niver py-10">
+              <div className="max-w-3xl mb-6">
+                <h2 className="heading-section-bar text-niver-800">{sec.titulo}</h2>
+                <p className="mt-2 text-stone-700 leading-relaxed text-[15px] sm:text-base">
+                  {sec.intro}
+                </p>
+              </div>
+              <CategoryGrid
+                nichoSlug={data.slug}
+                categorias={visible.map((c) => ({
+                  slug: c.slug,
+                  nome: c.nome,
+                  totalMensagens: c._count.mensagens,
+                  descricao: c.descricao ?? undefined,
+                  iconConfig: getCategoryIcon(c.slug),
+                }))}
+              />
+              {restantes > 0 && (
+                <p className="mt-4 text-sm text-stone-500 text-center">
+                  + {restantes} {restantes === 1 ? "categoria" : "categorias"} listadas abaixo
+                </p>
+              )}
+            </section>
+          );
+        })}
+
+        {/* EDITORIAL COMO ESCOLHER */}
+        <section className="bg-warm-50 py-12 border-y border-stone-100">
+          <div className="container-niver max-w-3xl">
+            <h2 className="heading-section-bar mb-5 text-niver-800">
+              Como escolher a mensagem certa
+            </h2>
+            <div className="prose prose-stone max-w-none text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
+              {COMO_ESCOLHER}
+            </div>
+          </div>
+        </section>
+
+        {/* TODAS AS CATEGORIAS */}
+        <section className="container-niver py-12" id="todas-categorias">
+          <div className="max-w-3xl mb-6">
+            <h2 className="heading-section-bar text-niver-800">
+              Todas as {data.clusters.length} categorias
+            </h2>
+            <p className="mt-2 text-stone-700 leading-relaxed text-[15px] sm:text-base">
+              Lista completa em ordem de volume de busca. Cada categoria abre uma listagem
+              extensa de mensagens curadas com botão de copiar, curtir e compartilhar.
+            </p>
+          </div>
+          <CategoryGrid
+            nichoSlug={data.slug}
+            categorias={data.clusters.map((c) => ({
+              slug: c.slug,
+              nome: c.nome,
+              totalMensagens: c._count.mensagens,
+              descricao: c.descricao ?? undefined,
+              iconConfig: getCategoryIcon(c.slug),
+            }))}
+          />
+        </section>
+
+        {/* FAQ texto (sem schema — Google deprecou rich snippet pra non-gov/health) */}
+        <section className="bg-stone-50 py-12 border-t border-stone-100">
+          <div className="container-niver max-w-3xl">
+            <h2 className="heading-section-bar mb-6 text-niver-800">
+              Perguntas frequentes sobre mensagens de aniversário
+            </h2>
+            <div className="space-y-6">
+              {NICHO_FAQ.map((f) => (
+                <div key={f.q}>
+                  <h3 className="font-display text-lg text-stone-900 font-semibold mb-1.5">
+                    {f.q}
+                  </h3>
+                  <p className="text-stone-700 leading-[1.75] text-[15px]">{f.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </article>
     </>
   );
 }
