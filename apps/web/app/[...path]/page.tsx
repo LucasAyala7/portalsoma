@@ -201,12 +201,33 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: resolved.nicho.metaDesc ?? resolved.nicho.descricao ?? undefined,
         alternates: { canonical: `/${resolved.nicho.slug}/` },
       };
-    case "cluster":
+    case "cluster": {
+      // Title/description dinâmicos com bucket de threshold + ano
+      const c = await prisma.mensagem.count({
+        where: { clusterId: resolved.cluster.id, status: "PUBLISHED" },
+      });
+      const last = await prisma.mensagem.findFirst({
+        where: { clusterId: resolved.cluster.id, status: "PUBLISHED" },
+        orderBy: { atualizadoEm: "desc" },
+        select: { atualizadoEm: true },
+      });
+      const bucket = bucketCount(c);
+      const ano = new Date().getFullYear();
+      const mes = MESES_PT[(last?.atualizadoEm ?? new Date()).getMonth()];
+      const titleAuto = `${bucket} Mensagens de Aniversário ${resolved.cluster.nome} — ${ano}`;
+      const descAuto = `Mais de ${bucket.replace("+", "")} mensagens de aniversário ${resolved.cluster.nome.toLowerCase()} pra copiar e compartilhar. Curadoria editorial atualizada em ${mes} ${ano}.`;
       return {
-        title: resolved.cluster.metaTitle ?? `${resolved.cluster.nome} — Mensagens de Aniversário`,
-        description: resolved.cluster.metaDesc ?? resolved.cluster.descricao ?? undefined,
+        title: resolved.cluster.metaTitle ?? titleAuto,
+        description: resolved.cluster.metaDesc ?? descAuto,
         alternates: { canonical: `/${resolved.nicho.slug}/${resolved.cluster.slug}/` },
+        openGraph: {
+          title: resolved.cluster.metaTitle ?? titleAuto,
+          description: resolved.cluster.metaDesc ?? descAuto,
+          url: `https://www.portalsoma.com.br/${resolved.nicho.slug}/${resolved.cluster.slug}/`,
+          type: "website",
+        },
       };
+    }
     case "complemento":
       return {
         title: resolved.complemento.metaTitle ?? `${resolved.cluster.nome} ${resolved.complemento.nome} — Portal Soma`,
@@ -305,12 +326,31 @@ function NichoHub({ data }: { data: NichoData }) {
 // CLUSTER PAGE (collection rica)
 // =====================================================
 
+/** Bucket de threshold pra title estável (evita variação que Google penaliza). */
+function bucketCount(n: number): string {
+  if (n < 20) return String(n);
+  if (n < 50) return "+20";
+  if (n < 100) return "+50";
+  if (n < 150) return "+100";
+  if (n < 200) return "+150";
+  if (n < 250) return "+200";
+  if (n < 300) return "+250";
+  if (n < 400) return "+300";
+  if (n < 500) return "+400";
+  return "+500";
+}
+
+const MESES_PT = [
+  "janeiro","fevereiro","março","abril","maio","junho",
+  "julho","agosto","setembro","outubro","novembro","dezembro",
+];
+
 async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: ClusterData }) {
-  const [mensagens, topSemana, siblings, agg] = await Promise.all([
+  const [mensagens, topSemana, siblings, agg, latestUpdate, autoresTop] = await Promise.all([
     prisma.mensagem.findMany({
       where: { clusterId: cluster.id, status: "PUBLISHED" },
       orderBy: [{ likes: "desc" }, { publicadoEm: "desc" }],
-      take: 30,
+      take: 200,
       include: {
         autor: true,
         persona: true,
@@ -339,9 +379,34 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       _sum: { likes: true, copies: true, shares: true, visualizacoes: true },
       _count: { id: true },
     }),
+    prisma.mensagem.findFirst({
+      where: { clusterId: cluster.id, status: "PUBLISHED" },
+      orderBy: { atualizadoEm: "desc" },
+      select: { atualizadoEm: true, publicadoEm: true },
+    }),
+    prisma.mensagem.groupBy({
+      by: ["autorId"],
+      where: { clusterId: cluster.id, status: "PUBLISHED" },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 4,
+    }),
   ]);
 
   const totalMensagens = agg._count.id;
+  const bucket = bucketCount(totalMensagens);
+  const anoAtual = new Date().getFullYear();
+  const dataAtualizacao = latestUpdate?.atualizadoEm ?? new Date();
+  const mesAtualizacao = MESES_PT[dataAtualizacao.getMonth()];
+  const dataAtualizacaoLabel = `${dataAtualizacao.getDate()} de ${mesAtualizacao} de ${dataAtualizacao.getFullYear()}`;
+
+  // Buscar autores top (Person blockquote)
+  const autoresMaisAtivos = autoresTop.length > 0
+    ? await prisma.author.findMany({
+        where: { id: { in: autoresTop.map((a) => a.autorId) } },
+        select: { id: true, nome: true, slug: true },
+      })
+    : [];
   const faqDefault = makeFaqForCluster(cluster.nome);
   const faqItems =
     cluster.faq && Array.isArray(cluster.faq)
@@ -386,10 +451,10 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         ])}
       />
 
-      {/* HERO da categoria */}
-      <section className="relative bg-gradient-to-b from-niver-50 to-warm-50 py-12 sm:py-16 deco-confetti overflow-hidden">
+      {/* HEADER 2 — hero SEO/GEO opening */}
+      <header className="cluster-hero relative bg-gradient-to-b from-niver-50 to-warm-50 py-12 sm:py-16 deco-confetti overflow-hidden">
         <div className="container-niver relative">
-          <nav className="text-sm text-stone-500 mb-4 flex items-center gap-2">
+          <nav className="text-sm text-stone-500 mb-4 flex items-center gap-2" aria-label="Breadcrumb">
             <a href="/" className="hover:text-niver-700 transition-colors">Início</a>
             <ChevronRight size={14} />
             <a href={`/${nicho.slug}/`} className="hover:text-niver-700 transition-colors">
@@ -397,20 +462,18 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             </a>
           </nav>
           <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-tight max-w-3xl mb-4">
-            Mensagens de aniversário {cluster.nome.toLowerCase()}
+            {bucket} Mensagens de Aniversário {cluster.nome} — {anoAtual}
           </h1>
-          {cluster.intro && (
+          {cluster.intro ? (
             <p className="text-stone-700 leading-relaxed max-w-2xl text-lg whitespace-pre-line">
               {cluster.intro}
             </p>
-          )}
-          {!cluster.intro && cluster.descricao && (
+          ) : (
             <p className="text-stone-700 leading-relaxed max-w-2xl text-lg">
-              {cluster.descricao}
+              {cluster.descricao ?? `Mais de ${bucket} mensagens de aniversário ${cluster.nome.toLowerCase()} cuidadosamente curadas — para copiar, compartilhar e emocionar. Atualizadas regularmente por nossos autores convidados.`}
             </p>
           )}
 
-          {/* counter strip */}
           <div className="mt-6">
             <CounterBoard
               items={[
@@ -422,14 +485,70 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             />
           </div>
         </div>
-      </section>
+      </header>
+
+      {/* ASIDE meta editorial — autores, blockquote TOP1, time freshness */}
+      <aside
+        className="cluster-meta container-niver py-8 border-b border-warm-200"
+        itemScope
+        itemType="https://schema.org/Article"
+        aria-label="Informações editoriais da categoria"
+      >
+        <meta itemProp="headline" content={`${bucket} Mensagens de Aniversário ${cluster.nome}`} />
+        <div className="flex flex-wrap gap-6 text-sm text-stone-600">
+          <div className="inline-flex items-center gap-1.5">
+            <time
+              itemProp="dateModified"
+              dateTime={dataAtualizacao.toISOString()}
+              className="font-medium text-niver-700"
+            >
+              Atualizado em {dataAtualizacaoLabel}
+            </time>
+          </div>
+          {autoresMaisAtivos.length > 0 && (
+            <div className="inline-flex items-center gap-1.5 flex-wrap">
+              <span>Curadoria por</span>
+              {autoresMaisAtivos.map((a, idx) => (
+                <span
+                  key={a.id}
+                  itemProp="author"
+                  itemScope
+                  itemType="https://schema.org/Person"
+                >
+                  <a
+                    href={`/autor/${a.slug}/`}
+                    className="text-niver-700 hover:underline font-medium"
+                  >
+                    <span itemProp="name">{a.nome}</span>
+                  </a>
+                  {idx < autoresMaisAtivos.length - 1 && <span className="text-stone-400">, </span>}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        {topSemana[0] && topSemana[0].resumo && (
+          <blockquote className="mt-6 border-l-4 border-niver-400 pl-5 py-2 italic text-stone-700 max-w-3xl">
+            <p itemProp="description">"{topSemana[0].resumo}"</p>
+            <cite className="block not-italic text-sm text-stone-500 mt-2">
+              — <span itemProp="creator">{topSemana[0].autor.nome}</span>, em{" "}
+              <a
+                href={`/${nicho.slug}/${cluster.slug}/${topSemana[0].slug}/`}
+                className="text-niver-700 hover:underline"
+              >
+                {topSemana[0].titulo}
+              </a>
+            </cite>
+          </blockquote>
+        )}
+      </aside>
 
       {/* TOP DA SEMANA (se tiver ≥3) */}
       {topSemana.length >= 3 && (
         <section className="container-niver py-10">
           <h2 className="heading-section-bar mb-6">
             <Flame size={22} className="text-rose-500" strokeWidth={2.4} />
-            <span>Top da semana em {cluster.nome}</span>
+            <span>Top em {cluster.nome}</span>
           </h2>
           <div className="grid md:grid-cols-3 gap-5">
             {topSemana.map((m, i) => (
@@ -445,8 +564,12 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         </section>
       )}
 
-      {/* TODAS AS MENSAGENS */}
-      <section className="container-niver py-12">
+      {/* SECTION collection — listicle principal */}
+      <section
+        className="cluster-collection container-niver py-12"
+        itemScope
+        itemType="https://schema.org/CollectionPage"
+      >
         <div className="space-y-6 mb-8">
           <SearchTypeahead
             messages={mensagens.map((m) => ({ id: m.id, conteudo: m.conteudo }))}
@@ -464,31 +587,31 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
           )}
         </div>
 
-        <h2 className="heading-section-bar mb-6">
-          <span>Todas as mensagens</span>
+        <h2 className="heading-section-bar mb-3">
+          <span>Mensagens emocionantes para {cluster.nome.toLowerCase().replace(/^para /i, "")}</span>
           <span className="text-base font-normal text-stone-500 tabular-nums">
             ({totalMensagens})
           </span>
         </h2>
+        <p className="text-stone-600 leading-relaxed max-w-2xl mb-8 text-[15px]">
+          Cada mensagem abaixo foi escrita pra ser sentida, não apenas lida. Copie em 1 clique, compartilhe no WhatsApp, ou baixe a imagem pronta para o status. Curtidas e compartilhamentos refletem a recepção real de quem usou.
+        </p>
 
         {mensagens.length > 0 ? (
           <>
-            {/* Modo feed: primeiras 8 em lista com thumb (scan rápido, mobile-friendly) */}
             <div className="space-y-3 mb-10">
-              {mensagens.slice(0, 8).map((m) => (
+              {mensagens.slice(0, 10).map((m) => (
                 <MessageCardListItem key={m.id} mensagem={m} nichoSlug={nicho.slug} />
               ))}
             </div>
-            {/* Modo discover: resto em grid 2-col com card rico (desktop emphasis) */}
-            {mensagens.length > 8 && (
+
+            {mensagens.length > 10 && (
               <>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="h-px flex-1 bg-warm-200" />
-                  <span className="text-xs uppercase tracking-wider text-stone-500 font-medium">Explore mais</span>
-                  <div className="h-px flex-1 bg-warm-200" />
-                </div>
+                <h2 className="heading-section-bar mt-12 mb-6">
+                  <span>Mais mensagens curadas</span>
+                </h2>
                 <div className="grid lg:grid-cols-2 gap-5">
-                  {mensagens.slice(8).map((m) => (
+                  {mensagens.slice(10).map((m) => (
                     <MessageCardRich key={m.id} mensagem={m} nichoSlug={nicho.slug} />
                   ))}
                 </div>
