@@ -249,10 +249,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description: m.resumo ?? m.conteudo.slice(0, 155),
         alternates: { canonical: url },
         openGraph: {
+          type: "article",
           title: m.titulo,
           description: m.resumo ?? m.conteudo.slice(0, 155),
           url,
           images: m.imagemOg ? [m.imagemOg.url] : m.imagemHero ? [m.imagemHero.url] : [],
+          publishedTime: m.publicadoEm?.toISOString(),
+          modifiedTime: m.atualizadoEm.toISOString(),
+          authors: [m.autor.nome],
+          siteName: "Portal Soma",
+          locale: "pt_BR",
         },
       };
     }
@@ -1058,14 +1064,31 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
             </figure>
           )}
 
-          <div className="card-feature p-8 sm:p-10 mb-8">
+          <blockquote
+            itemScope
+            itemType="https://schema.org/Quotation"
+            className="card-feature p-8 sm:p-10 mb-8 relative"
+          >
             <p
               itemProp="text"
               className="font-display text-xl sm:text-2xl text-stone-800 leading-relaxed whitespace-pre-line"
             >
               {mensagem.conteudo}
             </p>
-          </div>
+            <cite
+              itemProp="creator"
+              itemScope
+              itemType="https://schema.org/Person"
+              className="block not-italic text-sm text-stone-500 mt-6 pt-5 border-t border-warm-200/70"
+            >
+              — <a
+                href={`/autor/${mensagem.autor.slug}/`}
+                className="text-niver-700 hover:underline font-medium"
+              >
+                <span itemProp="name">{mensagem.autor.nome}</span>
+              </a>
+            </cite>
+          </blockquote>
 
           {/* Ações inline (desktop) — mobile usa StickyActionBar */}
           <div className="hidden md:flex flex-wrap gap-2 mb-12">
@@ -1102,6 +1125,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
                   key={m.id}
                   mensagem={m}
                   nichoSlug={mensagem.cluster.nicho.slug}
+                  noArticleMicrodata
                 />
               ))}
             </div>

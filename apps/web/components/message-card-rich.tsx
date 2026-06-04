@@ -24,6 +24,9 @@ interface Props {
   nichoSlug: string;
   destacada?: boolean;
   badge?: "trending" | "new" | "top" | "religious";
+  /** Quando true, NÃO emite itemScope/itemType=Article — evita duplicar microdata Article
+   *  em singles (onde o main já é Article principal) ou em listas que precisam só de ListItem. */
+  noArticleMicrodata?: boolean;
 }
 
 const BADGE_LABEL: Record<string, { text: string; Icon: typeof Flame }> = {
@@ -33,7 +36,7 @@ const BADGE_LABEL: Record<string, { text: string; Icon: typeof Flame }> = {
   religious: { text: "Cristã", Icon: Cross },
 };
 
-export function MessageCardRich({ mensagem, nichoSlug, destacada, badge }: Props) {
+export function MessageCardRich({ mensagem, nichoSlug, destacada, badge, noArticleMicrodata }: Props) {
   const url = mensagemUrl({
     nichoSlug,
     clusterSlug: mensagem.cluster.slug,
@@ -41,16 +44,18 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge }: Props
   });
   const badgeData = badge ? BADGE_LABEL[badge] : null;
   const hasImage = !!mensagem.imagemHero;
+  const microdataProps = noArticleMicrodata
+    ? {}
+    : { itemScope: true, itemType: "https://schema.org/Article" };
 
   return (
     <article
-      itemScope
-      itemType="https://schema.org/Article"
+      {...microdataProps}
       className={`card-message relative ${destacada ? "ring-2 ring-niver-200/60" : ""}`}
       id={`m-${mensagem.id}`}
     >
-      <meta itemProp="headline" content={mensagem.titulo} />
-      {mensagem.publicadoEm && (
+      {!noArticleMicrodata && <meta itemProp="headline" content={mensagem.titulo} />}
+      {!noArticleMicrodata && mensagem.publicadoEm && (
         <meta
           itemProp="datePublished"
           content={new Date(mensagem.publicadoEm).toISOString()}
