@@ -367,6 +367,7 @@ export default async function Home() {
                 nichoSlug={nichoSlug}
                 badge={i === 0 ? "trending" : i === 1 ? "top" : undefined}
                 destacada={i === 0}
+                priority={i === 0}
               />
             ))}
           </div>

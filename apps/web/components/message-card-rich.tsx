@@ -27,6 +27,8 @@ interface Props {
   /** Quando true, NÃO emite itemScope/itemType=Article — evita duplicar microdata Article
    *  em singles (onde o main já é Article principal) ou em listas que precisam só de ListItem. */
   noArticleMicrodata?: boolean;
+  /** Prioridade alta na imagem hero (LCP candidate) — use só no 1º card above-the-fold. */
+  priority?: boolean;
 }
 
 const BADGE_LABEL: Record<string, { text: string; Icon: typeof Flame }> = {
@@ -36,7 +38,7 @@ const BADGE_LABEL: Record<string, { text: string; Icon: typeof Flame }> = {
   religious: { text: "Cristã", Icon: Cross },
 };
 
-export function MessageCardRich({ mensagem, nichoSlug, destacada, badge, noArticleMicrodata }: Props) {
+export function MessageCardRich({ mensagem, nichoSlug, destacada, badge, noArticleMicrodata, priority }: Props) {
   const url = mensagemUrl({
     nichoSlug,
     clusterSlug: mensagem.cluster.slug,
@@ -76,7 +78,11 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge, noArtic
             src={mensagem.imagemHero.url}
             alt={mensagem.imagemHero.alt}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
+            decoding="async"
+            width={1200}
+            height={675}
             itemProp="image"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />

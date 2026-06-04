@@ -45,6 +45,9 @@ export function MessageCardListItem({ mensagem, nichoSlug }: Props) {
             alt={mensagem.imagemHero.alt}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
+            decoding="async"
+            width={96}
+            height={96}
             itemProp="image"
           />
         </div>

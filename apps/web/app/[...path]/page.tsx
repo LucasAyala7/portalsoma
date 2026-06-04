@@ -422,7 +422,8 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       ? (cluster.faq as { pergunta: string; resposta: string }[])
       : faqDefault;
 
-  const clusterArticleEntries = mensagens.map((m, i) => ({
+  // ItemList JSON-LD: só TOP 15 (Google reconhece carrossel até 20; mais é overkill + bloat HTML)
+  const clusterArticleEntries = mensagens.slice(0, 15).map((m, i) => ({
     position: i + 1,
     url: `/${nicho.slug}/${cluster.slug}/${m.slug}/`,
     titulo: m.titulo,
@@ -609,6 +610,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
                 nichoSlug={nicho.slug}
                 badge={i === 0 ? "trending" : i === 1 ? "top" : "new"}
                 destacada={i === 0}
+                priority={i === 0}
               />
             ))}
           </div>
@@ -1047,6 +1049,10 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
                 src={mensagem.imagemHero.url}
                 alt={mensagem.imagemHero.alt}
                 className="w-full aspect-[3/2] object-cover"
+                fetchPriority="high"
+                width={1200}
+                height={800}
+                decoding="async"
               />
               <div className="absolute top-3 right-3 z-10">
                 <ShareImageButton
