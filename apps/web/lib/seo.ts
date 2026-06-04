@@ -233,7 +233,6 @@ export function articleListItemSchema(m: ArticleListEntry) {
   return {
     "@type": "ListItem",
     position: m.position,
-    url,
     item: {
       "@type": "Article",
       "@id": url,
@@ -314,7 +313,6 @@ export function blogPostListItemSchema(p: BlogPostListEntry) {
   return {
     "@type": "ListItem",
     position: p.position,
-    url,
     item: {
       "@type": "BlogPosting",
       "@id": url,

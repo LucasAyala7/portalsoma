@@ -448,7 +448,8 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
           ...(clusterArticleEntries.length > 0
             ? [enrichedItemListSchema(clusterArticleEntries)]
             : []),
-          faqSchema(faqItems),
+          // FAQ schema removido: Google deprecou rich snippet pra non-gov/health (2023).
+          // Mantemos FAQ em texto livre via cluster.editorial.faqTexto (agrega densidade).
         ])}
       />
 
