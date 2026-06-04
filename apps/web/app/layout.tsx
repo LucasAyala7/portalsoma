@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import { prisma } from "@nivertotal/db";
 import "./globals.css";
-import { Cake, Heart, Copy, Share2 } from "lucide-react";
+import { Cake, Heart, Copy, Share2, Search } from "lucide-react";
 import { MobileMenu } from "@/components/mobile-menu";
 import { MegaNav } from "@/components/mega-nav";
 import { BottomBar } from "@/components/bottom-bar";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { GoogleAdsense } from "@/components/google-adsense";
 import { ScrollDepthTracker } from "@/components/scroll-depth-tracker";
-import { jsonLdScript, organizationSchema, webSiteWithSearchSchema } from "@/lib/seo";
+import { jsonLdScript, organizationSchema, webSiteWithSearchSchema, siteNavigationItemListSchema } from "@/lib/seo";
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-F00GTDMNNH";
 const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "ca-pub-3880875536722698";
@@ -142,7 +142,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={jsonLdScript([organizationSchema(), webSiteWithSearchSchema()])}
+          dangerouslySetInnerHTML={jsonLdScript([
+            organizationSchema(),
+            webSiteWithSearchSchema(),
+            siteNavigationItemListSchema(navData.navSections),
+          ])}
         />
         <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
         <GoogleAdsense client={ADSENSE_CLIENT} />
@@ -199,6 +203,15 @@ function SiteHeader({
         </a>
         <span className="flex-1" />
         <MegaNav sections={navSections} />
+        {/* Search link (desktop) */}
+        <a
+          href="/buscar/"
+          aria-label="Buscar mensagens"
+          title="Buscar"
+          className="hidden md:inline-flex items-center justify-center w-9 h-9 rounded-full text-stone-600 hover:bg-niver-50 hover:text-niver-700 transition-colors"
+        >
+          <Search size={16} strokeWidth={2.2} />
+        </a>
         {/* Desktop: soma global compacta */}
         <div className="hidden lg:flex items-center gap-3 text-xs text-stone-500 tabular-nums">
           <span className="inline-flex items-center gap-1" title={`${totals.likes.toLocaleString("pt-BR")} curtidas`}>

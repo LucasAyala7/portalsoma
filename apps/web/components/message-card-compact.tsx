@@ -46,15 +46,20 @@ export function MessageCardCompact({ mensagem, nichoSlug, index = 0, showActions
 
   return (
     <article
+      itemScope
+      itemType="https://schema.org/Article"
       id={`m-${mensagem.id}`}
       className={`group bg-gradient-to-r ${grad} via-white to-white border border-stone-100 rounded-2xl hover:border-niver-200 hover:shadow-md transition-all overflow-hidden`}
     >
+      <meta itemProp="headline" content={mensagem.titulo} />
       <a href={url} className="block p-5 pb-3 overflow-hidden">
         <div className="flex items-start gap-3 min-w-0">
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2 mb-1.5 min-w-0">
               <div className="text-xs text-stone-500 flex items-center gap-2 flex-wrap min-w-0">
-                <span className="font-medium text-niver-700 truncate">{mensagem.autor.nome}</span>
+                <span itemProp="author" itemScope itemType="https://schema.org/Person" className="font-medium text-niver-700 truncate">
+                  <span itemProp="name">{mensagem.autor.nome}</span>
+                </span>
                 {"nome" in mensagem.cluster && mensagem.cluster.nome && (
                   <>
                     <span>·</span>
@@ -64,17 +69,29 @@ export function MessageCardCompact({ mensagem, nichoSlug, index = 0, showActions
               </div>
               {/* Counts canto sup direito */}
               <div className="flex shrink-0 items-center gap-2 text-[11px] text-stone-500 tabular-nums">
-                <span className="inline-flex items-center gap-0.5">
+                <span
+                  itemProp="interactionStatistic"
+                  itemScope
+                  itemType="https://schema.org/InteractionCounter"
+                  className="inline-flex items-center gap-0.5"
+                >
+                  <meta itemProp="interactionType" content="https://schema.org/LikeAction" />
                   <Heart size={10} className="text-rose-500" strokeWidth={2.4} fill={mensagem.likes > 0 ? "currentColor" : "none"} />
-                  <strong className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
+                  <strong itemProp="userInteractionCount" className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
                 </span>
-                <span className="inline-flex items-center gap-0.5">
+                <span
+                  itemProp="interactionStatistic"
+                  itemScope
+                  itemType="https://schema.org/InteractionCounter"
+                  className="inline-flex items-center gap-0.5"
+                >
+                  <meta itemProp="interactionType" content="https://schema.org/WriteAction" />
                   <Copy size={10} className="text-niver-500" strokeWidth={2.4} />
-                  <strong className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
+                  <strong itemProp="userInteractionCount" className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
                 </span>
               </div>
             </div>
-            <p className="text-stone-800 leading-relaxed line-clamp-3 text-[15px] break-words">
+            <p itemProp="articleBody" className="text-stone-800 leading-relaxed line-clamp-3 text-[15px] break-words">
               {mensagem.conteudo}
             </p>
           </div>

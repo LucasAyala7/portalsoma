@@ -39,18 +39,46 @@ export function webSiteWithSearchSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
+    alternateName: "Portal Soma — Mensagens de Aniversário",
     url: SITE_URL,
     inLanguage: "pt-BR",
-    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+    publisher: { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
+    // SearchAction com target apontando pro form id="site-search" no header
+    potentialAction: [
+      {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${SITE_URL}/buscar/?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
       },
-      "query-input": "required name=search_term_string",
-    },
+    ],
+  };
+}
+
+/** ItemList das seções do mega nav — match com microdata SiteNavigationElement do <nav> */
+export interface SiteNavSection {
+  titulo: string;
+  items: { slug: string; nome: string }[];
+}
+
+export function siteNavigationItemListSchema(sections: SiteNavSection[], nichoSlug = "mensagem-de-aniversario") {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${SITE_URL}/#sitenavigation`,
+    name: "Navegação principal",
+    itemListElement: sections.flatMap((section, sIdx) =>
+      section.items.map((item, iIdx) => ({
+        "@type": "SiteNavigationElement",
+        position: sIdx * 100 + iIdx + 1,
+        name: item.nome,
+        url: `${SITE_URL}/${nichoSlug}/${item.slug}/`,
+      })),
+    ),
   };
 }
 
@@ -181,6 +209,166 @@ export function itemListSchema(items: ItemListEntry[]) {
       url: it.url.startsWith("http") ? it.url : `${SITE_URL}${it.url}`,
       name: it.name,
     })),
+  };
+}
+
+/** Article enriched + interactionStatistic — pra usar dentro de ItemList enriched. */
+export interface ArticleListEntry {
+  position: number;
+  url: string;
+  titulo: string;
+  resumo?: string | null;
+  imageUrl?: string | null;
+  autorNome: string;
+  autorUrl: string;
+  publicadoEm?: Date | null;
+  likes: number;
+  copies: number;
+  shares: number;
+  visualizacoes: number;
+}
+
+export function articleListItemSchema(m: ArticleListEntry) {
+  const url = m.url.startsWith("http") ? m.url : `${SITE_URL}${m.url}`;
+  return {
+    "@type": "ListItem",
+    position: m.position,
+    url,
+    item: {
+      "@type": "Article",
+      "@id": url,
+      headline: m.titulo,
+      name: m.titulo,
+      description: m.resumo ?? undefined,
+      url,
+      image: m.imageUrl ?? undefined,
+      inLanguage: "pt-BR",
+      datePublished: m.publicadoEm?.toISOString(),
+      author: {
+        "@type": "Person",
+        name: m.autorNome,
+        url: m.autorUrl.startsWith("http") ? m.autorUrl : `${SITE_URL}${m.autorUrl}`,
+      },
+      publisher: {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      interactionStatistic: [
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "LikeAction" },
+          userInteractionCount: m.likes,
+        },
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "WriteAction" },
+          userInteractionCount: m.copies,
+        },
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "ShareAction" },
+          userInteractionCount: m.shares,
+        },
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "ReadAction" },
+          userInteractionCount: m.visualizacoes,
+        },
+      ],
+    },
+  };
+}
+
+/** ItemList enriched de Articles (mensagens) — para Home/Cluster/Autor */
+export function enrichedItemListSchema(items: ArticleListEntry[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    numberOfItems: items.length,
+    itemListElement: items.map((m) => articleListItemSchema(m)),
+  };
+}
+
+/** ListItem com BlogPosting + interactionStatistic — para listagens de posts blog */
+export interface BlogPostListEntry {
+  position: number;
+  url: string;
+  titulo: string;
+  resumo?: string | null;
+  imageUrl?: string | null;
+  autorNome: string;
+  autorUrl: string;
+  categoriaNome: string;
+  publicadoEm?: Date | null;
+  wordCount?: number | null;
+  likes: number;
+  shares: number;
+  visualizacoes: number;
+  copies: number;
+}
+
+export function blogPostListItemSchema(p: BlogPostListEntry) {
+  const url = p.url.startsWith("http") ? p.url : `${SITE_URL}${p.url}`;
+  return {
+    "@type": "ListItem",
+    position: p.position,
+    url,
+    item: {
+      "@type": "BlogPosting",
+      "@id": url,
+      headline: p.titulo,
+      description: p.resumo ?? undefined,
+      url,
+      image: p.imageUrl ?? undefined,
+      inLanguage: "pt-BR",
+      datePublished: p.publicadoEm?.toISOString(),
+      wordCount: p.wordCount ?? undefined,
+      articleSection: p.categoriaNome,
+      author: {
+        "@type": "Person",
+        name: p.autorNome,
+        url: p.autorUrl.startsWith("http") ? p.autorUrl : `${SITE_URL}${p.autorUrl}`,
+      },
+      publisher: {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      interactionStatistic: [
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "LikeAction" },
+          userInteractionCount: p.likes,
+        },
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "ShareAction" },
+          userInteractionCount: p.shares,
+        },
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "ReadAction" },
+          userInteractionCount: p.visualizacoes,
+        },
+        {
+          "@type": "InteractionCounter",
+          interactionType: { "@type": "WriteAction" },
+          userInteractionCount: p.copies,
+        },
+      ],
+    },
+  };
+}
+
+export function enrichedBlogItemListSchema(items: BlogPostListEntry[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    numberOfItems: items.length,
+    itemListElement: items.map((p) => blogPostListItemSchema(p)),
   };
 }
 

@@ -34,6 +34,8 @@ export function MessageCardListItem({ mensagem, nichoSlug }: Props) {
     <a
       href={url}
       id={`m-${mensagem.id}`}
+      itemScope
+      itemType="https://schema.org/Article"
       className="group flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-2xl border border-warm-200/70 bg-white hover:border-niver-300 hover:shadow-md transition-all overflow-hidden"
     >
       {mensagem.imagemHero ? (
@@ -43,6 +45,7 @@ export function MessageCardListItem({ mensagem, nichoSlug }: Props) {
             alt={mensagem.imagemHero.alt}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
+            itemProp="image"
           />
         </div>
       ) : (
@@ -53,25 +56,41 @@ export function MessageCardListItem({ mensagem, nichoSlug }: Props) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 min-w-0">
-          <h3 className="font-display text-base sm:text-lg text-niver-800 leading-tight line-clamp-2 group-hover:text-niver-900 transition-colors min-w-0">
+          <h3 itemProp="headline" className="font-display text-base sm:text-lg text-niver-800 leading-tight line-clamp-2 group-hover:text-niver-900 transition-colors min-w-0">
             {mensagem.titulo}
           </h3>
           <div className="shrink-0 flex items-center gap-1.5 text-[11px] text-stone-500 tabular-nums">
-            <span className="inline-flex items-center gap-0.5" title="curtidas">
+            <span
+              itemProp="interactionStatistic"
+              itemScope
+              itemType="https://schema.org/InteractionCounter"
+              className="inline-flex items-center gap-0.5"
+              title="curtidas"
+            >
+              <meta itemProp="interactionType" content="https://schema.org/LikeAction" />
               <Heart size={10} strokeWidth={2.4} className="text-rose-500" fill={mensagem.likes > 0 ? "currentColor" : "none"} />
-              <strong className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
+              <strong itemProp="userInteractionCount" className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
             </span>
-            <span className="inline-flex items-center gap-0.5" title="cópias">
+            <span
+              itemProp="interactionStatistic"
+              itemScope
+              itemType="https://schema.org/InteractionCounter"
+              className="inline-flex items-center gap-0.5"
+              title="cópias"
+            >
+              <meta itemProp="interactionType" content="https://schema.org/WriteAction" />
               <Copy size={10} strokeWidth={2.4} className="text-niver-500" />
-              <strong className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
+              <strong itemProp="userInteractionCount" className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
             </span>
           </div>
         </div>
-        <p className="mt-1 text-sm text-stone-600 line-clamp-2 leading-snug break-words">
+        <p itemProp="description" className="mt-1 text-sm text-stone-600 line-clamp-2 leading-snug break-words">
           {snippet}
         </p>
         <div className="mt-2 flex items-center gap-2 text-xs text-stone-500">
-          <span className="font-medium text-niver-700 truncate">{mensagem.autor.nome}</span>
+          <span itemProp="author" itemScope itemType="https://schema.org/Person" className="font-medium text-niver-700 truncate">
+            <span itemProp="name">{mensagem.autor.nome}</span>
+          </span>
           <ArrowRight size={12} className="ml-auto shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-niver-600" />
         </div>
       </div>

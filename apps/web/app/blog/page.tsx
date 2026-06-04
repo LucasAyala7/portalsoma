@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { prisma } from "@nivertotal/db";
 import { Clock, BookOpen } from "lucide-react";
+import { enrichedBlogItemListSchema } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 86400;
@@ -45,24 +46,47 @@ export default async function BlogIndex() {
   const data = await getBlogData();
   const totalPosts = data.categorias.reduce((sum, c) => sum + c._count.posts, 0);
 
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": "https://www.portalsoma.com.br/blog/",
+    name: "Blog Portal Soma",
+    description: "Conteúdo editorial sobre aniversários, datas, presentes e relações.",
+    url: "https://www.portalsoma.com.br/blog/",
+    publisher: {
+      "@type": "Organization",
+      name: "Portal Soma",
+      url: "https://www.portalsoma.com.br/",
+    },
+  };
+
+  const recentesEntries = data.postsRecentes.map((p, i) => ({
+    position: i + 1,
+    url: `/blog/${p.categoria.slug}/${p.slug}/`,
+    titulo: p.titulo,
+    resumo: p.resumo,
+    imageUrl: p.imagemHero?.url ?? null,
+    autorNome: p.autor.nome,
+    autorUrl: `/autor/${p.autor.slug}/`,
+    categoriaNome: p.categoria.nome,
+    publicadoEm: p.publicadoEm,
+    wordCount: p.wordCount,
+    likes: p.likes,
+    shares: p.shares,
+    visualizacoes: p.visualizacoes,
+    copies: p.copies,
+  }));
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Blog",
-            "@id": "https://www.portalsoma.com.br/blog/",
-            name: "Blog Portal Soma",
-            description: "Conteúdo editorial sobre aniversários, datas, presentes e relações.",
-            url: "https://www.portalsoma.com.br/blog/",
-            publisher: {
-              "@type": "Organization",
-              name: "Portal Soma",
-              url: "https://www.portalsoma.com.br/",
-            },
-          }),
+          __html: JSON.stringify(
+            recentesEntries.length > 0
+              ? [blogSchema, enrichedBlogItemListSchema(recentesEntries)]
+              : [blogSchema],
+          ),
         }}
       />
 
@@ -171,6 +195,48 @@ export default async function BlogIndex() {
                       </span>
                     )}
                   </div>
+                  {post.publicadoEm && (
+                    <meta
+                      itemProp="datePublished"
+                      content={new Date(post.publicadoEm).toISOString()}
+                    />
+                  )}
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/LikeAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.likes)} />
+                  </span>
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/ShareAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.shares)} />
+                  </span>
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/ReadAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.visualizacoes)} />
+                  </span>
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/WriteAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.copies)} />
+                  </span>
                 </div>
               </article>
             ))}

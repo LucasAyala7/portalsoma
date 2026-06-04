@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@nivertotal/db";
-import { jsonLdScript, itemListSchema } from "@/lib/seo";
+import { jsonLdScript, enrichedItemListSchema, type ArticleListEntry } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
 import { Ticker } from "@/components/ticker";
 import { CounterBoard } from "@/components/counter-board";
@@ -175,6 +175,7 @@ async function getHomeData() {
         autor: true,
         persona: true,
         cluster: { include: { nicho: true } },
+        imagemHero: true,
       },
     }),
     prisma.mensagem.findMany({
@@ -185,6 +186,7 @@ async function getHomeData() {
         autor: true,
         persona: true,
         cluster: { include: { nicho: true } },
+        imagemHero: true,
       },
     }),
     prisma.author.findMany({
@@ -226,14 +228,44 @@ export default async function Home() {
   };
 
   const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
-  const destaquesItemList = data.mensagensDestaque.map((m) => ({
-    url: `${SITE_URL}${mensagemUrl({
-      nichoSlug: m.cluster.nicho.slug,
-      clusterSlug: m.cluster.slug,
-      slug: m.slug,
-    })}`,
-    name: m.titulo,
-  }));
+
+  type MensagemForList = {
+    titulo: string;
+    slug: string;
+    resumo: string | null;
+    publicadoEm: Date | null;
+    likes: number;
+    copies: number;
+    shares: number;
+    visualizacoes: number;
+    autor: { nome: string; slug: string };
+    cluster: { slug: string; nicho: { slug: string } };
+    imagemHero?: { url: string } | null;
+  };
+
+  const toArticleEntries = (list: MensagemForList[]): ArticleListEntry[] =>
+    list.map((m, i) => ({
+      position: i + 1,
+      url: mensagemUrl({
+        nichoSlug: m.cluster.nicho.slug,
+        clusterSlug: m.cluster.slug,
+        slug: m.slug,
+      }),
+      titulo: m.titulo,
+      resumo: m.resumo,
+      imageUrl: m.imagemHero?.url ?? null,
+      autorNome: m.autor.nome,
+      autorUrl: `/autor/${m.autor.slug}/`,
+      publicadoEm: m.publicadoEm,
+      likes: m.likes,
+      copies: m.copies,
+      shares: m.shares,
+      visualizacoes: m.visualizacoes,
+    }));
+
+  const destaquesEntries = toArticleEntries(data.mensagensDestaque);
+  const recentesEntries = toArticleEntries(data.mensagensRecentes);
+  const maisCopiadasEntries = toArticleEntries(data.mensagensMaisCopiadas);
 
   const homeCollection = {
     "@context": "https://schema.org",
@@ -252,7 +284,9 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLdScript([
           homeCollection,
-          ...(destaquesItemList.length > 0 ? [itemListSchema(destaquesItemList)] : []),
+          ...(destaquesEntries.length > 0 ? [enrichedItemListSchema(destaquesEntries)] : []),
+          ...(recentesEntries.length > 0 ? [enrichedItemListSchema(recentesEntries)] : []),
+          ...(maisCopiadasEntries.length > 0 ? [enrichedItemListSchema(maisCopiadasEntries)] : []),
         ])}
       />
 

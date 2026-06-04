@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { prisma } from "@nivertotal/db";
 import { Clock, ChevronRight } from "lucide-react";
+import { enrichedBlogItemListSchema } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 86400;
@@ -43,6 +44,23 @@ export default async function CategoriaBlog({ params }: PageProps) {
   const cat = await loadCategoria(categoria);
   if (!cat) notFound();
 
+  const postEntries = cat.posts.map((p, i) => ({
+    position: i + 1,
+    url: `/blog/${cat.slug}/${p.slug}/`,
+    titulo: p.titulo,
+    resumo: p.resumo,
+    imageUrl: p.imagemHero?.url ?? null,
+    autorNome: p.autor.nome,
+    autorUrl: `/autor/${p.autor.slug}/`,
+    categoriaNome: cat.nome,
+    publicadoEm: p.publicadoEm,
+    wordCount: p.wordCount,
+    likes: p.likes,
+    shares: p.shares,
+    visualizacoes: p.visualizacoes,
+    copies: p.copies,
+  }));
+
   return (
     <>
       <script
@@ -65,16 +83,7 @@ export default async function CategoriaBlog({ params }: PageProps) {
               description: cat.descricao ?? `Artigos sobre ${cat.nome.toLowerCase()}`,
               url: `https://www.portalsoma.com.br/blog/${cat.slug}/`,
             },
-            {
-              "@context": "https://schema.org",
-              "@type": "ItemList",
-              itemListElement: cat.posts.slice(0, 30).map((p, i) => ({
-                "@type": "ListItem",
-                position: i + 1,
-                url: `https://www.portalsoma.com.br/blog/${cat.slug}/${p.slug}/`,
-                name: p.titulo,
-              })),
-            },
+            ...(postEntries.length > 0 ? [enrichedBlogItemListSchema(postEntries)] : []),
           ]),
         }}
       />
@@ -145,6 +154,48 @@ export default async function CategoriaBlog({ params }: PageProps) {
                       </span>
                     )}
                   </div>
+                  {post.publicadoEm && (
+                    <meta
+                      itemProp="datePublished"
+                      content={new Date(post.publicadoEm).toISOString()}
+                    />
+                  )}
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/LikeAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.likes)} />
+                  </span>
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/ShareAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.shares)} />
+                  </span>
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/ReadAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.visualizacoes)} />
+                  </span>
+                  <span
+                    itemProp="interactionStatistic"
+                    itemScope
+                    itemType="https://schema.org/InteractionCounter"
+                    className="hidden"
+                  >
+                    <meta itemProp="interactionType" content="https://schema.org/WriteAction" />
+                    <meta itemProp="userInteractionCount" content={String(post.copies)} />
+                  </span>
                 </div>
               </article>
             ))}

@@ -44,9 +44,18 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge }: Props
 
   return (
     <article
+      itemScope
+      itemType="https://schema.org/Article"
       className={`card-message relative ${destacada ? "ring-2 ring-niver-200/60" : ""}`}
       id={`m-${mensagem.id}`}
     >
+      <meta itemProp="headline" content={mensagem.titulo} />
+      {mensagem.publicadoEm && (
+        <meta
+          itemProp="datePublished"
+          content={new Date(mensagem.publicadoEm).toISOString()}
+        />
+      )}
       {badgeData && (
         <div className={`absolute z-10 ${hasImage ? "top-3 left-3" : "-top-2 left-5"}`}>
           <span className={`badge-${badge} shadow-sm backdrop-blur`}>
@@ -63,6 +72,7 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge }: Props
             alt={mensagem.imagemHero.alt}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
+            itemProp="image"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
         </a>
@@ -71,31 +81,55 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge }: Props
       <div className="p-5 sm:p-6 overflow-hidden">
         <div className="flex items-start justify-between gap-2 mb-3 min-w-0">
           <div className="min-w-0 flex-1">
-            <PersonaBadge
-              nome={mensagem.autor.nome}
-              slug={mensagem.autor.slug}
-              fotoUrl={mensagem.autor.fotoUrl}
-              isReal={mensagem.autor.real}
-            />
+            <span itemProp="author" itemScope itemType="https://schema.org/Person">
+              <meta itemProp="name" content={mensagem.autor.nome} />
+              <PersonaBadge
+                nome={mensagem.autor.nome}
+                slug={mensagem.autor.slug}
+                fotoUrl={mensagem.autor.fotoUrl}
+                isReal={mensagem.autor.real}
+              />
+            </span>
           </div>
           {/* Counts canto sup direito (mobile + desktop) */}
           <div className="flex shrink-0 items-center gap-2 sm:gap-2.5 text-[11px] sm:text-xs text-stone-500 tabular-nums">
-            <span className="inline-flex items-center gap-1" title="curtidas">
+            <span
+              itemProp="interactionStatistic"
+              itemScope
+              itemType="https://schema.org/InteractionCounter"
+              className="inline-flex items-center gap-1"
+              title="curtidas"
+            >
+              <meta itemProp="interactionType" content="https://schema.org/LikeAction" />
               <Heart size={11} strokeWidth={2.4} className="text-rose-500" fill={mensagem.likes > 0 ? "currentColor" : "none"} />
-              <strong className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
+              <strong itemProp="userInteractionCount" className="text-stone-700">{mensagem.likes.toLocaleString("pt-BR")}</strong>
             </span>
-            <span className="inline-flex items-center gap-1" title="cópias">
+            <span
+              itemProp="interactionStatistic"
+              itemScope
+              itemType="https://schema.org/InteractionCounter"
+              className="inline-flex items-center gap-1"
+              title="cópias"
+            >
+              <meta itemProp="interactionType" content="https://schema.org/WriteAction" />
               <Copy size={11} strokeWidth={2.4} className="text-niver-500" />
-              <strong className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
+              <strong itemProp="userInteractionCount" className="text-stone-700">{mensagem.copies.toLocaleString("pt-BR")}</strong>
             </span>
-            <span className="hidden sm:inline-flex items-center gap-1 text-stone-400" title="visualizações">
+            <span
+              itemProp="interactionStatistic"
+              itemScope
+              itemType="https://schema.org/InteractionCounter"
+              className="hidden sm:inline-flex items-center gap-1 text-stone-400"
+              title="visualizações"
+            >
+              <meta itemProp="interactionType" content="https://schema.org/ReadAction" />
               <Eye size={11} strokeWidth={2.4} />
-              {mensagem.visualizacoes.toLocaleString("pt-BR")}
+              <span itemProp="userInteractionCount">{mensagem.visualizacoes.toLocaleString("pt-BR")}</span>
             </span>
           </div>
         </div>
 
-        <p className="text-stone-800 leading-relaxed whitespace-pre-line text-[15px] break-words">
+        <p itemProp="articleBody" className="text-stone-800 leading-relaxed whitespace-pre-line text-[15px] break-words">
           {mensagem.conteudo}
         </p>
 

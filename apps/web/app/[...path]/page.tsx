@@ -21,7 +21,7 @@ import {
   breadcrumbSchema,
   collectionSchema,
   faqSchema,
-  itemListSchema,
+  enrichedItemListSchema,
   creativeWorkWithInteractionSchema,
 } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
@@ -348,9 +348,19 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       ? (cluster.faq as { pergunta: string; resposta: string }[])
       : faqDefault;
 
-  const clusterItemList = mensagens.map((m) => ({
+  const clusterArticleEntries = mensagens.map((m, i) => ({
+    position: i + 1,
     url: `/${nicho.slug}/${cluster.slug}/${m.slug}/`,
-    name: m.titulo,
+    titulo: m.titulo,
+    resumo: m.resumo,
+    imageUrl: m.imagemHero?.url ?? null,
+    autorNome: m.autor.nome,
+    autorUrl: `/autor/${m.autor.slug}/`,
+    publicadoEm: m.publicadoEm,
+    likes: m.likes,
+    copies: m.copies,
+    shares: m.shares,
+    visualizacoes: m.visualizacoes,
   }));
 
   return (
@@ -369,7 +379,9 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             url: `/${nicho.slug}/${cluster.slug}/`,
             itemsCount: totalMensagens,
           }),
-          ...(clusterItemList.length > 0 ? [itemListSchema(clusterItemList)] : []),
+          ...(clusterArticleEntries.length > 0
+            ? [enrichedItemListSchema(clusterArticleEntries)]
+            : []),
           faqSchema(faqItems),
         ])}
       />
