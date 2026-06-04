@@ -35,6 +35,21 @@ model Nicho {
   atualizadoEm  DateTime  @updatedAt
 }
 
+/// Conteúdo editorial gerado por IA pra cada cluster (listicle structure)
+model ClusterEditorial {
+  clusterId        String   @id
+  cluster          Cluster  @relation(fields: [clusterId], references: [id], onDelete: Cascade)
+  introHero        String?  @db.Text                    // 200 palavras GEO opening (substitui Cluster.intro)
+  resumoEditorial  String?  @db.Text                    // 300 palavras meta (aside)
+  fechamento       String?  @db.Text                    // 200 palavras pós-collection
+  faqTexto         String?  @db.Text                    // FAQ em texto livre (sem schema), agrega densidade
+  origemConteudo   Origem   @default(IA)
+  modelo           String?                              // "gpt-4.1" | "gpt-5" | "manual"
+  qualidade        Float?
+  criadoEm         DateTime @default(now())
+  atualizadoEm     DateTime @updatedAt
+}
+
 /// Cluster nivel 1 (ex: "para-mae", "evangelica", "no-whatsapp", "de-15-anos")
 model Cluster {
   id              String        @id @default(cuid())
@@ -61,6 +76,7 @@ model Cluster {
 
   complementos    Complemento[]
   mensagens       Mensagem[]    @relation("MensagemCluster")
+  editorial       ClusterEditorial?
 
   criadoEm        DateTime      @default(now())
   atualizadoEm    DateTime      @updatedAt

@@ -69,6 +69,7 @@ async function loadCluster(nichoSlug: string, clusterSlug: string) {
     where: { slug: clusterSlug, nicho: { slug: nichoSlug }, ativo: true },
     include: {
       nicho: true,
+      editorial: true,
       complementos: {
         where: { ativo: true },
         orderBy: { volumeMensal: "desc" },
@@ -464,7 +465,11 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
           <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-tight max-w-3xl mb-4">
             {bucket} Mensagens de Aniversário {cluster.nome} — {anoAtual}
           </h1>
-          {cluster.intro ? (
+          {cluster.editorial?.introHero ? (
+            <p className="text-stone-700 leading-relaxed max-w-3xl text-lg whitespace-pre-line">
+              {cluster.editorial.introHero}
+            </p>
+          ) : cluster.intro ? (
             <p className="text-stone-700 leading-relaxed max-w-2xl text-lg whitespace-pre-line">
               {cluster.intro}
             </p>
@@ -540,6 +545,14 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
               </a>
             </cite>
           </blockquote>
+        )}
+        {cluster.editorial?.resumoEditorial && (
+          <p
+            itemProp="articleBody"
+            className="mt-6 text-stone-700 leading-relaxed max-w-3xl whitespace-pre-line"
+          >
+            {cluster.editorial.resumoEditorial}
+          </p>
         )}
       </aside>
 
@@ -626,6 +639,40 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         )}
       </section>
 
+      {/* SECTION extras — fechamento editorial + FAQ texto livre (sem schema) */}
+      {(cluster.editorial?.fechamento || cluster.editorial?.faqTexto) && (
+        <section className="cluster-extras container-niver py-12">
+          <article className="max-w-3xl mx-auto">
+            {cluster.editorial.fechamento && (
+              <>
+                <h2 className="heading-section-bar mb-6">
+                  <span>Como escolher a mensagem certa</span>
+                </h2>
+                <div className="prose-article text-stone-700 leading-relaxed mb-12 whitespace-pre-line">
+                  {cluster.editorial.fechamento}
+                </div>
+              </>
+            )}
+            {cluster.editorial.faqTexto && (
+              <>
+                <h2 className="heading-section-bar mb-6">
+                  <span>Perguntas frequentes sobre {cluster.nome.toLowerCase()}</span>
+                </h2>
+                <div
+                  className="prose-article text-stone-700 leading-relaxed [&_h3]:font-display [&_h3]:text-lg [&_h3]:text-niver-700 [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:font-semibold"
+                  dangerouslySetInnerHTML={{
+                    __html: cluster.editorial.faqTexto
+                      .replace(/### (.+)/g, "<h3>$1</h3>")
+                      .replace(/\n\n/g, "</p><p>")
+                      .replace(/^([^<].+)/m, "<p>$1</p>"),
+                  }}
+                />
+              </>
+            )}
+          </article>
+        </section>
+      )}
+
       {/* OUTROS DESTINATÁRIOS / TONS */}
       {siblings.length > 0 && (
         <section className="container-niver py-12">
@@ -652,11 +699,13 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         </section>
       )}
 
-      {/* FAQ */}
-      <section className="container-niver py-12">
-        <h2 className="heading-section-bar mb-8">Perguntas frequentes</h2>
-        <FaqAccordion items={faqItems} />
-      </section>
+      {/* FAQ accordion (legacy — só se sem editorial.faqTexto) */}
+      {!cluster.editorial?.faqTexto && (
+        <section className="container-niver py-12">
+          <h2 className="heading-section-bar mb-8">Perguntas frequentes</h2>
+          <FaqAccordion items={faqItems} />
+        </section>
+      )}
     </>
   );
 }
