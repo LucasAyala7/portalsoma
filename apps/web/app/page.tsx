@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ReactDOM from "react-dom";
 import { prisma } from "@nivertotal/db";
 import { jsonLdScript, enrichedItemListSchema, type ArticleListEntry } from "@/lib/seo";
 import { mensagemUrl } from "@/lib/utils";
@@ -278,6 +279,14 @@ export default async function Home() {
     inLanguage: "pt-BR",
     isPartOf: { "@type": "WebSite", name: "Portal Soma", url: SITE_URL },
   };
+
+  // LCP preload — 1º card de destaques (acima da dobra)
+  if (data.mensagensDestaque[0]?.imagemHero?.url) {
+    ReactDOM.preload(data.mensagensDestaque[0].imagemHero.url, {
+      as: "image",
+      fetchPriority: "high",
+    });
+  }
 
   return (
     <>

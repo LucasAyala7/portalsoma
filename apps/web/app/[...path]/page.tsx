@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import ReactDOM from "react-dom";
 import { prisma } from "@nivertotal/db";
 import { MessageCardRich } from "@/components/message-card-rich";
 import { MessageCardListItem } from "@/components/message-card-list";
@@ -437,6 +438,14 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
     shares: m.shares,
     visualizacoes: m.visualizacoes,
   }));
+
+  // LCP preload — 1ª img acima da dobra (topSemana[0]) é o candidate na cluster page
+  if (topSemana[0]?.imagemHero?.url) {
+    ReactDOM.preload(topSemana[0].imagemHero.url, {
+      as: "image",
+      fetchPriority: "high",
+    });
+  }
 
   return (
     <>
@@ -935,6 +944,14 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
       imagemHero: true,
     },
   });
+
+  // LCP preload — hero img do single (above-the-fold)
+  if (mensagem.imagemHero?.url) {
+    ReactDOM.preload(mensagem.imagemHero.url, {
+      as: "image",
+      fetchPriority: "high",
+    });
+  }
 
   return (
     <>
