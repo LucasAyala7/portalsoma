@@ -5,21 +5,9 @@ import { Clock, ChevronRight, ArrowLeft } from "lucide-react";
 import { ShareMenu } from "@/components/share-menu";
 import { ViewTracker } from "@/components/view-tracker";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  if (process.env.SKIP_STATIC_PARAMS === "true" || !process.env.DATABASE_URL) return [];
-  try {
-    const posts = await prisma.post.findMany({
-      where: { status: "PUBLISHED" },
-      select: { slug: true, categoria: { select: { slug: true } } },
-    });
-    return posts.map((p) => ({ categoria: p.categoria.slug, slug: p.slug }));
-  } catch {
-    return [];
-  }
-}
 
 interface PageProps {
   params: Promise<{ categoria: string; slug: string }>;

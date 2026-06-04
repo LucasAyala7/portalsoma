@@ -43,8 +43,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-// Static build — home gerada no deploy. Counts atualizam via cron daily rebuild.
-export const dynamic = "force-static";
+// Render dynamic + cache CDN 1 dia (CF Page Rule). Performance similar a estático.
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 // Mantido pra MessageCardCompact recentes (avatar fallback) — será removido em futuro refactor
 const EMOJI_DESTINATARIO: Record<string, string> = {

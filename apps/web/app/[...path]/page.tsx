@@ -35,10 +35,9 @@ interface PageProps {
   params: Promise<RouteParams>;
 }
 
-// Static build: gera todas mensagens/clusters/complementos no build.
-// Counts (likes/copies/shares) ficam do build — rebuild diário via cron.
-// dynamicParams=true: mensagens novas (após build) SSR primeira visita e cache depois.
-export const dynamic = "force-static";
+// Dynamic + CDN cache 1 dia (CF Page Rule s-maxage=86400, stale-while-revalidate=604800).
+export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 export const dynamicParams = true;
 
 type Resolved =

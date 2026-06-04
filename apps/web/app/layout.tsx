@@ -66,8 +66,9 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// Static build global — header/footer congelados no build, atualizados via cron daily rebuild
-export const dynamic = "force-static";
+// Render dynamic mas com cache CDN agressivo (1 dia s-maxage, 7 dias SWR) — performance estática.
+export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 async function getNavData() {
   const [topClusters, destinatarios, ocasioesAll, tonsAll, canais, agg] = await Promise.all([

@@ -35,6 +35,39 @@ const config: NextConfig = {
       },
     ];
   },
+  // Cache CDN agressivo — todas as páginas HTML cacheadas 1 dia em edge CF,
+  // 7 dias de stale-while-revalidate (CF serve stale enquanto refetcha do origin).
+  // API routes mantêm no-store via export individuais.
+  async headers() {
+    return [
+      {
+        // Mensagens single + cluster + autor + blog: cache super longo, refetch async
+        source: "/((?!api|_next|admin).*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value:
+              "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800",
+          },
+          {
+            key: "CDN-Cache-Control",
+            value: "public, max-age=86400",
+          },
+          {
+            key: "Cloudflare-CDN-Cache-Control",
+            value: "public, max-age=86400",
+          },
+        ],
+      },
+      {
+        // API routes: nunca cacheia
+        source: "/api/(.*)",
+        headers: [
+          { key: "Cache-Control", value: "no-store, must-revalidate" },
+        ],
+      },
+    ];
+  },
 };
 
 export default config;

@@ -3,18 +3,9 @@ import { notFound } from "next/navigation";
 import { prisma } from "@nivertotal/db";
 import { Clock, ChevronRight } from "lucide-react";
 
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  if (process.env.SKIP_STATIC_PARAMS === "true" || !process.env.DATABASE_URL) return [];
-  try {
-    const cats = await prisma.blogCategory.findMany({ where: { ativo: true }, select: { slug: true } });
-    return cats.map((c) => ({ categoria: c.slug }));
-  } catch {
-    return [];
-  }
-}
 
 interface PageProps {
   params: Promise<{ categoria: string }>;

@@ -8,22 +8,10 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-// Static build: gera todos autores ativos no build.
-export const dynamic = "force-static";
+// Dynamic + CDN cache 1 dia
+export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  if (process.env.SKIP_STATIC_PARAMS === "true" || !process.env.DATABASE_URL) return [];
-  try {
-    const autores = await prisma.author.findMany({
-      where: { ativo: true },
-      select: { slug: true },
-    });
-    return autores.map((a) => ({ slug: a.slug }));
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
