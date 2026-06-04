@@ -15,6 +15,8 @@ import { CategoryGrid } from "@/components/category-grid";
 import { StickyActionBar } from "@/components/sticky-action-bar";
 import { ViewTracker } from "@/components/view-tracker";
 import { ShareImageButton } from "@/components/share-image-button";
+import { ClusterHeroIntro } from "@/components/cluster-hero-intro";
+import { VerMensagensCTA } from "@/components/ver-mensagens-cta";
 import { getCategoryIcon } from "@/lib/icons";
 import {
   jsonLdScript,
@@ -485,18 +487,16 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             {bucket} Mensagens de Aniversário {cluster.nome} — {anoAtual}
           </h1>
           {cluster.editorial?.introHero ? (
-            <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line lg:columns-2 lg:gap-10 lg:[&>br]:hidden">
-              {cluster.editorial.introHero}
-            </p>
+            <ClusterHeroIntro text={cluster.editorial.introHero} />
           ) : cluster.intro ? (
-            <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
-              {cluster.intro}
-            </p>
+            <ClusterHeroIntro text={cluster.intro} />
           ) : (
             <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px]">
-              {cluster.descricao ?? `Mais de ${bucket} mensagens de aniversário ${cluster.nome.toLowerCase()} cuidadosamente curadas — para copiar, compartilhar e emocionar. Atualizadas regularmente por nossos autores convidados.`}
+              {cluster.descricao ?? `Mais de ${bucket} mensagens de aniversário ${cluster.nome.toLowerCase()} cuidadosamente curadas - para copiar, compartilhar e emocionar. Atualizadas regularmente por nossos autores convidados.`}
             </p>
           )}
+
+          <VerMensagensCTA targetId="cluster-collection" />
 
           <div className="mt-6">
             <CounterBoard
@@ -610,7 +610,8 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
 
       {/* SECTION collection — listicle principal */}
       <section
-        className="cluster-collection container-niver py-12"
+        id="cluster-collection"
+        className="cluster-collection container-niver py-12 scroll-mt-20"
         itemScope
         itemType="https://schema.org/CollectionPage"
       >
