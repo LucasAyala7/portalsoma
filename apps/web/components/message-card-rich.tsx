@@ -3,6 +3,7 @@ import { CopyButton } from "./copy-button";
 import { ShareMenu } from "./share-menu";
 import { LikeButton } from "./like-button";
 import { PersonaBadge } from "./persona-badge";
+import { WhatsAppSendButton } from "./whatsapp-send-button";
 import { mensagemUrl } from "@/lib/utils";
 
 interface Props {
@@ -145,6 +146,7 @@ export function MessageCardRich({ mensagem, nichoSlug, destacada, badge, noArtic
         </p>
 
         <div className="mt-5 pt-4 border-t border-stone-100 flex items-center gap-1.5 flex-wrap">
+          <WhatsAppSendButton text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
           <CopyButton text={mensagem.conteudo} mensagemId={mensagem.id} />
           <ShareMenu text={mensagem.conteudo} url={url} mensagemId={mensagem.id} />
           <LikeButton mensagemId={mensagem.id} initialCount={mensagem.likes} />

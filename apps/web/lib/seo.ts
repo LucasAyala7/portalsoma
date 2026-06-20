@@ -161,8 +161,10 @@ export function collectionSchema(input: {
   descricao: string;
   url: string;
   itemsCount: number;
+  /** CSS selectors a marcar como Speakable — Google Assistant TTS + GEO. */
+  speakableSelectors?: string[];
 }) {
-  return {
+  const base: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: input.nome,
@@ -172,6 +174,13 @@ export function collectionSchema(input: {
     isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
     mainEntity: { "@type": "ItemList", numberOfItems: input.itemsCount },
   };
+  if (input.speakableSelectors && input.speakableSelectors.length > 0) {
+    base.speakable = {
+      "@type": "SpeakableSpecification",
+      cssSelector: input.speakableSelectors,
+    };
+  }
+  return base;
 }
 
 export function authorSchema(input: {

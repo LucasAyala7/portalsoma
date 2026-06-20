@@ -4,6 +4,7 @@ import { jsonLdScript, enrichedItemListSchema, type ArticleListEntry } from "@/l
 import { mensagemUrl } from "@/lib/utils";
 import { Ticker } from "@/components/ticker";
 import { CounterBoard } from "@/components/counter-board";
+import { FamousBirthdaysToday } from "@/components/famous-birthdays-today";
 import { AuthorCarousel } from "@/components/author-carousel";
 import { CalendarWidget } from "@/components/calendar-widget";
 import { CategoryGrid } from "@/components/category-grid";
@@ -343,6 +344,9 @@ export default async function Home() {
           ]}
         />
       </section>
+
+      {/* 3.5 FAMOSOS DO DIA — Wikipedia API, conteúdo fresco diário */}
+      <FamousBirthdaysToday />
 
       {/* 4. TRENDING — grid 2 col com cards rich */}
       {data.mensagensDestaque.length > 0 && (

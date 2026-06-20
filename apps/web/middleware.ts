@@ -12,9 +12,9 @@ import { lookupRedirect } from "./app/redirects-data";
  *  - Senão: deixa passar pro Next normal
  */
 export const config = {
-  // ignora estáticos e API
+  // ignora estáticos e API (mas precisa entrar em .md pra rewrite acontecer)
   matcher: [
-    "/((?!_next/|api/|favicon|robots\\.txt|sitemap\\.xml|sitemap-clusters\\.xml|sitemap-autores\\.xml|sitemap-web-stories\\.xml|sitemap-mensagens-|sitemap-mensagens/|m/).*)",
+    "/((?!_next/|api/|favicon|llms\\.txt|robots\\.txt|sitemap\\.xml|sitemap-clusters\\.xml|sitemap-autores\\.xml|sitemap-web-stories\\.xml|sitemap-mensagens-|sitemap-mensagens/|m/).*)",
   ],
 };
 
@@ -28,6 +28,16 @@ export async function middleware(req: NextRequest) {
   if (host === "portalsoma.com.br" || host.startsWith("portalsoma.com.br:")) {
     const target = `https://www.portalsoma.com.br${req.nextUrl.pathname}${req.nextUrl.search}`;
     return NextResponse.redirect(target, 301);
+  }
+
+  // Endpoint markdown: rewrite /<path>.md → /api/md?path=<path>
+  // Ingest-friendly pra LLM crawlers.
+  if (path.endsWith(".md") && !path.startsWith("/_next/") && !path.startsWith("/api/")) {
+    const cleanPath = path.replace(/\.md$/, "");
+    const url = req.nextUrl.clone();
+    url.pathname = "/api/md";
+    url.searchParams.set("path", cleanPath);
+    return NextResponse.rewrite(url);
   }
 
   // Só interessa em URLs com redirects (nicho legado WP + dedup blog)

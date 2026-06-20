@@ -17,6 +17,7 @@ import { ViewTracker } from "@/components/view-tracker";
 import { ShareImageButton } from "@/components/share-image-button";
 import { ClusterHeroIntro } from "@/components/cluster-hero-intro";
 import { VerMensagensCTA } from "@/components/ver-mensagens-cta";
+import { GiftSuggestions } from "@/components/gift-suggestions";
 import { getCategoryIcon } from "@/lib/icons";
 import {
   jsonLdScript,
@@ -228,13 +229,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   switch (resolved.kind) {
     case "nicho": {
+      // Hub repositioning: foco em DISCOVERY / CATEGORIAS pra evitar canibalização com a home.
+      // Home mira "Mensagens de Aniversário" intent brand+emocional.
+      // Hub mira "categorias de mensagens" / "lista completa" intent navegação+autoridade.
       const ano = new Date().getFullYear();
       const totalCats = resolved.nicho.clusters.length;
       const totalMsgsAgg = await prisma.mensagem.count({
         where: { status: "PUBLISHED", cluster: { nichoId: resolved.nicho.id } },
       });
-      const titleAuto = `Mensagens de Aniversário ${ano} — ${totalMsgsAgg.toLocaleString("pt-BR")} em ${totalCats} categorias`;
-      const descAuto = `${totalMsgsAgg.toLocaleString("pt-BR")} mensagens de aniversário em ${totalCats} categorias — pra mãe, pai, amiga, marido, esposa, filhos. Curadoria editorial Portal Soma, atualizada em ${ano}.`;
+      const titleAuto = `Todas as Categorias de Mensagens de Aniversário ${ano} — ${totalCats} listas, ${totalMsgsAgg.toLocaleString("pt-BR")} mensagens`;
+      const descAuto = `Navegue por ${totalCats} categorias de mensagens de aniversário organizadas por destinatário, ocasião e tom — ${totalMsgsAgg.toLocaleString("pt-BR")} mensagens curadas. Lista completa Portal Soma ${ano}.`;
       return {
         title: resolved.nicho.metaTitle ?? titleAuto,
         description: resolved.nicho.metaDesc ?? descAuto,
@@ -250,7 +254,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       };
     }
     case "cluster": {
-      // Title/description dinâmicos com bucket de threshold + ano
+      // Title/description dinâmicos: KW primeiro (match exato com query) + bucket + ano
       const c = await prisma.mensagem.count({
         where: { clusterId: resolved.cluster.id, status: "PUBLISHED" },
       });
@@ -262,8 +266,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       const bucket = bucketCount(c);
       const ano = new Date().getFullYear();
       const mes = MESES_PT[(last?.atualizadoEm ?? new Date()).getMonth()];
-      const titleAuto = `${bucket} Mensagens de Aniversário ${resolved.cluster.nome} — ${ano}`;
-      const descAuto = `Mais de ${bucket.replace("+", "")} mensagens de aniversário ${resolved.cluster.nome.toLowerCase()} pra copiar e compartilhar. Curadoria editorial atualizada em ${mes} ${ano}.`;
+      const titleAuto = `Mensagens de Aniversário ${resolved.cluster.nome} — ${bucket} opções ${ano}`;
+      const descAuto = `Mais de ${bucket.replace("+", "")} mensagens de aniversário ${resolved.cluster.nome.toLowerCase()} pra copiar e compartilhar. Curadoria editorial Portal Soma, atualizada em ${mes} ${ano}.`;
+      const url = `https://www.portalsoma.com.br/${resolved.nicho.slug}/${resolved.cluster.slug}/`;
       return {
         title: resolved.cluster.metaTitle ?? titleAuto,
         description: resolved.cluster.metaDesc ?? descAuto,
@@ -271,17 +276,37 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
           title: resolved.cluster.metaTitle ?? titleAuto,
           description: resolved.cluster.metaDesc ?? descAuto,
-          url: `https://www.portalsoma.com.br/${resolved.nicho.slug}/${resolved.cluster.slug}/`,
+          url,
           type: "website",
+          siteName: "Portal Soma",
+          locale: "pt_BR",
         },
       };
     }
-    case "complemento":
+    case "complemento": {
+      const cAuto = await prisma.mensagem.count({
+        where: { complementoId: resolved.complemento.id, status: "PUBLISHED" },
+      });
+      const anoComp = new Date().getFullYear();
+      const titleAutoComp = `Mensagens de Aniversário ${resolved.cluster.nome} ${resolved.complemento.nome} — ${anoComp}`;
+      const descAutoComp =
+        resolved.complemento.descricao ??
+        `${cAuto > 0 ? `${cAuto} ` : ""}mensagens de aniversário ${resolved.cluster.nome.toLowerCase()} ${resolved.complemento.nome.toLowerCase()} pra copiar e compartilhar. Curadoria Portal Soma ${anoComp}.`;
+      const urlComp = `https://www.portalsoma.com.br/${resolved.nicho.slug}/${resolved.cluster.slug}/${resolved.complemento.slug}/`;
       return {
-        title: resolved.complemento.metaTitle ?? `${resolved.cluster.nome} ${resolved.complemento.nome} — Portal Soma`,
-        description: resolved.complemento.metaDesc ?? resolved.complemento.descricao ?? undefined,
+        title: resolved.complemento.metaTitle ?? titleAutoComp,
+        description: resolved.complemento.metaDesc ?? descAutoComp,
         alternates: { canonical: `/${resolved.nicho.slug}/${resolved.cluster.slug}/${resolved.complemento.slug}/` },
+        openGraph: {
+          title: resolved.complemento.metaTitle ?? titleAutoComp,
+          description: resolved.complemento.metaDesc ?? descAutoComp,
+          url: urlComp,
+          type: "website",
+          siteName: "Portal Soma",
+          locale: "pt_BR",
+        },
       };
+    }
     case "single": {
       const m = resolved.mensagem;
       const url = mensagemUrl({
@@ -289,6 +314,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         clusterSlug: m.cluster.slug,
         slug: m.slug,
       });
+      // OG dinâmica com texto da mensagem — CTR x2 em compartilhamento.
+      // Fallback pro hero estático se a rota /api/og falhar.
+      const ogDynamic = `https://www.portalsoma.com.br/api/og?id=${m.id}`;
       return {
         title: m.titulo,
         description: m.resumo ?? m.conteudo.slice(0, 155),
@@ -298,12 +326,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           title: m.titulo,
           description: m.resumo ?? m.conteudo.slice(0, 155),
           url,
-          images: m.imagemOg ? [m.imagemOg.url] : m.imagemHero ? [m.imagemHero.url] : [],
+          images: [
+            { url: ogDynamic, width: 1200, height: 630, alt: m.titulo },
+            ...(m.imagemOg ? [{ url: m.imagemOg.url }] : []),
+            ...(m.imagemHero ? [{ url: m.imagemHero.url }] : []),
+          ],
           publishedTime: m.publicadoEm?.toISOString(),
           modifiedTime: m.atualizadoEm.toISOString(),
           authors: [m.autor.nome],
           siteName: "Portal Soma",
           locale: "pt_BR",
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: m.titulo,
+          description: m.resumo ?? m.conteudo.slice(0, 155),
+          images: [ogDynamic],
         },
       };
     }
@@ -467,6 +505,7 @@ async function NichoHub({ data }: { data: NichoData }) {
             descricao: data.descricao ?? INTRO_EDITORIAL.slice(0, 160),
             url: `/${data.slug}/`,
             itemsCount: totalMsgs,
+            speakableSelectors: [".speakable-intro", ".speakable-pillar"],
           }),
           categoriasItemList,
           enrichedItemListSchema(
@@ -537,17 +576,17 @@ async function NichoHub({ data }: { data: NichoData }) {
           <div className="container-niver">
             <div className="text-center mb-8">
               <span className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-medium text-niver-700 bg-niver-100 px-3 py-1.5 rounded-full mb-4">
-                <BookOpen size={12} strokeWidth={2.4} /> Curadoria editorial Portal Soma
+                <BookOpen size={12} strokeWidth={2.4} /> Índice editorial completo
               </span>
               <h1
                 itemProp="headline"
                 className="font-display text-3xl sm:text-5xl text-niver-900 max-w-4xl mx-auto leading-tight"
               >
-                Mensagens de Aniversário {ano}
+                Todas as Categorias de Mensagens de Aniversário
               </h1>
               <p className="mt-4 text-stone-700 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed">
-                Mais de {totalMsgs.toLocaleString("pt-BR")} mensagens em {data.clusters.length} categorias —
-                pra mãe, pai, amiga, marido, esposa, filhos e todas as ocasiões da vida.
+                {data.clusters.length} categorias organizadas por destinatário, ocasião, tom e canal —
+                {totalMsgs.toLocaleString("pt-BR")} mensagens curadas pra você encontrar a certa em segundos.
               </p>
               <p className="mt-3 text-xs text-stone-500">
                 Atualizado em {mesUltimo} de {ano}
@@ -566,12 +605,12 @@ async function NichoHub({ data }: { data: NichoData }) {
           </div>
         </header>
 
-        {/* INTRO EDITORIAL */}
+        {/* INTRO EDITORIAL — Speakable pra Google Assistant + GEO */}
         <section className="container-niver py-10 max-w-3xl">
           <h2 className="heading-section-bar mb-5 text-niver-800">
             O que é mensagem de aniversário?
           </h2>
-          <div className="prose prose-stone max-w-none text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
+          <div className="speakable-intro prose prose-stone max-w-none text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
             {INTRO_EDITORIAL}
           </div>
         </section>
@@ -639,13 +678,13 @@ async function NichoHub({ data }: { data: NichoData }) {
           );
         })}
 
-        {/* EDITORIAL COMO ESCOLHER */}
+        {/* EDITORIAL COMO ESCOLHER — Speakable pillar */}
         <section className="bg-warm-50 py-12 border-y border-stone-100">
           <div className="container-niver max-w-3xl">
             <h2 className="heading-section-bar mb-5 text-niver-800">
               Como escolher a mensagem certa
             </h2>
-            <div className="prose prose-stone max-w-none text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
+            <div className="speakable-pillar prose prose-stone max-w-none text-stone-700 leading-[1.85] text-[16px] sm:text-[17px] whitespace-pre-line">
               {COMO_ESCOLHER}
             </div>
           </div>
@@ -857,7 +896,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             </span>
           </nav>
           <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-[1.15] mb-5">
-            {bucket} Mensagens de Aniversário {cluster.nome} — {anoAtual}
+            Mensagens de Aniversário {cluster.nome} — {bucket} opções {anoAtual}
           </h1>
           {cluster.editorial?.introHero ? (
             <ClusterHeroIntro text={cluster.editorial.introHero} />
@@ -1484,6 +1523,13 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
             </div>
           )}
         </section>
+
+        {/* PRESENTES (afiliado Amazon) — contextual ao destinatário */}
+        {mensagem.cluster.tipo === "DESTINATARIO" && (
+          <section className="container-niver py-6 max-w-3xl">
+            <GiftSuggestions destinatario={mensagem.cluster.nome.replace(/^Para\s+/i, "")} />
+          </section>
+        )}
 
         {/* RELACIONADAS */}
         {relacionadas.length > 0 && (

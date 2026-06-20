@@ -139,6 +139,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const navData = await getNavData();
   return (
     <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable}`}>
+      <head>
+        {/* Preconnect handshake antecipado com CDN de imagens — LCP -150~300ms mobile. */}
+        <link rel="preconnect" href="https://media.portalsoma.com.br" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://media.portalsoma.com.br" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+      </head>
       <body>
         <script
           type="application/ld+json"
