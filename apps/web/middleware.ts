@@ -30,15 +30,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(target, 301);
   }
 
-  // Endpoint markdown: rewrite /<path>.md → /api/md?path=<path>
-  // Ingest-friendly pra LLM crawlers.
-  if (path.endsWith(".md") && !path.startsWith("/_next/") && !path.startsWith("/api/")) {
-    const cleanPath = path.replace(/\.md$/, "");
-    const url = req.nextUrl.clone();
-    url.pathname = "/api/md";
-    url.searchParams.set("path", cleanPath);
-    return NextResponse.rewrite(url);
-  }
+  // Endpoint markdown agora gerenciado por next.config rewrites (mais robusto pra extensões).
 
   // Só interessa em URLs com redirects (nicho legado WP + dedup blog)
   if (!path.startsWith("/mensagem-de-aniversario/") && !path.startsWith("/blog/")) {
