@@ -1,6 +1,7 @@
 import { prisma } from "@nivertotal/db";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic"; // evita pre-render no build
 export const revalidate = 3600;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";

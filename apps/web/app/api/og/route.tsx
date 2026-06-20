@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { prisma } from "@nivertotal/db";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic"; // evita pre-render no build
 // Cache CDN 24h — gera 1 vez, serve milhões de vezes via CF.
 export const revalidate = 86400;
 

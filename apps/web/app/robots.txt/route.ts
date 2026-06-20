@@ -1,4 +1,5 @@
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic"; // estatico funcional, mas dynamic evita conflito w/ static export
 export const revalidate = 86400;
 
 /**
