@@ -25,10 +25,10 @@ interface Props {
   nichoSlug: string;
   destacada?: boolean;
   badge?: "trending" | "new" | "top" | "religious";
-  /** Quando true, NÃO emite itemScope/itemType=Article — evita duplicar microdata Article
+  /** Quando true, NÃO emite itemScope/itemType=Article · evita duplicar microdata Article
    *  em singles (onde o main já é Article principal) ou em listas que precisam só de ListItem. */
   noArticleMicrodata?: boolean;
-  /** Prioridade alta na imagem hero (LCP candidate) — use só no 1º card above-the-fold. */
+  /** Prioridade alta na imagem hero (LCP candidate) · use só no 1º card above-the-fold. */
   priority?: boolean;
 }
 

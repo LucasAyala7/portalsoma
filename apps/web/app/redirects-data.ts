@@ -1,6 +1,6 @@
 /**
  * Carrega os redirects ativos do DB e injeta no middleware via build.
- * Roda no SSR no carregamento — cache em memória do Next.
+ * Roda no SSR no carregamento · cache em memória do Next.
  *
  * Esse arquivo é importado APENAS pela app route `/api/redirect/[...path]`
  * (não pelo middleware, que precisa rodar em edge runtime sem Prisma).

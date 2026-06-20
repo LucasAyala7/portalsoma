@@ -7,12 +7,12 @@ export const dynamic = "force-dynamic";
 export const revalidate = 86400;
 
 export const metadata: Metadata = {
-  title: "Blog — Reflexões, Tradições e Significados dos Aniversários",
+  title: "Blog · Reflexões, Tradições e Significados dos Aniversários",
   description:
     "Artigos editoriais sobre o significado das datas, etiqueta do aniversário, presentes, celebração e relações afetivas. Leitura aprofundada do Portal Soma.",
   alternates: { canonical: "https://www.portalsoma.com.br/blog/" },
   openGraph: {
-    title: "Blog Portal Soma — Reflexões sobre Aniversário",
+    title: "Blog Portal Soma · Reflexões sobre Aniversário",
     description: "Conteúdo editorial aprofundado sobre datas, presentes e relações.",
     url: "https://www.portalsoma.com.br/blog/",
     type: "website",

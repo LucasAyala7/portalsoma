@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const autor = await prisma.author.findUnique({ where: { slug, ativo: true } });
   if (!autor) return {};
   return {
-    title: `${autor.nome} — Autor no Portal Soma`,
+    title: `${autor.nome} · Autor no Portal Soma`,
     description: autor.bio.slice(0, 155),
     alternates: { canonical: `/autor/${slug}/` },
   };

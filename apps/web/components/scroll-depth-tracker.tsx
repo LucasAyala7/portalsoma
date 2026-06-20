@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
 
 /**
- * Scroll depth tracker — emite eventos GA4 quando user atinge 25/50/75/100% da página.
+ * Scroll depth tracker · emite eventos GA4 quando user atinge 25/50/75/100% da página.
  * Reseta em mudança de rota.
  */
 export function ScrollDepthTracker() {

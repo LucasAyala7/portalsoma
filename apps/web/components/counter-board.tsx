@@ -12,7 +12,7 @@ interface Props {
 }
 
 /**
- * Grid de stats grandes — usado em landing/cluster header.
+ * Grid de stats grandes · usado em landing/cluster header.
  * Visual: cards arredondados com número proeminente + label discreta.
  */
 export function CounterBoard({ items }: Props) {

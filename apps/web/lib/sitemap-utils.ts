@@ -3,7 +3,7 @@
  *
  * Estratégia: sitemap index (`/sitemap.xml`) aponta pra sub-sitemaps temáticos
  * (clusters, mensagens paginadas, autores, web stories). Cada sub-sitemap
- * carrega no máximo 5000 URLs — limite Google é 50k, mas fragmentar mais
+ * carrega no máximo 5000 URLs · limite Google é 50k, mas fragmentar mais
  * acelera descoberta e re-crawl seletivo.
  */
 

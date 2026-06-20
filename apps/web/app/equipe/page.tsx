@@ -4,12 +4,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Users, CheckCircle2, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Nossa Equipe — Autores e editores do Portal Soma",
+  title: "Nossa Equipe · Autores e editores do Portal Soma",
   description:
     "Conheça os autores e editores por trás do Portal Soma. Vozes reais e personagens autorais que escrevem mensagens de aniversário com cuidado editorial.",
   alternates: { canonical: "/equipe/" },
   openGraph: {
-    title: "Nossa Equipe — Portal Soma",
+    title: "Nossa Equipe · Portal Soma",
     description: "Os autores e editores que escrevem mensagens no Portal Soma.",
     url: "/equipe/",
     type: "website",
@@ -93,19 +93,19 @@ export default async function EquipePage() {
           <p className="text-stone-700 leading-relaxed mb-4">
             Trabalhamos com dois tipos de autores: <strong>editores reais</strong>, que são pessoas de
             verdade com nome, foto e e-mail; e <strong>autores virtuais</strong>, que são personagens
-            autorais criados pela nossa equipe — sempre identificados como tais — para dar variedade de
+            autorais criados pela nossa equipe · sempre identificados como tais · para dar variedade de
             voz ao acervo. Eles representam tipos de pessoas que escrevem mensagens de aniversário no dia
             a dia: a avó religiosa, o pastor da igreja, a tia engraçada, o irmão mais novo.
           </p>
           <p className="text-stone-700 leading-relaxed mb-4">
             Ao escrever como esses personagens, ampliamos o leque de estilos disponíveis no site sem
-            perder a coerência editorial. Toda mensagem — seja escrita por humano ou assinada por
-            personagem virtual — passa pela mesma régua: precisa ser correta no português, respeitosa,
+            perder a coerência editorial. Toda mensagem · seja escrita por humano ou assinada por
+            personagem virtual · passa pela mesma régua: precisa ser correta no português, respeitosa,
             original e emocionalmente verdadeira pro contexto que se propõe.
           </p>
           <p className="text-stone-700 leading-relaxed">
             A distinção entre real e personagem é declarada na página de cada autor e abaixo. Não
-            escondemos isso de ninguém — transparência editorial é parte do nosso compromisso com você.
+            escondemos isso de ninguém · transparência editorial é parte do nosso compromisso com você.
           </p>
         </div>
       </section>

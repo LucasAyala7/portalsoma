@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Quote, MessageCircle, Heart } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Depoimentos — O que dizem do Portal Soma",
+  title: "Depoimentos · O que dizem do Portal Soma",
   description:
     "Histórias de leitores que usaram mensagens do Portal Soma para emocionar familiares e amigos. Depoimentos sobre o uso, a curadoria e a qualidade das mensagens.",
   alternates: { canonical: "/depoimentos/" },
   openGraph: {
-    title: "Depoimentos — Portal Soma",
+    title: "Depoimentos · Portal Soma",
     description: "Histórias de quem usou nossas mensagens.",
     url: "/depoimentos/",
     type: "website",
@@ -135,7 +135,7 @@ export default function DepoimentosPage() {
             A gente publica mensagens em escala, mas a checagem final da nossa qualidade não está numa
             métrica de tráfego ou número de cliques. Ela está em quem leu, copiou e mandou uma
             mensagem nossa e sentiu que ela funcionou. Por isso, quando alguém escreve pro nosso e-mail
-            contando uma história, a gente pergunta se podemos publicar — sempre preservando privacidade
+            contando uma história, a gente pergunta se podemos publicar · sempre preservando privacidade
             quando solicitado.
           </p>
           <p className="text-stone-700 leading-relaxed">
@@ -144,7 +144,7 @@ export default function DepoimentosPage() {
             <a href="mailto:lucas@portalsoma.com.br" className="text-niver-700 underline">
               lucas@portalsoma.com.br
             </a>{" "}
-            — vamos adorar ler.
+            · vamos adorar ler.
           </p>
         </div>
       </section>
@@ -194,7 +194,7 @@ export default function DepoimentosPage() {
           </h2>
           <p className="text-stone-700 leading-relaxed mb-6">
             Mandou uma mensagem do Portal Soma e quer compartilhar a reação que você recebeu? A gente
-            adora ler essas histórias — e elas ajudam a manter nosso time motivado a continuar.
+            adora ler essas histórias · e elas ajudam a manter nosso time motivado a continuar.
           </p>
           <a href="/contato/" className="btn-primary">
             <MessageCircle size={16} /> Enviar minha história

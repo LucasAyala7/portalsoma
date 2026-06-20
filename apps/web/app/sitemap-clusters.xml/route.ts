@@ -7,7 +7,7 @@ import {
 } from "../../lib/sitemap-utils";
 
 /**
- * /sitemap-clusters.xml — raiz + nichos + clusters + complementos.
+ * /sitemap-clusters.xml · raiz + nichos + clusters + complementos.
  *
  * Esse sub-sitemap concentra as páginas "hub" do silo:
  *  - Home

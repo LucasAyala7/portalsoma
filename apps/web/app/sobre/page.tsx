@@ -3,14 +3,14 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Heart, Sparkles, Users, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Sobre o Portal Soma — Nossa história, propósito e equipe",
+  title: "Sobre o Portal Soma · Nossa história, propósito e equipe",
   description:
     "Conheça a história do Portal Soma, o site brasileiro dedicado a mensagens de aniversário emocionantes em português. Fundado em 2026, mantido pela Vencedores Digitais.",
   alternates: { canonical: "/sobre/" },
   openGraph: {
     title: "Sobre o Portal Soma",
     description:
-      "A história, a equipe e o propósito por trás do Portal Soma — mensagens de aniversário pra emocionar quem você ama.",
+      "A história, a equipe e o propósito por trás do Portal Soma · mensagens de aniversário pra emocionar quem você ama.",
     url: "/sobre/",
     type: "article",
   },
@@ -92,7 +92,7 @@ export default function SobrePage() {
             Em algum momento, todo mundo precisou parabenizar alguém e travou na hora de escolher as
             palavras. Aquele momento curto entre abrir o aplicativo de mensagens, lembrar do aniversário e
             sentir que o texto que vai sair precisa ser à altura do amor que se sente. Foi pra esse momento
-            que o Portal Soma nasceu — pra que ninguém mais perca a oportunidade de emocionar quem ama
+            que o Portal Soma nasceu · pra que ninguém mais perca a oportunidade de emocionar quem ama
             por não encontrar a frase certa.
           </p>
           <p className="mt-4 text-stone-700 leading-relaxed">
@@ -123,7 +123,7 @@ export default function SobrePage() {
               <h3 className="text-xl font-display font-semibold text-stone-900 mb-2">Vozes diversas</h3>
               <p className="text-stone-700 leading-relaxed">
                 Não acreditamos num único jeito de parabenizar. Por isso convidamos vozes diferentes —
-                avós, pastores, professoras, irmãos mais novos — pra escrever conosco. Cada autor traz seu
+                avós, pastores, professoras, irmãos mais novos · pra escrever conosco. Cada autor traz seu
                 estilo, sua fé, sua memória.
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function SobrePage() {
             O Portal Soma foi fundado em abril de 2026 pelo empreendedor maranhense Lucas Ayala, com
             sede em Bacabal, no Maranhão. A ideia partiu de uma observação simples: existem milhões de
             mensagens de aniversário circulando na internet brasileira, mas a maioria é repetitiva, mal
-            escrita ou impessoal. Lucas acreditava que dava pra fazer diferente — combinando editoria
+            escrita ou impessoal. Lucas acreditava que dava pra fazer diferente · combinando editoria
             séria, vozes humanas e ferramentas modernas pra entregar conteúdo de qualidade em escala.
           </p>
           <p className="text-stone-700 leading-relaxed mb-4">
@@ -155,7 +155,7 @@ export default function SobrePage() {
             rapidamente. Hoje, o site está dentro da estrutura da{" "}
             <strong>Agência Vencedores Digitais</strong> (CNPJ 34.600.484/0001-21), e conta com uma
             equipe editorial mista: redatores humanos que assinam edição e curadoria, e autores
-            virtuais — personagens com vozes próprias, claramente identificados como tais — que dão
+            virtuais · personagens com vozes próprias, claramente identificados como tais · que dão
             cor e variedade ao acervo. Toda mensagem publicada está vinculada a um autor, e a página do
             autor explica quem ele é.
           </p>

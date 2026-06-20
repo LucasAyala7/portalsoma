@@ -17,14 +17,14 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const { q } = await searchParams;
   const query = (q ?? "").trim().slice(0, 80);
-  // Title sem suffix "| Portal Soma" — layout.tsx template já adiciona automaticamente.
+  // Title sem suffix "| Portal Soma" · layout.tsx template já adiciona automaticamente.
   if (!query) {
     return {
       title: "Buscar mensagens",
       description: "Encontre mensagens de aniversário por palavra-chave, autor, ocasião ou estilo.",
       alternates: { canonical: `${SITE_URL}/buscar/` },
       openGraph: {
-        title: "Buscar mensagens — Portal Soma",
+        title: "Buscar mensagens · Portal Soma",
         description: "Encontre mensagens de aniversário por palavra-chave, autor, ocasião ou estilo.",
         url: `${SITE_URL}/buscar/`,
         type: "website",
@@ -35,12 +35,12 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   }
   const fullUrl = `${SITE_URL}/buscar/?q=${encodeURIComponent(query)}`;
   return {
-    title: `"${query}" — Resultados de busca`,
+    title: `"${query}" · Resultados de busca`,
     description: `Resultados da busca por "${query}" em mensagens de aniversário do Portal Soma.`,
     alternates: { canonical: fullUrl },
     robots: { index: false, follow: true },
     openGraph: {
-      title: `"${query}" — Resultados de busca · Portal Soma`,
+      title: `"${query}" · Resultados de busca · Portal Soma`,
       description: `Resultados da busca por "${query}" em mensagens de aniversário do Portal Soma.`,
       url: fullUrl,
       type: "website",

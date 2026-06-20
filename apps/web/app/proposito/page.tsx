@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Heart, Compass, Feather, Globe2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Nosso Propósito — Manifesto editorial do Portal Soma",
+  title: "Nosso Propósito · Manifesto editorial do Portal Soma",
   description:
     "O manifesto editorial do Portal Soma. Por que existimos, no que acreditamos e como entendemos o papel de uma mensagem de aniversário na vida das pessoas.",
   alternates: { canonical: "/proposito/" },
   openGraph: {
-    title: "Nosso Propósito — Portal Soma",
+    title: "Nosso Propósito · Portal Soma",
     description: "Manifesto editorial: por que o Portal Soma existe.",
     url: "/proposito/",
     type: "article",
@@ -132,7 +132,7 @@ export default function PropositoPage() {
               </li>
               <li>
                 <strong>Religiosidade desrespeitosa:</strong> mensagens evangélicas, católicas,
-                espíritas, umbandistas — todas têm espaço se forem escritas com respeito à tradição que
+                espíritas, umbandistas · todas têm espaço se forem escritas com respeito à tradição que
                 representam. Apropriação superficial, não.
               </li>
               <li>
@@ -156,7 +156,7 @@ export default function PropositoPage() {
               coloca um pedaço de você nela.
             </p>
             <p className="text-stone-700 leading-relaxed">
-              E se uma mensagem do site te emocionou — se você mandou e a pessoa amou — a gente adoraria
+              E se uma mensagem do site te emocionou · se você mandou e a pessoa amou · a gente adoraria
               saber. Histórias assim alimentam o trabalho da nossa equipe. Escreva pra{" "}
               <a href="mailto:lucas@portalsoma.com.br" className="text-niver-700 underline">
                 lucas@portalsoma.com.br

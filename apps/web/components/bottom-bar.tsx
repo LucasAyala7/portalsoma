@@ -37,7 +37,7 @@ export function BottomBar() {
     if (typeof navigator !== "undefined" && "share" in navigator) {
       try {
         await navigator.share({
-          title: "Portal Soma — Mensagens de Aniversário",
+          title: "Portal Soma · Mensagens de Aniversário",
           text: "Mensagens originais pra emocionar quem você ama",
           url,
         });

@@ -19,11 +19,11 @@ interface Props {
 }
 
 /**
- * Mega nav desktop — botões com dropdown 3-col por categoria.
+ * Mega nav desktop · botões com dropdown 3-col por categoria.
  * Mobile usa MobileMenu (drawer); este componente é hidden md:flex.
  *
  * UX hover: o dropdown encosta no botão (pt-2 invisível como bridge) e há
- * grace period de 150ms no onMouseLeave — evita fechar quando o mouse cruza
+ * grace period de 150ms no onMouseLeave · evita fechar quando o mouse cruza
  * de volta ou desliza entre trigger e itens.
  */
 export function MegaNav({ sections, nichoSlug = "mensagem-de-aniversario" }: Props) {

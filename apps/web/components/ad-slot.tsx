@@ -23,7 +23,7 @@ declare global {
 }
 
 /**
- * Slot de ad manual — reserva espaço (minHeight) pra evitar CLS, e dispara
+ * Slot de ad manual · reserva espaço (minHeight) pra evitar CLS, e dispara
  * adsbygoogle.push() no mount. Funciona em SPA navigation também.
  */
 export function AdSlot({ slot, format = "auto", layoutKey, minHeight = 250, className }: Props) {
@@ -35,7 +35,7 @@ export function AdSlot({ slot, format = "auto", layoutKey, minHeight = 250, clas
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       }
     } catch {
-      /* swallow — adblock ou script ainda não carregou */
+      /* swallow · adblock ou script ainda não carregou */
     }
   }, []);
 

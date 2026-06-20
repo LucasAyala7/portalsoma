@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Scale, FileText, AlertTriangle } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Termos de Uso — Portal Soma",
+  title: "Termos de Uso · Portal Soma",
   description:
     "Termos de Uso do Portal Soma. Regras de utilização do conteúdo, direitos autorais, limites de uso pessoal e comercial das mensagens de aniversário.",
   alternates: { canonical: "/termos-de-uso/" },
   openGraph: {
-    title: "Termos de Uso — Portal Soma",
+    title: "Termos de Uso · Portal Soma",
     description: "Regras para uso do conteúdo do Portal Soma.",
     url: "/termos-de-uso/",
     type: "article",
@@ -30,7 +30,7 @@ export default function TermosPage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "Termos de Uso — Portal Soma",
+            name: "Termos de Uso · Portal Soma",
             url: "https://www.portalsoma.com.br/termos-de-uso/",
             inLanguage: "pt-BR",
             dateModified: "2026-06-01",
@@ -79,9 +79,9 @@ export default function TermosPage() {
 
           <h2 className="heading-section-bar mt-10 mb-4">2. Conteúdo do site</h2>
           <p className="text-stone-700 leading-relaxed">
-            Todo o conteúdo publicado no Portal Soma — incluindo mas não se limitando a mensagens de
+            Todo o conteúdo publicado no Portal Soma · incluindo mas não se limitando a mensagens de
             aniversário, textos editoriais, biografias de autores, fotografias, ilustrações, logotipos,
-            arquitetura de informação, design e código-fonte do site — é de autoria, propriedade ou uso
+            arquitetura de informação, design e código-fonte do site · é de autoria, propriedade ou uso
             licenciado pelo Portal Soma e/ou pela Agência Vencedores Digitais. Está protegido pela Lei
             de Direitos Autorais brasileira (Lei nº 9.610/1998) e por tratados internacionais
             aplicáveis.
@@ -97,7 +97,7 @@ export default function TermosPage() {
             Você está autorizado, gratuitamente e sem necessidade de pedir permissão prévia, a:
           </p>
           <ul className="text-stone-700 leading-relaxed space-y-2">
-            <li>Ler, copiar e enviar mensagens do Portal Soma para pessoas queridas — familiares, amigos, colegas — em ocasiões pessoais como aniversários, datas comemorativas, cumprimentos religiosos;</li>
+            <li>Ler, copiar e enviar mensagens do Portal Soma para pessoas queridas · familiares, amigos, colegas · em ocasiões pessoais como aniversários, datas comemorativas, cumprimentos religiosos;</li>
             <li>Adaptar livremente o texto pra inserir nome próprio, lembrança específica ou ajustes de tom;</li>
             <li>Compartilhar a mensagem por WhatsApp, SMS, e-mail, redes sociais privadas ou cartão físico, mantendo o caráter pessoal do envio;</li>
             <li>Salvar mensagens pra uso futuro em álbuns, agendas ou cadernos pessoais.</li>
@@ -112,7 +112,7 @@ export default function TermosPage() {
             <strong>Não é permitido</strong>, sem autorização escrita prévia:
           </p>
           <ul className="text-stone-700 leading-relaxed space-y-2">
-            <li>Reproduzir conteúdo do Portal Soma — total ou parcial — em outros sites, blogs, aplicativos, livros impressos, e-books ou bases de dados, mesmo com atribuição;</li>
+            <li>Reproduzir conteúdo do Portal Soma · total ou parcial · em outros sites, blogs, aplicativos, livros impressos, e-books ou bases de dados, mesmo com atribuição;</li>
             <li>Comercializar produtos físicos (cartões, canecas, quadros) que reproduzam mensagens do site;</li>
             <li>Treinar modelos de inteligência artificial com nosso conteúdo;</li>
             <li>Fazer scraping automatizado do site pra reuso em qualquer formato;</li>
@@ -152,7 +152,7 @@ export default function TermosPage() {
           <p className="text-stone-700 leading-relaxed">
             O Portal Soma é oferecido "como está". Embora a gente cuide com afinco da qualidade
             editorial, não garantimos que o site esteja sempre disponível, livre de erros ou adequado a
-            todo propósito específico. O site é uma plataforma de inspiração e referência — a decisão
+            todo propósito específico. O site é uma plataforma de inspiração e referência · a decisão
             final sobre qual mensagem enviar a quem é sempre sua. Não nos responsabilizamos por
             reações de terceiros a mensagens enviadas por você usando textos retirados do site.
           </p>

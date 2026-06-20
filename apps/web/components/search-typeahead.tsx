@@ -18,7 +18,7 @@ interface Props {
 
 /**
  * Search local na collection page (filtra cards visíveis).
- * Não bate em servidor — instantâneo.
+ * Não bate em servidor · instantâneo.
  */
 export function SearchTypeahead({ messages, placeholder = "Buscar mensagens...", onFilter }: Props) {
   const [query, setQuery] = useState("");

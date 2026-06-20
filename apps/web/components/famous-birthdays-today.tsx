@@ -18,7 +18,7 @@ const MESES_PT = [
 ];
 
 /**
- * Aniversariantes famosos brasileiros nascidos hoje — via Wikipedia API (REST on this day).
+ * Aniversariantes famosos brasileiros nascidos hoje · via Wikipedia API (REST on this day).
  * Fresh content diário grátis, signal de freshness pro Google, tráfego brand novo.
  *
  * Cache server-side: ISR 24h (revalidate). API Wikipedia liberada CORS sem chave.
@@ -58,7 +58,7 @@ export async function FamousBirthdaysToday() {
         });
     }
   } catch {
-    // Falha silenciosa — widget some, não quebra a página.
+    // Falha silenciosa · widget some, não quebra a página.
   }
 
   if (famosos.length === 0) return null;
@@ -74,7 +74,7 @@ export async function FamousBirthdaysToday() {
             Nasceram em {labelData}
           </h2>
           <p className="text-sm text-stone-500 mt-1">
-            Pessoas famosas que fazem aniversário hoje — referência cultural pra inspirar sua mensagem.
+            Pessoas famosas que fazem aniversário hoje · referência cultural pra inspirar sua mensagem.
           </p>
         </div>
         <Cake size={26} className="text-niver-500" strokeWidth={2} />

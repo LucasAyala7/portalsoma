@@ -3,7 +3,7 @@ import { prisma } from "@nivertotal/db";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic"; // evita pre-render no build
-// Cache CDN 24h — gera 1 vez, serve milhões de vezes via CF.
+// Cache CDN 24h · gera 1 vez, serve milhões de vezes via CF.
 export const revalidate = 86400;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
@@ -11,7 +11,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com
 /**
  * OG image dinâmica com texto da mensagem.
  * Quando alguém compartilha link no WhatsApp/IG/X, preview mostra a mensagem inteira
- * em vez de imagem genérica — CTR x2 em compartilhamento orgânico.
+ * em vez de imagem genérica · CTR x2 em compartilhamento orgânico.
  *
  * Uso: <link rel="og:image" content="https://www.portalsoma.com.br/api/og?id={mensagemId}">
  *
@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 
   if (!m) return new Response("not found", { status: 404 });
 
-  // Trim do conteúdo se for muito longo — caber na imagem.
+  // Trim do conteúdo se for muito longo · caber na imagem.
   const conteudo = m.conteudo.length > 280 ? m.conteudo.slice(0, 277) + "…" : m.conteudo;
   const fontSize = m.conteudo.length > 200 ? 30 : m.conteudo.length > 120 ? 36 : 42;
 

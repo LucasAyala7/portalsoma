@@ -7,7 +7,7 @@ import {
 } from "../../lib/sitemap-utils";
 
 /**
- * Sitemap index — `/sitemap.xml`
+ * Sitemap index · `/sitemap.xml`
  *
  * Aponta pra sub-sitemaps fragmentados pra Google indexar mais rápido e
  * re-crawlear seletivamente quando algum cluster/mensagem é atualizado.

@@ -1,7 +1,7 @@
 import Script from "next/script";
 
 /**
- * Google Analytics 4 — carregamento global via next/script.
+ * Google Analytics 4 · carregamento global via next/script.
  * - strategy="afterInteractive": carrega após hydration, não bloqueia LCP.
  * - Configurado em layout.tsx; emite events via `trackEvent()` helper.
  */

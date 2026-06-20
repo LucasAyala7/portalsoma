@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Shield, Lock, Eye, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade — Portal Soma",
+  title: "Política de Privacidade · Portal Soma",
   description:
     "Política de Privacidade do Portal Soma. Como coletamos, usamos e protegemos seus dados pessoais conforme a LGPD brasileira e o GDPR europeu.",
   alternates: { canonical: "/politica-de-privacidade/" },
   openGraph: {
-    title: "Política de Privacidade — Portal Soma",
+    title: "Política de Privacidade · Portal Soma",
     description: "Tratamento de dados conforme LGPD e GDPR.",
     url: "/politica-de-privacidade/",
     type: "article",
@@ -31,7 +31,7 @@ export default function PrivacidadePage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "Política de Privacidade — Portal Soma",
+            name: "Política de Privacidade · Portal Soma",
             url: "https://www.portalsoma.com.br/politica-de-privacidade/",
             inLanguage: "pt-BR",
             dateModified: "2026-06-01",
@@ -56,7 +56,7 @@ export default function PrivacidadePage() {
             Política de Privacidade
           </h1>
           <p className="mt-4 text-stone-600">
-            Versão {VERSAO} — em vigor desde {VIGENCIA}
+            Versão {VERSAO} · em vigor desde {VIGENCIA}
           </p>
         </div>
       </section>
@@ -67,8 +67,8 @@ export default function PrivacidadePage() {
             O Portal Soma respeita sua privacidade. Esta Política descreve como coletamos, usamos,
             compartilhamos e protegemos os seus dados pessoais quando você visita{" "}
             <strong>www.portalsoma.com.br</strong>. Ela se aplica a todos os visitantes do site e foi
-            elaborada com base na Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018) e no
-            Regulamento Geral de Proteção de Dados europeu (GDPR — Regulamento UE 2016/679).
+            elaborada com base na Lei Geral de Proteção de Dados (LGPD · Lei nº 13.709/2018) e no
+            Regulamento Geral de Proteção de Dados europeu (GDPR · Regulamento UE 2016/679).
           </p>
 
           <h2 className="heading-section-bar mt-10 mb-4">1. Quem somos</h2>
@@ -81,7 +81,7 @@ export default function PrivacidadePage() {
 
           <h2 className="heading-section-bar mt-10 mb-4">2. Dados que coletamos</h2>
           <p className="text-stone-700 leading-relaxed mb-3">
-            A maior parte da navegação no Portal Soma é totalmente anônima — você não precisa criar
+            A maior parte da navegação no Portal Soma é totalmente anônima · você não precisa criar
             conta nem fornecer dados pessoais pra ler e copiar mensagens. Quando você simplesmente
             acessa nosso site, coletamos automaticamente os seguintes dados:
           </p>
@@ -89,7 +89,7 @@ export default function PrivacidadePage() {
             <li>Endereço IP (anonimizado quando processado pelo Google Analytics);</li>
             <li>Tipo e versão do navegador, sistema operacional, dispositivo;</li>
             <li>Páginas visitadas, tempo de permanência, origem do acesso (referrer);</li>
-            <li>Identificadores de cookies — veja nossa <a href="/politica-de-cookies/" className="text-niver-700 underline">Política de Cookies</a>.</li>
+            <li>Identificadores de cookies · veja nossa <a href="/politica-de-cookies/" className="text-niver-700 underline">Política de Cookies</a>.</li>
           </ul>
           <p className="text-stone-700 leading-relaxed mt-3">
             Já quando você nos envia um e-mail, formulário de contato, denúncia DMCA ou pedido relativo
@@ -128,7 +128,7 @@ export default function PrivacidadePage() {
           </p>
           <ul className="text-stone-700 leading-relaxed space-y-2">
             <li><strong>Google Analytics (Google LLC):</strong> análise de tráfego e comportamento agregado, com IP anonimizado.</li>
-            <li><strong>Google AdSense (Google LLC):</strong> exibição de anúncios e geração de receita. O Google pode usar cookies pra personalizar anúncios — você pode controlar isso em <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-niver-700 underline">adssettings.google.com</a>.</li>
+            <li><strong>Google AdSense (Google LLC):</strong> exibição de anúncios e geração de receita. O Google pode usar cookies pra personalizar anúncios · você pode controlar isso em <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-niver-700 underline">adssettings.google.com</a>.</li>
             <li><strong>Provedor de hospedagem:</strong> infraestrutura de servidores, sem acesso aos dados de visitantes em nível pessoal.</li>
             <li><strong>Autoridades públicas:</strong> apenas mediante ordem judicial ou requisição legal válida.</li>
           </ul>

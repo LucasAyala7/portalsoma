@@ -46,7 +46,7 @@ export interface CategoryIconConfig {
 const FALLBACK: CategoryIconConfig = { icon: Cake, color: "niver" };
 
 const DESTINATARIO: Record<string, CategoryIconConfig> = {
-  // família — rose (carinho)
+  // família · rose (carinho)
   "para-mae": { icon: Flower2, color: "rose" },
   "para-pai": { icon: Briefcase, color: "stone" },
   "para-filha": { icon: Sparkles, color: "rose" },
@@ -79,21 +79,21 @@ const DESTINATARIO: Record<string, CategoryIconConfig> = {
   "para-namorado": { icon: Heart, color: "rose" },
   "para-namorada": { icon: Heart, color: "rose" },
 
-  // amizade — niver (amizade quente)
+  // amizade · niver (amizade quente)
   "para-amiga": { icon: Heart, color: "niver" },
   "para-amigo": { icon: Users, color: "niver" },
 
-  // trabalho — stone
+  // trabalho · stone
   "para-chefe": { icon: Briefcase, color: "stone" },
   "para-cliente": { icon: HeartHandshake, color: "stone" },
   "para-colega": { icon: Coffee, color: "stone" },
 
-  // religiosos — violet
+  // religiosos · violet
   "para-pastor": { icon: Cross, color: "violet" },
   "para-pastora": { icon: Cross, color: "violet" },
   "para-padre": { icon: Church, color: "violet" },
 
-  // falecidos — sky (calmo)
+  // falecidos · sky (calmo)
   "para-mae-falecida": { icon: Heart, color: "sky" },
   "para-pai-falecido": { icon: Heart, color: "sky" },
   "para-amigo-falecido": { icon: Heart, color: "sky" },

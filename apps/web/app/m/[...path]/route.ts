@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com.br";
 
 /**
- * Endpoint markdown raw — GEO friendly pra LLM crawlers.
+ * Endpoint markdown raw · GEO friendly pra LLM crawlers.
  *
  * Convenção: prefixar URL HTML com /m/ pra obter versão markdown.
  *   /mensagem-de-aniversario/para-mae/      → /m/mensagem-de-aniversario/para-mae/
@@ -73,7 +73,7 @@ async function renderNicho(slug: string) {
   const out: string[] = [];
   out.push(`# ${nicho.nome}`);
   out.push("");
-  out.push(`> Curadoria editorial Portal Soma — ${totalMsgs.toLocaleString("pt-BR")} mensagens em ${nicho.clusters.length} categorias.`);
+  out.push(`> Curadoria editorial Portal Soma · ${totalMsgs.toLocaleString("pt-BR")} mensagens em ${nicho.clusters.length} categorias.`);
   out.push("");
   out.push(`Fonte: ${SITE_URL}/${nicho.slug}/`);
   out.push("");
@@ -95,7 +95,7 @@ async function renderNicho(slug: string) {
     out.push(`## ${labels[tipo] ?? tipo}`);
     out.push("");
     for (const c of items) {
-      out.push(`- [${c.nome}](${SITE_URL}/${nicho.slug}/${c.slug}/) — ${c._count.mensagens} mensagens`);
+      out.push(`- [${c.nome}](${SITE_URL}/${nicho.slug}/${c.slug}/) · ${c._count.mensagens} mensagens`);
     }
     out.push("");
   }
@@ -183,7 +183,7 @@ async function renderSingle(nichoSlug: string, clusterSlug: string, slug: string
   const out: string[] = [];
   out.push(`# ${m.titulo}`);
   out.push("");
-  out.push(`> Mensagem de aniversário ${m.cluster.nome.toLowerCase()} — Portal Soma`);
+  out.push(`> Mensagem de aniversário ${m.cluster.nome.toLowerCase()} · Portal Soma`);
   out.push("");
   out.push(`Fonte: ${SITE_URL}/${m.cluster.nicho.slug}/${m.cluster.slug}/${m.slug}/`);
   out.push("");

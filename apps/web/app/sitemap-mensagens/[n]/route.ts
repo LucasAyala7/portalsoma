@@ -8,7 +8,7 @@ import {
 } from "../../../lib/sitemap-utils";
 
 /**
- * /sitemap-mensagens-{n}.xml — sub-sitemap paginado de mensagens publicadas.
+ * /sitemap-mensagens-{n}.xml · sub-sitemap paginado de mensagens publicadas.
  *
  * Cada página carrega no máximo MAX_URLS_PER_SITEMAP (5000) URLs. O sitemap
  * index calcula quantas páginas existem com base em `count(Mensagem)`. A

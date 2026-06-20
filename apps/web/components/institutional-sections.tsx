@@ -1,7 +1,7 @@
 import { Sparkles, Heart, Send, Quote, Mail, ShieldCheck } from "lucide-react";
 
 /**
- * Bloco "Como funciona" — 3 steps em grid 3 col.
+ * Bloco "Como funciona" · 3 steps em grid 3 col.
  */
 export function HowItWorks() {
   const steps = [
@@ -55,7 +55,7 @@ export function HowItWorks() {
 }
 
 /**
- * Bloco "Sobre" — texto + counter selo.
+ * Bloco "Sobre" · texto + counter selo.
  */
 export function AboutBlock({ totalMensagens }: { totalMensagens: number }) {
   return (
@@ -72,12 +72,12 @@ export function AboutBlock({ totalMensagens }: { totalMensagens: number }) {
           <div className="space-y-4 text-stone-700 leading-relaxed">
             <p>
               O Portal Soma nasceu de uma ideia simples: toda pessoa merece receber uma
-              mensagem de aniversário que toque o coração — não uma fórmula pronta, não um
+              mensagem de aniversário que toque o coração · não uma fórmula pronta, não um
               clichê de internet.
             </p>
             <p>
               Aqui cada mensagem é escrita com cuidado pelos nossos autores. São vozes
-              diferentes, idades diferentes, jeitos diferentes — pra você sempre encontrar a
+              diferentes, idades diferentes, jeitos diferentes · pra você sempre encontrar a
               que combina com a pessoa, a ocasião e o sentimento.
             </p>
           </div>
@@ -145,7 +145,7 @@ function StatCard({
 }
 
 /**
- * Depoimentos curtos — bloco de 3 quotes.
+ * Depoimentos curtos · bloco de 3 quotes.
  */
 export function TestimonialsBlock() {
   const testimonials = [
@@ -200,7 +200,7 @@ export function TestimonialsBlock() {
 }
 
 /**
- * Newsletter signup — bloco com gradient niver.
+ * Newsletter signup · bloco com gradient niver.
  */
 export function NewsletterBlock() {
   return (
@@ -214,7 +214,7 @@ export function NewsletterBlock() {
           </h2>
           <p className="text-niver-100 mb-6 leading-relaxed">
             Toda semana, uma seleção das mensagens mais bonitas pra você ter sempre uma
-            pronta na manga. Sem spam, sem barulho — só carinho.
+            pronta na manga. Sem spam, sem barulho · só carinho.
           </p>
           <form className="flex flex-col sm:flex-row gap-3 max-w-md">
             <input

@@ -5,7 +5,7 @@ export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
 /**
- * Apple touch icon — iOS home screen bookmark.
+ * Apple touch icon · iOS home screen bookmark.
  */
 export default function AppleIcon() {
   return new ImageResponse(

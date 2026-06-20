@@ -61,7 +61,7 @@ export async function POST(req: Request) {
           where: { id: mensagemId },
           data: updates,
         }).catch(() => {
-          // mensagem pode não existir mais — silencioso
+          // mensagem pode não existir mais · silencioso
         });
       }
     }

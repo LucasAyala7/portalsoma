@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Resolve URL canonical de uma mensagem.
- * Cada mensagem vive em /[nicho]/[cluster]/[slug]/ — complemento NÃO entra no canonical
+ * Cada mensagem vive em /[nicho]/[cluster]/[slug]/ · complemento NÃO entra no canonical
  * (evita canibalização: a mesma mensagem aparece em listagens de complementos
  * mas todas apontam pro canonical único).
  */

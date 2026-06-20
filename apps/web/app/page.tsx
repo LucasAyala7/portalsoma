@@ -39,7 +39,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Mensagens de Aniversário Para Compartilhar — Portal Soma",
+  title: "Mensagens de Aniversário Para Compartilhar · Portal Soma",
   description:
     "Mensagens de aniversário emocionantes, evangélicas, engraçadas e únicas para mãe, pai, amiga, filha e mais. Copie em 1 clique e compartilhe no WhatsApp.",
   alternates: { canonical: "/" },
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
-// Mantido pra MessageCardCompact recentes (avatar fallback) — será removido em futuro refactor
+// Mantido pra MessageCardCompact recentes (avatar fallback) · será removido em futuro refactor
 const EMOJI_DESTINATARIO: Record<string, string> = {
   "para-amiga": "💝",
   "para-amigo": "🤝",
@@ -272,7 +272,7 @@ export default async function Home() {
   const homeCollection = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Portal Soma — Mensagens de Aniversário",
+    name: "Portal Soma · Mensagens de Aniversário",
     description:
       "Mensagens de aniversário emocionantes, evangélicas, engraçadas e únicas para mãe, pai, amiga, filha e mais.",
     url: SITE_URL,
@@ -345,10 +345,10 @@ export default async function Home() {
         />
       </section>
 
-      {/* 3.5 FAMOSOS DO DIA — Wikipedia API, conteúdo fresco diário */}
+      {/* 3.5 FAMOSOS DO DIA · Wikipedia API, conteúdo fresco diário */}
       <FamousBirthdaysToday />
 
-      {/* 4. TRENDING — grid 2 col com cards rich */}
+      {/* 4. TRENDING · grid 2 col com cards rich */}
       {data.mensagensDestaque.length > 0 && (
         <section className="container-niver py-12">
           <div className="flex items-end justify-between mb-6 gap-4">
@@ -378,7 +378,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 5. POR DESTINATÁRIO — grid 4 col grande (default) */}
+      {/* 5. POR DESTINATÁRIO · grid 4 col grande (default) */}
       <section className="container-niver py-12">
         <div className="flex items-end justify-between mb-6 gap-4">
           <div>
@@ -401,7 +401,7 @@ export default async function Home() {
         />
       </section>
 
-      {/* 6. MAIS COPIADAS — lista compacta + aside (autores + newsletter) */}
+      {/* 6. MAIS COPIADAS · lista compacta + aside (autores + newsletter) */}
       {data.mensagensMaisCopiadas.length > 0 && (
         <section className="bg-warm-100/60 py-12">
           <div className="container-niver">
@@ -446,7 +446,7 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 7. POR TOM — grid 5 col denso */}
+      {/* 7. POR TOM · grid 5 col denso */}
       <section className="container-niver py-12">
         <h2 className="heading-section-bar mb-6">Por tom e religião</h2>
         <CategoryGrid
@@ -509,7 +509,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 9. POR OCASIÃO — pills 3 col */}
+      {/* 9. POR OCASIÃO · pills 3 col */}
       <section className="container-niver py-12">
         <h2 className="heading-section-bar mb-6">Ocasiões e momentos</h2>
         <CategoryGrid
@@ -549,11 +549,11 @@ export default async function Home() {
         </section>
       )}
 
-      {/* 11. TODOS DESTINATÁRIOS — grid 5 col denso */}
+      {/* 11. TODOS DESTINATÁRIOS · grid 5 col denso */}
       <section className="container-niver py-12">
         <h2 className="heading-section-bar mb-2">Explore todos os destinatários</h2>
         <p className="text-sm text-stone-600 mb-6 ml-5">
-          De familiar a amigo, de chefe a padrinho — temos a categoria certa.
+          De familiar a amigo, de chefe a padrinho · temos a categoria certa.
         </p>
         <CategoryGrid
           variant="dense"

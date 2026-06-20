@@ -23,7 +23,7 @@ const TONS_BG = [
 ];
 
 /**
- * Carrossel de autores/personas — grid responsivo.
+ * Carrossel de autores/personas · grid responsivo.
  * Cada card mostra avatar + nome + bio curta + count + link pra perfil.
  */
 export function AuthorCarousel({ autores }: Props) {

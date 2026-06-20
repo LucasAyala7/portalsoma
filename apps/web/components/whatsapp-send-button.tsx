@@ -12,7 +12,7 @@ interface Props {
 }
 
 /**
- * Click-to-Send direto pro WhatsApp — abre wa.me com texto+link pré-preenchidos.
+ * Click-to-Send direto pro WhatsApp · abre wa.me com texto+link pré-preenchidos.
  * Sem modal, sem fricção: ato principal do site (compartilhar mensagem) em 1 clique.
  */
 export function WhatsAppSendButton({ text, url, mensagemId, variant = "primary", size = "sm" }: Props) {

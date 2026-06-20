@@ -7,9 +7,9 @@ import {
 } from "../../lib/sitemap-utils";
 
 /**
- * /sitemap-web-stories.xml — Web Stories AMP publicadas.
+ * /sitemap-web-stories.xml · Web Stories AMP publicadas.
  *
- * Pode estar vazio enquanto fábrica de Web Stories não roda — estrutura
+ * Pode estar vazio enquanto fábrica de Web Stories não roda · estrutura
  * fica pronta pra Google descobrir assim que primeira história sair.
  */
 

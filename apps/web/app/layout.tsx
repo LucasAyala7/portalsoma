@@ -28,7 +28,7 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "Portal Soma";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Mensagens de Aniversário para Compartilhar`,
+    default: `${SITE_NAME} · Mensagens de Aniversário para Compartilhar`,
     template: `%s | ${SITE_NAME}`,
   },
   description:
@@ -66,7 +66,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// Render dynamic mas com cache CDN agressivo (1 dia s-maxage, 7 dias SWR) — performance estática.
+// Render dynamic mas com cache CDN agressivo (1 dia s-maxage, 7 dias SWR) · performance estática.
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
@@ -140,7 +140,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="pt-BR" className={`${inter.variable} ${fraunces.variable}`}>
       <head>
-        {/* Preconnect handshake antecipado com CDN de imagens — LCP -150~300ms mobile. */}
+        {/* Preconnect handshake antecipado com CDN de imagens · LCP -150~300ms mobile. */}
         <link rel="preconnect" href="https://media.portalsoma.com.br" crossOrigin="" />
         <link rel="dns-prefetch" href="https://media.portalsoma.com.br" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -276,7 +276,7 @@ function SiteFooter({ totalMensagens }: { totalMensagens: number }) {
           <p className="text-xs text-stone-500 mt-5 leading-relaxed">
             Mantido pela Agência Vencedores Digitais
             <br />
-            CNPJ 34.600.484/0001-21 — Bacabal/MA
+            CNPJ 34.600.484/0001-21 · Bacabal/MA
           </p>
         </div>
         <div>

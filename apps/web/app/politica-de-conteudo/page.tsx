@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { ClipboardCheck, BookOpenCheck, Bot, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Política de Conteúdo — Diretrizes editoriais do Portal Soma",
+  title: "Política de Conteúdo · Diretrizes editoriais do Portal Soma",
   description:
     "Diretrizes editoriais do Portal Soma: processo de revisão, critérios de qualidade, fontes consultadas, uso de inteligência artificial e padrões de atribuição.",
   alternates: { canonical: "/politica-de-conteudo/" },
   openGraph: {
-    title: "Política de Conteúdo — Portal Soma",
+    title: "Política de Conteúdo · Portal Soma",
     description: "Diretrizes editoriais e processo de revisão.",
     url: "/politica-de-conteudo/",
     type: "article",
@@ -30,7 +30,7 @@ export default function ConteudoPage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "Política de Conteúdo — Portal Soma",
+            name: "Política de Conteúdo · Portal Soma",
             url: "https://www.portalsoma.com.br/politica-de-conteudo/",
             inLanguage: "pt-BR",
             dateModified: "2026-06-01",
@@ -153,14 +153,14 @@ export default function ConteudoPage() {
             </li>
           </ul>
           <p className="text-stone-700 leading-relaxed mt-3">
-            Em todos os casos, nada vai ao ar sem revisão humana — texto, citação ou imagem. A
+            Em todos os casos, nada vai ao ar sem revisão humana · texto, citação ou imagem. A
             inteligência artificial é ferramenta de produção, não autor. A responsabilidade editorial é
             sempre da nossa equipe humana.
           </p>
 
           <h2 className="heading-section-bar mt-10 mb-4">4. Autores virtuais</h2>
           <p className="text-stone-700 leading-relaxed">
-            Trabalhamos com um pequeno elenco de personagens autorais — Vó Lurdes, Pastor Antônio,
+            Trabalhamos com um pequeno elenco de personagens autorais · Vó Lurdes, Pastor Antônio,
             Padre Henrique, Júlia Marques, Marcos Almeida, Tia Fátima, Profa. Beatriz Coelho, Rafael
             Andrade. Cada um tem uma voz definida (faixa etária aproximada, contexto, religião quando
             aplicável, estilo de escrita) e produz mensagens dentro do seu repertório. A página de cada
@@ -193,7 +193,7 @@ export default function ConteudoPage() {
 
           <h2 className="heading-section-bar mt-10 mb-4">7. Atualização e arquivamento</h2>
           <p className="text-stone-700 leading-relaxed">
-            Mensagens publicadas no Portal Soma são, em regra, atemporais — uma mensagem de feliz
+            Mensagens publicadas no Portal Soma são, em regra, atemporais · uma mensagem de feliz
             aniversário pra mãe escrita em 2026 segue válida em 2030. Por isso, raramente removemos
             conteúdo. Quando atualizamos, registramos a data de revisão. Quando despublicamos (por erro
             grave, denúncia procedente ou solicitação válida), a URL fica com uma nota explicativa em

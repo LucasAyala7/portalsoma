@@ -10,7 +10,7 @@ const GIFTS_BY_DESTINATARIO: Record<string, Array<{ termo: string; emoji: string
   default: [
     { termo: "presente aniversário", emoji: "🎁", descricao: "Ideias gerais de presente que combinam com qualquer relação" },
     { termo: "caneca personalizada", emoji: "☕", descricao: "Clássico atemporal pra acompanhar a mensagem" },
-    { termo: "moldura digital", emoji: "🖼️", descricao: "Fotos da pessoa rotacionando — presente emocional" },
+    { termo: "moldura digital", emoji: "🖼️", descricao: "Fotos da pessoa rotacionando · presente emocional" },
   ],
   mae: [
     { termo: "kit perfume feminino", emoji: "💐", descricao: "Fragrâncias premium pra acompanhar a homenagem" },
@@ -61,7 +61,7 @@ const GIFTS_BY_DESTINATARIO: Record<string, Array<{ termo: string; emoji: string
 
 /**
  * Sugestões de presente afiliadas Amazon, contextualizadas pelo destinatário do cluster.
- * Monetização real além de adsense — comissão Amazon 4-10% por item.
+ * Monetização real além de adsense · comissão Amazon 4-10% por item.
  *
  * Quando AMAZON_AFFILIATE_TAG não está configurada, links abrem busca sem tag (modo dev).
  */
@@ -120,7 +120,7 @@ export function GiftSuggestions({ destinatario, amazonTag }: Props) {
       </ul>
       <p className="mt-4 text-[10px] text-stone-400 leading-snug">
         Como participante do programa de afiliados da Amazon, ganhamos uma pequena comissão
-        em compras qualificadas — sem custo adicional para você.
+        em compras qualificadas · sem custo adicional para você.
       </p>
     </aside>
   );

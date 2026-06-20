@@ -10,7 +10,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.portalsoma.com
 
 export async function generateMetadata(): Promise<Metadata> {
   const totalAutores = await prisma.author.count({ where: { ativo: true } });
-  const titleAuto = `Autores — ${totalAutores} curadores e escritores do Portal Soma`;
+  const titleAuto = `Autores · ${totalAutores} curadores e escritores do Portal Soma`;
   const descAuto = `Conheça os ${totalAutores} autores por trás das mensagens do Portal Soma. Curadoria editorial brasileira em mensagens de aniversário.`;
   return {
     title: titleAuto,
@@ -74,7 +74,7 @@ export default async function AutoresIndex() {
           {
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "Autores — Portal Soma",
+            name: "Autores · Portal Soma",
             url: `${SITE_URL}/autor/`,
             description: `Conheça os ${totalAutores} autores por trás das mensagens do Portal Soma.`,
             inLanguage: "pt-BR",
@@ -84,7 +84,7 @@ export default async function AutoresIndex() {
       />
 
       <article itemScope itemType="https://schema.org/CollectionPage">
-        <meta itemProp="name" content="Autores — Portal Soma" />
+        <meta itemProp="name" content="Autores · Portal Soma" />
         <meta itemProp="inLanguage" content="pt-BR" />
 
         {/* Breadcrumb microdata */}
@@ -156,7 +156,7 @@ export default async function AutoresIndex() {
           <p className="text-stone-700 leading-[1.85] text-[16px] sm:text-[17px]">
             O Portal Soma combina dois tipos de assinatura: <strong>autores humanos</strong>{" "}
             (escritores convidados que assumem publicamente o que escrevem) e{" "}
-            <strong>personas editoriais</strong> — vozes recorrentes com tom próprio
+            <strong>personas editoriais</strong> · vozes recorrentes com tom próprio
             (avó, irmã mais velha, amiga de longa data, pastor, professora), criadas
             para que cada mensagem tenha uma cadência específica e não soe igual a
             todas as outras. Toda mensagem traz autor declarado para você saber de

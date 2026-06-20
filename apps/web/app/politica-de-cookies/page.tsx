@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Cookie, Settings, ShieldOff } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Política de Cookies — Portal Soma",
+  title: "Política de Cookies · Portal Soma",
   description:
     "Política de Cookies do Portal Soma. Detalha quais cookies usamos, para que servem, quanto tempo duram e como você pode desativá-los no navegador.",
   alternates: { canonical: "/politica-de-cookies/" },
   openGraph: {
-    title: "Política de Cookies — Portal Soma",
+    title: "Política de Cookies · Portal Soma",
     description: "Cookies utilizados no Portal Soma e como controlá-los.",
     url: "/politica-de-cookies/",
     type: "article",
@@ -82,7 +82,7 @@ export default function CookiesPage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "Política de Cookies — Portal Soma",
+            name: "Política de Cookies · Portal Soma",
             url: "https://www.portalsoma.com.br/politica-de-cookies/",
             inLanguage: "pt-BR",
             dateModified: "2026-06-01",
@@ -127,7 +127,7 @@ export default function CookiesPage() {
             Um cookie é um pequeno arquivo de texto que um site coloca no seu navegador quando você o
             visita. Ele permite que o site reconheça o seu dispositivo, lembre preferências e meça o
             comportamento de navegação ao longo do tempo. Cookies em si não identificam você
-            pessoalmente — eles armazenam apenas um identificador anônimo que o navegador devolve nas
+            pessoalmente · eles armazenam apenas um identificador anônimo que o navegador devolve nas
             próximas visitas.
           </p>
 
@@ -197,7 +197,7 @@ export default function CookiesPage() {
           <p className="text-stone-700 leading-relaxed">
             Exibimos anúncios via Google AdSense pra sustentar a operação do site. O AdSense pode usar
             cookies pra mostrar anúncios mais relevantes baseados em suas visitas anteriores em outros
-            sites — isso é chamado de publicidade comportamental. Você pode:
+            sites · isso é chamado de publicidade comportamental. Você pode:
           </p>
           <ul className="text-stone-700 leading-relaxed space-y-2 mt-3">
             <li>
@@ -253,7 +253,7 @@ export default function CookiesPage() {
           <p className="text-stone-700 leading-relaxed mt-3">
             Importante: desativar todos os cookies pode prejudicar a navegação em sites em geral. No
             Portal Soma, especificamente, a desativação dos cookies de analytics e publicidade não
-            impede que você acesse o conteúdo — apenas desliga a medição e a personalização.
+            impede que você acesse o conteúdo · apenas desliga a medição e a personalização.
           </p>
 
           <div className="not-prose mt-10 grid sm:grid-cols-2 gap-4">

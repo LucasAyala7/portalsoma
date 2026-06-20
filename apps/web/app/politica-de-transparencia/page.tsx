@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Eye, Coins, RefreshCcw, Edit3 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Política de Transparência — Portal Soma",
+  title: "Política de Transparência · Portal Soma",
   description:
     "Como o Portal Soma se sustenta financeiramente, fontes de receita, parcerias afiliadas, processo de correções editoriais e princípios de independência.",
   alternates: { canonical: "/politica-de-transparencia/" },
   openGraph: {
-    title: "Política de Transparência — Portal Soma",
+    title: "Política de Transparência · Portal Soma",
     description: "Receita, correções, independência editorial.",
     url: "/politica-de-transparencia/",
     type: "article",
@@ -30,7 +30,7 @@ export default function TransparenciaPage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "Política de Transparência — Portal Soma",
+            name: "Política de Transparência · Portal Soma",
             url: "https://www.portalsoma.com.br/politica-de-transparencia/",
             inLanguage: "pt-BR",
             dateModified: "2026-06-01",
@@ -63,7 +63,7 @@ export default function TransparenciaPage() {
           <p className="text-stone-700 leading-relaxed text-lg">
             Acreditamos que um site editorial deve ser claro sobre como se sustenta, como toma decisões
             e como reage quando comete erros. Esta página reúne todas essas informações em um só
-            lugar. Foi escrita pra ser lida — e atualizada quando algo mudar.
+            lugar. Foi escrita pra ser lida · e atualizada quando algo mudar.
           </p>
 
           <h2 className="heading-section-bar mt-10 mb-4">1. Como nos sustentamos</h2>
@@ -75,7 +75,7 @@ export default function TransparenciaPage() {
               <strong>Publicidade programática via Google AdSense.</strong> Anúncios contextuais são
               exibidos em algumas páginas e geram receita pra equipe e pra manutenção da infraestrutura
               (servidor, domínio, ferramentas editoriais). Não temos nenhum controle sobre quais
-              anúncios específicos aparecem — isso é decidido pelo algoritmo do Google e pelas
+              anúncios específicos aparecem · isso é decidido pelo algoritmo do Google e pelas
               preferências do leitor (veja{" "}
               <a href="/politica-de-cookies/" className="text-niver-700 underline">
                 Política de Cookies
@@ -125,7 +125,7 @@ export default function TransparenciaPage() {
 
           <h2 className="heading-section-bar mt-10 mb-4">4. Inteligência artificial e processo editorial</h2>
           <p className="text-stone-700 leading-relaxed mb-3">
-            Usamos ferramentas de inteligência artificial pra apoiar a produção editorial — sobretudo na
+            Usamos ferramentas de inteligência artificial pra apoiar a produção editorial · sobretudo na
             geração de rascunhos, na pesquisa de referências bíblicas e na geração de imagens
             ilustrativas. Em todos os casos:
           </p>
@@ -144,8 +144,8 @@ export default function TransparenciaPage() {
 
           <h2 className="heading-section-bar mt-10 mb-4">5. Correções editoriais</h2>
           <p className="text-stone-700 leading-relaxed mb-3">
-            Erros acontecem. Quando publicamos algo incorreto — erro ortográfico, citação bíblica
-            errada, data inconsistente, atribuição equivocada — agimos da seguinte forma:
+            Erros acontecem. Quando publicamos algo incorreto · erro ortográfico, citação bíblica
+            errada, data inconsistente, atribuição equivocada · agimos da seguinte forma:
           </p>
           <ul className="text-stone-700 leading-relaxed space-y-2">
             <li>
@@ -168,7 +168,7 @@ export default function TransparenciaPage() {
             <a href="mailto:lucas@portalsoma.com.br" className="text-niver-700 underline">
               lucas@portalsoma.com.br
             </a>{" "}
-            com o link da página e o problema identificado. Agradecemos demais — leitores atentos são
+            com o link da página e o problema identificado. Agradecemos demais · leitores atentos são
             nossos melhores aliados.
           </p>
 

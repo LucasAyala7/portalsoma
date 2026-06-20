@@ -1,5 +1,5 @@
 /**
- * /ads.txt — declara publisher AdSense autorizado.
+ * /ads.txt · declara publisher AdSense autorizado.
  * Google verifica esse arquivo antes de servir ads. Ausente = ads não rodam.
  */
 export const dynamic = "force-static";

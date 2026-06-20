@@ -9,7 +9,7 @@ interface Props {
 }
 
 /**
- * Faixa horizontal abaixo do hero — exibe contadores agregados.
+ * Faixa horizontal abaixo do hero · exibe contadores agregados.
  * Texto rola horizontalmente em loop infinito (CSS animation).
  */
 export function Ticker({ totalMensagens, totalLikes, totalShares, totalCopies, totalViews }: Props) {

@@ -5,7 +5,7 @@ export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
 /**
- * Favicon dinâmico — "S" laranja em circular branco.
+ * Favicon dinâmico · "S" laranja em circular branco.
  * Gerado em build, servido como /icon (Next 16 convenção file-based).
  */
 export default function Icon() {

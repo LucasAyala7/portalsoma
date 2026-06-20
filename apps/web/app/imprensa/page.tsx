@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Newspaper, Download, Mail, Image as ImageIcon, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Imprensa — Press kit do Portal Soma",
+  title: "Imprensa · Press kit do Portal Soma",
   description:
     "Imprensa, jornalistas e parceiros de mídia: acesso ao press kit do Portal Soma, biografia institucional, logos para download e contato direto com a editoria.",
   alternates: { canonical: "/imprensa/" },
   openGraph: {
-    title: "Imprensa — Portal Soma",
+    title: "Imprensa · Portal Soma",
     description: "Press kit, biografia e contato pra jornalistas.",
     url: "/imprensa/",
     type: "website",
@@ -28,7 +28,7 @@ export default function ImprensaPage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "Imprensa — Portal Soma",
+            name: "Imprensa · Portal Soma",
             url: "https://www.portalsoma.com.br/imprensa/",
             inLanguage: "pt-BR",
             about: {
@@ -84,7 +84,7 @@ export default function ImprensaPage() {
             O Portal Soma é um site brasileiro dedicado a publicar mensagens de aniversário em português
             organizadas por destinatário (mãe, pai, amiga, filho, namorado), ocasião (aniversário de 15
             anos, 60 anos, batismo) e tom (evangélica, engraçada, curta, bíblica). Toda mensagem
-            publicada passa por curadoria editorial e é assinada por um autor — humano ou personagem
+            publicada passa por curadoria editorial e é assinada por um autor · humano ou personagem
             virtual claramente identificado como tal. O site oferece ferramentas práticas como cópia em
             um clique e compartilhamento direto pro WhatsApp. É mantido pela Agência Vencedores
             Digitais (CNPJ 34.600.484/0001-21), com sede em Bacabal, no Maranhão, e foi fundado em
@@ -102,8 +102,8 @@ export default function ImprensaPage() {
             </p>
             <p>
               <strong>Como funcionamos.</strong> Nossa equipe combina editores reais com um pequeno
-              elenco de autores virtuais — personagens autorais com vozes definidas, sempre
-              identificados como tais — pra dar variedade de estilo ao acervo. Cada mensagem é vinculada
+              elenco de autores virtuais · personagens autorais com vozes definidas, sempre
+              identificados como tais · pra dar variedade de estilo ao acervo. Cada mensagem é vinculada
               ao seu autor, passa por revisão antes de ser publicada e fica acessível por filtros
               intuitivos. Oferecemos também recursos como cópia em um clique, compartilhamento direto no
               WhatsApp e personagens identificados pra que o leitor saiba quem escreveu o quê.

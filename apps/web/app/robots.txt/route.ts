@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic"; // estatico funcional, mas dynamic evita
 export const revalidate = 86400;
 
 /**
- * robots.txt customizado — sobrescreve o CF "Managed Content" default.
+ * robots.txt customizado · sobrescreve o CF "Managed Content" default.
  *
  * Política Portal Soma:
  *  - Search engines (Google, Bing, DuckDuckGo): allow tudo (exceto admin/api)
@@ -15,7 +15,7 @@ export const revalidate = 86400;
  * Estratégia GEO: queremos citation, não dataset training.
  */
 export async function GET() {
-  const txt = `# Portal Soma — robots.txt
+  const txt = `# Portal Soma · robots.txt
 # Política de crawling: permite indexação + citation em AI search, bloqueia training de dataset.
 # Última atualização: ${new Date().toISOString().slice(0, 10)}
 
@@ -32,7 +32,7 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
-# ─── AI search/citation bots — LIBERADOS (queremos aparecer em respostas LLM) ──
+# ─── AI search/citation bots · LIBERADOS (queremos aparecer em respostas LLM) ──
 # OpenAI (ChatGPT search / SearchGPT)
 User-agent: OAI-SearchBot
 Allow: /
@@ -73,7 +73,7 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-# ─── Training-only crawlers — bloqueados (não viramos dataset bruto) ────
+# ─── Training-only crawlers · bloqueados (não viramos dataset bruto) ────
 User-agent: CCBot
 Disallow: /
 
@@ -104,7 +104,7 @@ Disallow: /
 User-agent: AhrefsBot
 Disallow: /
 
-# ─── Default — tudo o resto: allow básico ────────────────────────────────
+# ─── Default · tudo o resto: allow básico ────────────────────────────────
 User-agent: *
 Allow: /
 Disallow: /admin/
@@ -115,7 +115,7 @@ Disallow: /_next/
 Sitemap: https://www.portalsoma.com.br/sitemap.xml
 
 # LLM manifest
-# /llms.txt — descrição estruturada do site + endpoints markdown
+# /llms.txt · descrição estruturada do site + endpoints markdown
 `;
   return new Response(txt, {
     status: 200,

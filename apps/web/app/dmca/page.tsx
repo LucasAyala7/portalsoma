@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { AlertTriangle, Send, FileText, Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "DMCA — Notificação de violação de direitos autorais — Portal Soma",
+  title: "DMCA · Notificação de violação de direitos autorais · Portal Soma",
   description:
     "Procedimento para notificação de violação de direitos autorais no Portal Soma conforme DMCA e legislação brasileira. Formulário e endereço de contato.",
   alternates: { canonical: "/dmca/" },
   openGraph: {
-    title: "DMCA — Portal Soma",
+    title: "DMCA · Portal Soma",
     description: "Procedimento para reportar violação de direitos autorais.",
     url: "/dmca/",
     type: "article",
@@ -42,7 +42,7 @@ export default function DmcaPage() {
           {
             "@context": "https://schema.org",
             "@type": "WebPage",
-            name: "DMCA — Portal Soma",
+            name: "DMCA · Portal Soma",
             url: "https://www.portalsoma.com.br/dmca/",
             inLanguage: "pt-BR",
             dateModified: "2026-06-01",
@@ -74,14 +74,14 @@ export default function DmcaPage() {
         <div className="max-w-3xl mx-auto prose prose-stone">
           <p className="text-stone-700 leading-relaxed text-lg">
             O Portal Soma respeita os direitos autorais de terceiros. Se você acredita que algum
-            conteúdo publicado no site infringe seus direitos autorais — ou direitos pelos quais você
-            está autorizado a agir — pedimos que envie uma notificação formal conforme as orientações
+            conteúdo publicado no site infringe seus direitos autorais · ou direitos pelos quais você
+            está autorizado a agir · pedimos que envie uma notificação formal conforme as orientações
             abaixo.
           </p>
           <p className="text-stone-700 leading-relaxed">
             Seguimos o procedimento estabelecido pelo <strong>Digital Millennium Copyright Act (DMCA)</strong>{" "}
             dos Estados Unidos, integrado às boas práticas da legislação brasileira (Lei nº 9.610/1998 e
-            Lei nº 12.965/2014 — Marco Civil da Internet).
+            Lei nº 12.965/2014 · Marco Civil da Internet).
           </p>
 
           <h2 className="heading-section-bar mt-10 mb-4">1. Antes de enviar uma notificação</h2>
@@ -94,7 +94,7 @@ export default function DmcaPage() {
           </p>
           <p className="text-stone-700 leading-relaxed">
             Se você encontrou um trecho que parece ser cópia direta de obra sua, agradecemos a
-            notificação — analisamos com prioridade.
+            notificação · analisamos com prioridade.
           </p>
 
           <h2 className="heading-section-bar mt-10 mb-4">2. O que sua notificação precisa conter</h2>
@@ -130,7 +130,7 @@ export default function DmcaPage() {
             </li>
           </ol>
           <p className="text-stone-700 leading-relaxed mt-3">
-            Notificações incompletas dificultam a análise e podem atrasar a resposta — peço que
+            Notificações incompletas dificultam a análise e podem atrasar a resposta · peço que
             preencham todos os itens.
           </p>
 
@@ -152,7 +152,7 @@ export default function DmcaPage() {
             </div>
           </div>
           <p className="text-stone-700 leading-relaxed">
-            Se preferir um modelo pronto pré-preenchido, use o botão abaixo — ele abre seu programa de
+            Se preferir um modelo pronto pré-preenchido, use o botão abaixo · ele abre seu programa de
             e-mail com a estrutura padrão de notificação:
           </p>
           <div className="not-prose mt-4">
@@ -188,8 +188,8 @@ export default function DmcaPage() {
 
           <h2 className="heading-section-bar mt-10 mb-4">7. Outras questões legais</h2>
           <p className="text-stone-700 leading-relaxed">
-            Pra outras questões legais que não envolvam direitos autorais — como notificações de
-            difamação, retirada de dados pessoais conforme LGPD, ou disputas comerciais — utilize os
+            Pra outras questões legais que não envolvam direitos autorais · como notificações de
+            difamação, retirada de dados pessoais conforme LGPD, ou disputas comerciais · utilize os
             canais apropriados descritos em nossos{" "}
             <a href="/termos-de-uso/" className="text-niver-700 underline">Termos de Uso</a> e{" "}
             <a href="/politica-de-privacidade/" className="text-niver-700 underline">

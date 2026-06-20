@@ -3,12 +3,12 @@ import { jsonLdScript, breadcrumbSchema } from "@/lib/seo";
 import { Mail, MapPin, Building2, Clock, MessageSquare, Send } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Contato — Fale com o Portal Soma",
+  title: "Contato · Fale com o Portal Soma",
   description:
     "Entre em contato com o Portal Soma. Envie sugestões, parcerias, correções editoriais ou solicitações de imprensa. Resposta em até 5 dias úteis.",
   alternates: { canonical: "/contato/" },
   openGraph: {
-    title: "Contato — Portal Soma",
+    title: "Contato · Portal Soma",
     description: "Envie sua mensagem para o Portal Soma.",
     url: "/contato/",
     type: "website",
@@ -19,7 +19,7 @@ export default function ContatoPage() {
   const contactSchema = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    name: "Contato — Portal Soma",
+    name: "Contato · Portal Soma",
     url: "https://www.portalsoma.com.br/contato/",
     inLanguage: "pt-BR",
     mainEntity: {
@@ -203,7 +203,7 @@ export default function ContatoPage() {
               <MapPin size={24} className="text-niver-600 mb-2" />
               <h3 className="font-display text-lg font-semibold mb-2">Endereço</h3>
               <address className="not-italic text-stone-700 leading-relaxed">
-                <span itemProp="streetAddress">Bacabal — Maranhão</span>
+                <span itemProp="streetAddress">Bacabal · Maranhão</span>
                 <br />
                 <span itemProp="addressLocality">Bacabal</span>,{" "}
                 <span itemProp="addressRegion">MA</span>
@@ -223,7 +223,7 @@ export default function ContatoPage() {
                 <br />
                 CNPJ: 34.600.484/0001-21
                 <br />
-                Bacabal/MA — Brasil
+                Bacabal/MA · Brasil
               </p>
             </div>
 
@@ -245,7 +245,7 @@ export default function ContatoPage() {
           <h2 className="heading-section-bar mb-6">Outros canais específicos</h2>
           <p className="text-stone-700 leading-relaxed mb-6">
             Pra agilizar o atendimento, separamos os principais motivos de contato. Use o canal mais
-            adequado ao seu caso — assim sua mensagem chega na pessoa certa mais rápido.
+            adequado ao seu caso · assim sua mensagem chega na pessoa certa mais rápido.
           </p>
           <ul className="space-y-3 text-stone-700">
             <li>
@@ -260,7 +260,7 @@ export default function ContatoPage() {
             </li>
             <li>
               <strong>Privacidade e dados pessoais (LGPD):</strong> escreva pra
-              lucas@portalsoma.com.br com o assunto "LGPD" — explicamos o procedimento na nossa{" "}
+              lucas@portalsoma.com.br com o assunto "LGPD" · explicamos o procedimento na nossa{" "}
               <a href="/politica-de-privacidade/" className="text-niver-700 underline">Política de Privacidade</a>.
             </li>
             <li>

@@ -1,7 +1,7 @@
 import Script from "next/script";
 
 /**
- * Google AdSense — carregamento lazy (após idle) pra não destruir LCP.
+ * Google AdSense · carregamento lazy (após idle) pra não destruir LCP.
  * Auto Ads ativado no painel → Google injeta posicionamento automaticamente.
  *
  * Pra slots manuais, usar <AdSlot slot="..." /> em pontos estratégicos.

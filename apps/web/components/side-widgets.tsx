@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * Sidebar widget — autores com mais engajamento.
+ * Sidebar widget · autores com mais engajamento.
  * Pra usar em layouts 2-col (conteúdo principal + aside).
  */
 export function TopAuthorsWidget({ autores }: Props) {
@@ -77,7 +77,7 @@ interface QuickLinksProps {
 }
 
 /**
- * Widget de "links rápidos" — pra glossário, FAQ, popular tags etc.
+ * Widget de "links rápidos" · pra glossário, FAQ, popular tags etc.
  */
 export function QuickLinksWidget({ title, icon: Icon = BookOpen, links }: QuickLinksProps) {
   return (
@@ -159,7 +159,7 @@ interface PersonaSpotlightProps {
 }
 
 /**
- * Spotlight de uma persona — destaque visual em aside.
+ * Spotlight de uma persona · destaque visual em aside.
  */
 export function PersonaSpotlight({ persona }: PersonaSpotlightProps) {
   return (

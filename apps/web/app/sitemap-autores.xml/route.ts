@@ -7,7 +7,7 @@ import {
 } from "../../lib/sitemap-utils";
 
 /**
- * /sitemap-autores.xml — páginas de autores ativos.
+ * /sitemap-autores.xml · páginas de autores ativos.
  */
 
 export const dynamic = "force-dynamic";

@@ -178,7 +178,7 @@ async function resolveRoute(path: string[]): Promise<Resolved | null> {
 }
 
 export async function generateStaticParams(): Promise<{ path: string[] }[]> {
-  // Skip DB no build — pages geradas on-demand via ISR
+  // Skip DB no build · pages geradas on-demand via ISR
   if (process.env.SKIP_STATIC_PARAMS === "true" || !process.env.DATABASE_URL) return [];
   try {
   const params: { path: string[] }[] = [];
@@ -237,8 +237,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       const totalMsgsAgg = await prisma.mensagem.count({
         where: { status: "PUBLISHED", cluster: { nichoId: resolved.nicho.id } },
       });
-      const titleAuto = `Todas as Categorias de Mensagens de Aniversário ${ano} — ${totalCats} listas, ${totalMsgsAgg.toLocaleString("pt-BR")} mensagens`;
-      const descAuto = `Navegue por ${totalCats} categorias de mensagens de aniversário organizadas por destinatário, ocasião e tom — ${totalMsgsAgg.toLocaleString("pt-BR")} mensagens curadas. Lista completa Portal Soma ${ano}.`;
+      const titleAuto = `Todas as Categorias de Mensagens de Aniversário ${ano} · ${totalCats} listas, ${totalMsgsAgg.toLocaleString("pt-BR")} mensagens`;
+      const descAuto = `Navegue por ${totalCats} categorias de mensagens de aniversário organizadas por destinatário, ocasião e tom · ${totalMsgsAgg.toLocaleString("pt-BR")} mensagens curadas. Lista completa Portal Soma ${ano}.`;
       return {
         title: resolved.nicho.metaTitle ?? titleAuto,
         description: resolved.nicho.metaDesc ?? descAuto,
@@ -266,7 +266,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       const bucket = bucketCount(c);
       const ano = new Date().getFullYear();
       const mes = MESES_PT[(last?.atualizadoEm ?? new Date()).getMonth()];
-      const titleAuto = `Mensagens de Aniversário ${resolved.cluster.nome} — ${bucket} opções ${ano}`;
+      const titleAuto = `Mensagens de Aniversário ${resolved.cluster.nome} · ${bucket} opções ${ano}`;
       const descAuto = `Mais de ${bucket.replace("+", "")} mensagens de aniversário ${resolved.cluster.nome.toLowerCase()} pra copiar e compartilhar. Curadoria editorial Portal Soma, atualizada em ${mes} ${ano}.`;
       const url = `https://www.portalsoma.com.br/${resolved.nicho.slug}/${resolved.cluster.slug}/`;
       return {
@@ -288,7 +288,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         where: { complementoId: resolved.complemento.id, status: "PUBLISHED" },
       });
       const anoComp = new Date().getFullYear();
-      const titleAutoComp = `Mensagens de Aniversário ${resolved.cluster.nome} ${resolved.complemento.nome} — ${anoComp}`;
+      const titleAutoComp = `Mensagens de Aniversário ${resolved.cluster.nome} ${resolved.complemento.nome} · ${anoComp}`;
       const descAutoComp =
         resolved.complemento.descricao ??
         `${cAuto > 0 ? `${cAuto} ` : ""}mensagens de aniversário ${resolved.cluster.nome.toLowerCase()} ${resolved.complemento.nome.toLowerCase()} pra copiar e compartilhar. Curadoria Portal Soma ${anoComp}.`;
@@ -314,7 +314,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         clusterSlug: m.cluster.slug,
         slug: m.slug,
       });
-      // OG dinâmica com texto da mensagem — CTR x2 em compartilhamento.
+      // OG dinâmica com texto da mensagem · CTR x2 em compartilhamento.
       // Fallback pro hero estático se a rota /api/og falhar.
       const ogDynamic = `https://www.portalsoma.com.br/api/og?id=${m.id}`;
       return {
@@ -369,7 +369,7 @@ export default async function CatchAllPage({ params }: PageProps) {
 }
 
 // =====================================================
-// NICHO HUB — pillar page editorial
+// NICHO HUB · pillar page editorial
 // =====================================================
 
 const NICHO_FAQ: { q: string; a: string }[] = [
@@ -379,7 +379,7 @@ const NICHO_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Qual o tamanho ideal de uma mensagem de aniversário?",
-    a: "Para status, post e WhatsApp, ideal é até 280 caracteres — caibe na tela e é fácil de copiar. Para cartões físicos e mensagens mais íntimas, mensagens de 3 a 6 frases funcionam bem. Em homenagens públicas (post longo, discurso), 8 a 12 linhas dão espaço para histórias e referências pessoais.",
+    a: "Para status, post e WhatsApp, ideal é até 280 caracteres · caibe na tela e é fácil de copiar. Para cartões físicos e mensagens mais íntimas, mensagens de 3 a 6 frases funcionam bem. Em homenagens públicas (post longo, discurso), 8 a 12 linhas dão espaço para histórias e referências pessoais.",
   },
   {
     q: "Posso usar uma mensagem do Portal Soma e personalizar?",
@@ -391,7 +391,7 @@ const NICHO_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Quando enviar uma mensagem de aniversário antecipada?",
-    a: "Quando você não vai poder cumprimentar no dia (viagem, fuso, agenda), a mensagem antecipada faz sentido — sempre marcando que é antecipada. Em geral, evitar antecipar para a véspera ou dois dias antes em culturas que consideram isso azar; o ideal é enviar no dia ou, se atrasou, no dia seguinte com uma justificativa breve.",
+    a: "Quando você não vai poder cumprimentar no dia (viagem, fuso, agenda), a mensagem antecipada faz sentido · sempre marcando que é antecipada. Em geral, evitar antecipar para a véspera ou dois dias antes em culturas que consideram isso azar; o ideal é enviar no dia ou, se atrasou, no dia seguinte com uma justificativa breve.",
   },
   {
     q: "Quantas mensagens estão disponíveis e com que frequência são atualizadas?",
@@ -399,23 +399,23 @@ const NICHO_FAQ: { q: string; a: string }[] = [
   },
 ];
 
-const INTRO_EDITORIAL = `Mensagem de aniversário é um dos textos mais antigos e cotidianos que escrevemos. Está em cartões, em status do WhatsApp, em legenda de foto, em discurso de festa, em mensagem privada que ninguém vê. E ainda assim continua difícil — porque o gênero parece simples mas exige equilíbrio entre afeto, oportunidade e voz. Uma frase genérica esfria. Uma frase íntima demais constrange. Uma frase comprida demais cansa. Uma curta demais pode soar descuidada.
+const INTRO_EDITORIAL = `Mensagem de aniversário é um dos textos mais antigos e cotidianos que escrevemos. Está em cartões, em status do WhatsApp, em legenda de foto, em discurso de festa, em mensagem privada que ninguém vê. E ainda assim continua difícil · porque o gênero parece simples mas exige equilíbrio entre afeto, oportunidade e voz. Uma frase genérica esfria. Uma frase íntima demais constrange. Uma frase comprida demais cansa. Uma curta demais pode soar descuidada.
 
-O Portal Soma é uma curadoria editorial brasileira focada em ajudar a encontrar a mensagem certa para a pessoa certa. As mensagens são organizadas por três dimensões: para quem (relação), para quando (ocasião) e como (tom). Você encontra opções para mãe, pai, amiga, marido, esposa, filho, sobrinho, chefe, cliente, padrinho — mas também por idade, por estilo religioso, por humor, por ocasião marcante. Cada categoria abre uma lista longa de variações para você escolher a que combina com o vínculo.`;
+O Portal Soma é uma curadoria editorial brasileira focada em ajudar a encontrar a mensagem certa para a pessoa certa. As mensagens são organizadas por três dimensões: para quem (relação), para quando (ocasião) e como (tom). Você encontra opções para mãe, pai, amiga, marido, esposa, filho, sobrinho, chefe, cliente, padrinho · mas também por idade, por estilo religioso, por humor, por ocasião marcante. Cada categoria abre uma lista longa de variações para você escolher a que combina com o vínculo.`;
 
 const COMO_ESCOLHER = `Antes de copiar a primeira mensagem que aparece, vale uma pergunta: como é o vínculo de vocês? Mensagem para uma amiga de quinze anos não é a mesma coisa que mensagem para um chefe que você admira mas não conhece de perto. O grau de intimidade define o vocabulário, o tom e o tamanho. Mensagens curtas funcionam bem para vínculos profissionais e cumprimentos cordiais; mensagens longas brilham nas relações íntimas, onde memórias específicas valem mais que ornamentos.
 
-Outra escolha que pesa: a pessoa tem fé como parte central da vida? Se sim, uma mensagem bíblica, católica ou evangélica costuma chegar mais fundo do que uma genérica. Se não, frases religiosas podem soar deslocadas. Em homenagens públicas, considere o que a pessoa gostaria de ler — não o que você acha bonito. E sempre que possível, acrescente um detalhe pessoal: uma lembrança compartilhada, uma piada interna, um agradecimento concreto. É o detalhe que transforma cumprimento em homenagem.`;
+Outra escolha que pesa: a pessoa tem fé como parte central da vida? Se sim, uma mensagem bíblica, católica ou evangélica costuma chegar mais fundo do que uma genérica. Se não, frases religiosas podem soar deslocadas. Em homenagens públicas, considere o que a pessoa gostaria de ler · não o que você acha bonito. E sempre que possível, acrescente um detalhe pessoal: uma lembrança compartilhada, uma piada interna, um agradecimento concreto. É o detalhe que transforma cumprimento em homenagem.`;
 
 const TIPO_SECOES: { tipo: string; titulo: string; intro: string }[] = [
   {
     tipo: "DESTINATARIO",
-    titulo: "Por relação — para quem é a mensagem",
-    intro: "A escolha mais importante. Mãe, marido, melhor amiga, sobrinho, chefe — cada vínculo pede tom, vocabulário e tamanho diferentes. Comece pelo destinatário e o restante se ajusta.",
+    titulo: "Por relação · para quem é a mensagem",
+    intro: "A escolha mais importante. Mãe, marido, melhor amiga, sobrinho, chefe · cada vínculo pede tom, vocabulário e tamanho diferentes. Comece pelo destinatário e o restante se ajusta.",
   },
   {
     tipo: "OCASIAO",
-    titulo: "Por ocasião — momento de vida e idade",
+    titulo: "Por ocasião · momento de vida e idade",
     intro: "Aniversário de 15 anos não pede o mesmo discurso de aniversário de 60. Aqui as mensagens são organizadas por marcos: infância, vida adulta, virada de década, aniversário póstumo, datas que pedem palavras específicas.",
   },
   {
@@ -430,7 +430,7 @@ const TIPO_SECOES: { tipo: string; titulo: string; intro: string }[] = [
   },
   {
     tipo: "FALECIDO",
-    titulo: "Em memória — homenagens póstumas",
+    titulo: "Em memória · homenagens póstumas",
     intro: "Quando alguém querido já não está, o aniversário continua existindo na lembrança. Aqui ficam as mensagens que celebram a memória com respeito e afeto.",
   },
 ];
@@ -535,7 +535,7 @@ async function NichoHub({ data }: { data: NichoData }) {
         itemScope
         itemType="https://schema.org/CollectionPage"
       >
-        <meta itemProp="name" content={`${data.nome} — Portal Soma`} />
+        <meta itemProp="name" content={`${data.nome} · Portal Soma`} />
         <meta itemProp="description" content={data.descricao ?? INTRO_EDITORIAL.slice(0, 160)} />
         <meta itemProp="inLanguage" content="pt-BR" />
         <meta itemProp="dateModified" content={ultimaAtualizacao.toISOString()} />
@@ -605,7 +605,7 @@ async function NichoHub({ data }: { data: NichoData }) {
           </div>
         </header>
 
-        {/* INTRO EDITORIAL — Speakable pra Google Assistant + GEO */}
+        {/* INTRO EDITORIAL · Speakable pra Google Assistant + GEO */}
         <section className="container-niver py-10 max-w-3xl">
           <h2 className="heading-section-bar mb-5 text-niver-800">
             O que é mensagem de aniversário?
@@ -678,7 +678,7 @@ async function NichoHub({ data }: { data: NichoData }) {
           );
         })}
 
-        {/* EDITORIAL COMO ESCOLHER — Speakable pillar */}
+        {/* EDITORIAL COMO ESCOLHER · Speakable pillar */}
         <section className="bg-warm-50 py-12 border-y border-stone-100">
           <div className="container-niver max-w-3xl">
             <h2 className="heading-section-bar mb-5 text-niver-800">
@@ -713,7 +713,7 @@ async function NichoHub({ data }: { data: NichoData }) {
           />
         </section>
 
-        {/* FAQ texto (sem schema — Google deprecou rich snippet pra non-gov/health) */}
+        {/* FAQ texto (sem schema · Google deprecou rich snippet pra non-gov/health) */}
         <section className="bg-stone-50 py-12 border-t border-stone-100">
           <div className="container-niver max-w-3xl">
             <h2 className="heading-section-bar mb-6 text-niver-800">
@@ -867,7 +867,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         ])}
       />
 
-      {/* HEADER 2 — hero SEO/GEO opening */}
+      {/* HEADER 2 · hero SEO/GEO opening */}
       <header className="cluster-hero relative bg-gradient-to-b from-niver-50 to-warm-50 py-12 sm:py-16 deco-confetti overflow-hidden">
         <div className="container-niver relative">
           <nav
@@ -896,7 +896,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
             </span>
           </nav>
           <h1 className="font-display text-3xl sm:text-5xl text-niver-800 leading-[1.15] mb-5">
-            Mensagens de Aniversário {cluster.nome} — {bucket} opções {anoAtual}
+            Mensagens de Aniversário {cluster.nome} · {bucket} opções {anoAtual}
           </h1>
           {cluster.editorial?.introHero ? (
             <ClusterHeroIntro text={cluster.editorial.introHero} />
@@ -924,7 +924,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         </div>
       </header>
 
-      {/* ASIDE meta editorial — autores, blockquote TOP1, time freshness */}
+      {/* ASIDE meta editorial · autores, blockquote TOP1, time freshness */}
       <aside
         className="cluster-meta container-niver py-8 border-b border-warm-200"
         itemScope
@@ -978,7 +978,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
               <blockquote className="mt-4 border-l-4 border-niver-400 pl-5 py-2 italic text-stone-700 max-w-3xl">
                 <p itemProp="description">"{topSemana[0].resumo}"</p>
                 <cite className="block not-italic text-sm text-stone-500 mt-2">
-                  — <span itemProp="creator">{topSemana[0].autor.nome}</span>, em{" "}
+                  · <span itemProp="creator">{topSemana[0].autor.nome}</span>, em{" "}
                   <a
                     href={`/${nicho.slug}/${cluster.slug}/${topSemana[0].slug}/`}
                     className="text-niver-700 hover:underline"
@@ -1022,7 +1022,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         </section>
       )}
 
-      {/* SECTION collection — listicle principal */}
+      {/* SECTION collection · listicle principal */}
       <section
         id="cluster-collection"
         className="cluster-collection container-niver py-12 scroll-mt-20"
@@ -1080,12 +1080,12 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         ) : (
           <div className="card-feature text-center py-16">
             <p className="text-stone-600 mb-2">Estamos preparando mensagens com cuidado pra esta categoria.</p>
-            <p className="text-sm text-stone-500">Volte em breve — novas mensagens chegam diariamente.</p>
+            <p className="text-sm text-stone-500">Volte em breve · novas mensagens chegam diariamente.</p>
           </div>
         )}
       </section>
 
-      {/* SECTION extras — fechamento editorial + FAQ texto livre (sem schema) */}
+      {/* SECTION extras · fechamento editorial + FAQ texto livre (sem schema) */}
       {(cluster.editorial?.fechamento || cluster.editorial?.faqTexto) && (
         <section className="cluster-extras container-niver py-12">
           <article className="max-w-3xl mx-auto">
@@ -1153,7 +1153,7 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
         </section>
       )}
 
-      {/* FAQ accordion (legacy — só se sem editorial.faqTexto) */}
+      {/* FAQ accordion (legacy · só se sem editorial.faqTexto) */}
       {!cluster.editorial?.faqTexto && (
         <section className="container-niver py-12">
           <h2 className="heading-section-bar mb-8">Perguntas frequentes</h2>
@@ -1492,7 +1492,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
               itemType="https://schema.org/Person"
               className="block not-italic text-sm text-stone-500 mt-6 pt-5 border-t border-warm-200/70"
             >
-              — <a
+              · <a
                 href={`/autor/${mensagem.autor.slug}/`}
                 className="text-niver-700 hover:underline font-medium"
               >
@@ -1501,7 +1501,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
             </cite>
           </blockquote>
 
-          {/* Ações inline (desktop) — mobile usa StickyActionBar */}
+          {/* Ações inline (desktop) · mobile usa StickyActionBar */}
           <div className="hidden md:flex flex-wrap gap-2 mb-12">
             <CopyButton
               text={mensagem.conteudo}
@@ -1524,7 +1524,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
           )}
         </section>
 
-        {/* PRESENTES (afiliado Amazon) — contextual ao destinatário */}
+        {/* PRESENTES (afiliado Amazon) · contextual ao destinatário */}
         {mensagem.cluster.tipo === "DESTINATARIO" && (
           <section className="container-niver py-6 max-w-3xl">
             <GiftSuggestions destinatario={mensagem.cluster.nome.replace(/^Para\s+/i, "")} />
@@ -1551,7 +1551,7 @@ async function MensagemPage({ mensagem }: { mensagem: MensagemData }) {
         )}
       </article>
 
-      {/* Sticky bottom action bar — só mobile */}
+      {/* Sticky bottom action bar · só mobile */}
       <StickyActionBar
         text={mensagem.conteudo}
         url={url}
@@ -1576,7 +1576,7 @@ function makeFaqForCluster(nome: string): { pergunta: string; resposta: string }
     {
       pergunta: `Posso copiar mensagens ${nome.toLowerCase()} pra mandar no WhatsApp?`,
       resposta:
-        "Sim! Cada mensagem tem o botão Copiar — um clique e ela já vai pra área de transferência, pronta pra colar no WhatsApp, Telegram, SMS ou onde quiser.",
+        "Sim! Cada mensagem tem o botão Copiar · um clique e ela já vai pra área de transferência, pronta pra colar no WhatsApp, Telegram, SMS ou onde quiser.",
     },
     {
       pergunta: `As mensagens são originais ou copiadas de outros lugares?`,
@@ -1586,7 +1586,7 @@ function makeFaqForCluster(nome: string): { pergunta: string; resposta: string }
     {
       pergunta: `Tem mensagens curtas pra mandar rapidinho?`,
       resposta:
-        "Tem sim. Em cada categoria você encontra mensagens de tamanhos variados — das bem curtinhas pro WhatsApp até as longas pra cartões e momentos especiais.",
+        "Tem sim. Em cada categoria você encontra mensagens de tamanhos variados · das bem curtinhas pro WhatsApp até as longas pra cartões e momentos especiais.",
     },
   ];
 }

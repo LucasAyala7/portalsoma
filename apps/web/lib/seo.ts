@@ -14,7 +14,7 @@ export function organizationSchema() {
     url: SITE_URL,
     logo: `${SITE_URL}/logo.png`,
     description:
-      "Portal brasileiro de mensagens de aniversário originais — emocionantes, evangélicas, engraçadas e únicas — para mãe, pai, amiga, filha e mais.",
+      "Portal brasileiro de mensagens de aniversário originais · emocionantes, evangélicas, engraçadas e únicas · para mãe, pai, amiga, filha e mais.",
     inLanguage: "pt-BR",
     sameAs: [
       "https://www.instagram.com/portalsoma",
@@ -41,7 +41,7 @@ export function webSiteWithSearchSchema() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
-    alternateName: "Portal Soma — Mensagens de Aniversário",
+    alternateName: "Portal Soma · Mensagens de Aniversário",
     url: SITE_URL,
     inLanguage: "pt-BR",
     publisher: { "@type": "Organization", "@id": `${SITE_URL}/#organization`, name: SITE_NAME, url: SITE_URL },
@@ -59,7 +59,7 @@ export function webSiteWithSearchSchema() {
   };
 }
 
-/** ItemList das seções do mega nav — match com microdata SiteNavigationElement do <nav> */
+/** ItemList das seções do mega nav · match com microdata SiteNavigationElement do <nav> */
 export interface SiteNavSection {
   titulo: string;
   items: { slug: string; nome: string }[];
@@ -161,7 +161,7 @@ export function collectionSchema(input: {
   descricao: string;
   url: string;
   itemsCount: number;
-  /** CSS selectors a marcar como Speakable — Google Assistant TTS + GEO. */
+  /** CSS selectors a marcar como Speakable · Google Assistant TTS + GEO. */
   speakableSelectors?: string[];
 }) {
   const base: Record<string, unknown> = {
@@ -221,7 +221,7 @@ export function itemListSchema(items: ItemListEntry[]) {
   };
 }
 
-/** Article enriched + interactionStatistic — pra usar dentro de ItemList enriched. */
+/** Article enriched + interactionStatistic · pra usar dentro de ItemList enriched. */
 export interface ArticleListEntry {
   position: number;
   url: string;
@@ -289,7 +289,7 @@ export function articleListItemSchema(m: ArticleListEntry) {
   };
 }
 
-/** ItemList enriched de Articles (mensagens) — para Home/Cluster/Autor */
+/** ItemList enriched de Articles (mensagens) · para Home/Cluster/Autor */
 export function enrichedItemListSchema(items: ArticleListEntry[]) {
   return {
     "@context": "https://schema.org",
@@ -299,7 +299,7 @@ export function enrichedItemListSchema(items: ArticleListEntry[]) {
   };
 }
 
-/** ListItem com BlogPosting + interactionStatistic — para listagens de posts blog */
+/** ListItem com BlogPosting + interactionStatistic · para listagens de posts blog */
 export interface BlogPostListEntry {
   position: number;
   url: string;

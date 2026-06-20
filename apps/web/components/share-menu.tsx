@@ -15,7 +15,7 @@ interface Props {
 export function ShareMenu({ text, url, mensagemId, promoteOnShare }: Props) {
   const [open, setOpen] = useState(false);
   const fullUrl = url.startsWith("http") ? url : `https://www.portalsoma.com.br${url}`;
-  // URLs com UTM por destino — pra GA atribuir tráfego que volta via share.
+  // URLs com UTM por destino · pra GA atribuir tráfego que volta via share.
   const campaign = promoteOnShare ? "promote" : "user_share";
   const urlWa = withUtm(fullUrl, "share", "whatsapp", campaign);
   const urlTg = withUtm(fullUrl, "share", "telegram", campaign);

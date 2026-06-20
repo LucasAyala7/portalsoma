@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * Botão "Compartilhar imagem" — usa Web Share API Level 2 (files: [Blob]).
+ * Botão "Compartilhar imagem" · usa Web Share API Level 2 (files: [Blob]).
  * Fallback: download direto + toast "imagem baixada, cole no app".
  */
 export function ShareImageButton({ imageUrl, titulo, mensagemId, slug, className }: Props) {
@@ -58,7 +58,7 @@ export function ShareImageButton({ imageUrl, titulo, mensagemId, slug, className
           track("share-files");
           setDone("shared");
         } catch (err: unknown) {
-          // Usuário cancelou — não trata como erro
+          // Usuário cancelou · não trata como erro
           if ((err as { name?: string })?.name !== "AbortError") {
             await fallbackDownload(blob, filename);
             setDone("downloaded");
@@ -69,7 +69,7 @@ export function ShareImageButton({ imageUrl, titulo, mensagemId, slug, className
         setDone("downloaded");
       }
     } catch {
-      // Silencioso — botão volta ao estado normal
+      // Silencioso · botão volta ao estado normal
     } finally {
       setBusy(false);
       if (done) setTimeout(() => setDone(null), 2500);

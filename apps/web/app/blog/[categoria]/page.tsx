@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const cat = await loadCategoria(categoria);
   if (!cat) return {};
   return {
-    title: cat.metaTitle ?? `${cat.nome} — Blog Portal Soma`,
+    title: cat.metaTitle ?? `${cat.nome} · Blog Portal Soma`,
     description: cat.metaDesc ?? cat.descricao ?? undefined,
     alternates: { canonical: `https://www.portalsoma.com.br/blog/${cat.slug}/` },
   };
