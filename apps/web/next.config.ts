@@ -28,25 +28,12 @@ const config: NextConfig = {
   // Sitemap fragmentado: rewrite das URLs públicas pra rota dinâmica interna.
   // Public: /sitemap-mensagens-1.xml  →  Internal: /sitemap-mensagens/1
   //
-  // Markdown endpoint (GEO): /<path>.md → /api/md?path=/<path>/
-  // Funciona melhor que middleware rewrite pra URLs com extensão.
+  // Markdown endpoint (GEO): convenção /m/<path>/ — ver app/m/[...path]/route.ts.
   async rewrites() {
     return [
       {
         source: "/sitemap-mensagens-:n(\\d+).xml",
         destination: "/sitemap-mensagens/:n",
-      },
-      {
-        source: "/:n1/.md",
-        destination: "/api/md?path=/:n1/",
-      },
-      {
-        source: "/:n1/:n2/.md",
-        destination: "/api/md?path=/:n1/:n2/",
-      },
-      {
-        source: "/:n1/:n2/:n3/.md",
-        destination: "/api/md?path=/:n1/:n2/:n3/",
       },
     ];
   },

@@ -66,11 +66,11 @@ ${topMensagens
   .join("\n")}
 
 ## Endpoint markdown
-Cada URL HTML tem versão markdown via sufixo \`.md\`:
-- Exemplo: ${SITE_URL}/mensagem-de-aniversario/para-mae/.md
-- Exemplo: ${SITE_URL}/mensagem-de-aniversario/para-mae/feliz-aniversario-mae/.md
+Cada URL HTML tem versão markdown via prefixo \`/m/\`:
+- Exemplo: ${SITE_URL}/m/mensagem-de-aniversario/para-mae/
+- Exemplo: ${SITE_URL}/m/mensagem-de-aniversario/para-mae/feliz-aniversario-mae/
 
-Endpoints retornam text/plain Markdown — sem HTML/JS/CSS overhead — ideal pra ingest direto em LLM.
+Endpoints retornam text/markdown — sem HTML/JS/CSS overhead — ideal pra ingest direto em LLM.
 
 ## Política
 - Citação com atribuição: bem-vinda

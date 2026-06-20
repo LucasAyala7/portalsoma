@@ -12,9 +12,9 @@ import { lookupRedirect } from "./app/redirects-data";
  *  - Senão: deixa passar pro Next normal
  */
 export const config = {
-  // ignora estáticos e API (mas precisa entrar em .md pra rewrite acontecer)
+  // ignora estáticos, API, sitemaps e endpoint markdown /m/
   matcher: [
-    "/((?!_next/|api/|favicon|llms\\.txt|robots\\.txt|sitemap\\.xml|sitemap-clusters\\.xml|sitemap-autores\\.xml|sitemap-web-stories\\.xml|sitemap-mensagens-|sitemap-mensagens/|m/).*)",
+    "/((?!_next/|api/|favicon|llms\\.txt|robots\\.txt|sitemap\\.xml|sitemap-clusters\\.xml|sitemap-autores\\.xml|sitemap-web-stories\\.xml|sitemap-mensagens-|sitemap-mensagens/|m/|icon|apple-icon).*)",
   ],
 };
 
