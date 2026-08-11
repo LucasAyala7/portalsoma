@@ -18,6 +18,7 @@ import { ShareImageButton } from "@/components/share-image-button";
 import { ClusterHeroIntro } from "@/components/cluster-hero-intro";
 import { VerMensagensCTA } from "@/components/ver-mensagens-cta";
 import { GiftSuggestions } from "@/components/gift-suggestions";
+import { relatedClusterSlugs } from "@/lib/cross-links";
 import { getCategoryIcon } from "@/lib/icons";
 import {
   jsonLdScript,
@@ -827,6 +828,15 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       ? (cluster.faq as { pergunta: string; resposta: string }[])
       : faqDefault;
 
+  // Cross-links semânticos — clusters afins por tema (idade, família, tom)
+  const crossSlugs = relatedClusterSlugs(cluster.slug);
+  const crossLinks = crossSlugs.length > 0
+    ? await prisma.cluster.findMany({
+        where: { slug: { in: crossSlugs }, ativo: true, nichoId: nicho.id },
+        include: { _count: { select: { mensagens: { where: { status: "PUBLISHED" } } } } },
+      })
+    : [];
+
   // ItemList JSON-LD: só TOP 15 (Google reconhece carrossel até 20; mais é overkill + bloat HTML)
   const clusterArticleEntries = mensagens.slice(0, 15).map((m, i) => ({
     position: i + 1,
@@ -1148,6 +1158,25 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
               totalMensagens: s._count.mensagens,
               descricao: s.descricao ?? undefined,
               iconConfig: getCategoryIcon(s.slug),
+            }))}
+          />
+        </section>
+      )}
+
+      {/* CROSS-LINKS SEMÂNTICOS — clusters afins pelo tema (idade, família, tom) */}
+      {crossLinks.length > 0 && (
+        <section className="container-niver py-8 border-t border-warm-100">
+          <h2 className="heading-section-bar mb-6">
+            <span>Você também vai gostar</span>
+          </h2>
+          <CategoryGrid
+            nichoSlug={nicho.slug}
+            categorias={crossLinks.map((c) => ({
+              slug: c.slug,
+              nome: c.nome,
+              totalMensagens: c._count.mensagens,
+              descricao: c.descricao ?? undefined,
+              iconConfig: getCategoryIcon(c.slug),
             }))}
           />
         </section>
