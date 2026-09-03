@@ -58,8 +58,6 @@ const BANIDOS = [
   "antes de tudo",
   "e possivel optar",
   "é possível optar",
-  "sobretudo",
-  "ao mesmo tempo",
   "nao e apenas",
   "não é apenas",
   "mais do que apenas",
@@ -97,8 +95,6 @@ const BANIDOS = [
   "por sua vez",
   "dessa forma",
   "assim sendo",
-  "alem disso",
-  "além disso",
 ];
 
 const SYSTEM = `Voce escreve textos editoriais para o Portal Soma, site brasileiro de mensagens de aniversario.
@@ -119,7 +115,7 @@ ao fim.
 
 REGRAS DURAS:
 1. Frases curtas. Media de 15 palavras. Nunca passe de 25.
-2. Zero jargao de ensaio. Nada de conectivos formais (portanto, dessa forma, alem disso, por sua vez, ou seja).
+2. Zero jargao de ensaio. Nada de conectivos de ensaio academico (portanto, dessa forma, por sua vez, assim sendo).
 3. Use "a gente" e "voce". Escreva pra uma pessoa, nao pra um publico.
 4. Cite situacoes reais: grupo de familia no WhatsApp, foto antiga, almoco de domingo, cartao que ninguem le.
 5. Contraste especifico vale mais que adjetivo. Em vez de dizer que a data e importante, mostre o detalhe concreto que a torna importante PARA ESSA CATEGORIA.

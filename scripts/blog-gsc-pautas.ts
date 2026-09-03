@@ -45,17 +45,18 @@ const args = Object.fromEntries(
 const DRY = args["dry-run"] === "true";
 const LIMIT = args.limit ? Number(args.limit) : undefined;
 const CONCURRENCY = args.concurrency ? Number(args.concurrency) : 3;
+const SO_SLUG = args.slug;
 
 const BANIDOS = [
   "quem busca", "lacos", "laços", "traduzir", "nuance", "trajetoria", "trajetória",
-  "palavras certas", "transcend", "antes de tudo", "sobretudo", "ao mesmo tempo",
+  "palavras certas", "transcend", "antes de tudo", "ao mesmo tempo",
   "nao e apenas", "não é apenas", "mais do que apenas", "em ultima analise",
   "em última análise", "vale ressaltar", "vale destacar", "no fim do dia",
   "em conclusao", "em conclusão", "jornada", "navegar", "no mundo de hoje",
   "cada vez mais", "em meio a", "em uma era", "verdadeiro presente",
   "inesquecivel", "inesquecível", "repleto de", "celebrar a vida",
   "momento unico", "momento único", "papel fundamental", "por sua vez",
-  "dessa forma", "assim sendo", "alem disso", "além disso",
+  "dessa forma", "assim sendo", "além disso",
 ];
 
 interface Pauta {
@@ -419,7 +420,8 @@ Escreva o artigo.`;
 
 async function main() {
   console.log(`[blog-gsc] model=${MODEL} dry=${DRY} pautas=${PAUTAS.length}`);
-  const alvo = LIMIT ? PAUTAS.slice(0, LIMIT) : PAUTAS;
+  const base = SO_SLUG ? PAUTAS.filter((p) => p.slug === SO_SLUG) : PAUTAS;
+  const alvo = LIMIT ? base.slice(0, LIMIT) : base;
 
   const cats = await prisma.blogCategory.findMany({ select: { id: true, slug: true } });
   const catMap = new Map(cats.map((c) => [c.slug, c.id]));
