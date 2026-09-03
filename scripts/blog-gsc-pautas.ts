@@ -49,14 +49,12 @@ const SO_SLUG = args.slug;
 
 const BANIDOS = [
   "quem busca", "lacos", "laços", "traduzir", "nuance", "trajetoria", "trajetória",
-  "palavras certas", "transcend", "antes de tudo", "ao mesmo tempo",
-  "nao e apenas", "não é apenas", "mais do que apenas", "em ultima analise",
+  "palavras certas", "transcend", "antes de tudo",   "nao e apenas", "não é apenas", "mais do que apenas", "em ultima analise",
   "em última análise", "vale ressaltar", "vale destacar", "no fim do dia",
   "em conclusao", "em conclusão", "jornada", "navegar", "no mundo de hoje",
   "cada vez mais", "em meio a", "em uma era", "verdadeiro presente",
   "inesquecivel", "inesquecível", "repleto de", "celebrar a vida",
-  "momento unico", "momento único", "papel fundamental", "por sua vez",
-  "dessa forma", "assim sendo", "além disso",
+  "momento unico", "momento único", "papel fundamental",
 ];
 
 interface Pauta {
@@ -313,31 +311,31 @@ const PAUTAS: Pauta[] = [
   },
 ];
 
-const SYSTEM = `Voce e redator do Portal Soma, site brasileiro sobre aniversarios, bodas e datas afetivas.
+const SYSTEM = `Você é redator do Portal Soma, site brasileiro sobre aniversários, bodas e datas afetivas.
 
 COMO ESCREVER:
-Abre com a RESPOSTA DIRETA a pergunta do titulo, em uma ou duas frases. Sem enrolacao, sem introducao ceremonial. Depois desenvolve.
+Abre com a RESPOSTA DIRETA à pergunta do título, em uma ou duas frases. Sem enrolação, sem introdução cerimonial. Depois desenvolve.
 
-Voce escreve como jornalista de revista que conhece gente de verdade. Frases curtas, media de 15 palavras. Cena concreta vale mais que adjetivo.
+Você escreve como jornalista de revista que conhece gente de verdade. Frases curtas, media de 15 palavras. Cena concreta vale mais que adjetivo.
 
 RUIM (soa IA): "Celebrar bodas de pinho e, antes de tudo, reconhecer o valor de uma trajetoria construida a dois."
 BOM (soa gente): "Pinho e madeira de movel barato. Nao e mogno. E o que aguenta trinta anos de mudanca de casa sem rachar."
 
 REGRAS DURAS:
-1. Frases curtas. Media 15 palavras. Nunca passe de 25.
+1. Frases curtas. Média 15 palavras. Nunca passe de 25.
 2. Zero conectivo formal (portanto, dessa forma, alem disso, por sua vez, ou seja, assim sendo).
-3. Use "a gente" e "voce".
-4. Cite situacoes reais brasileiras: grupo de familia no WhatsApp, almoco de domingo, festa em salao de predio, foto emoldurada na sala.
-5. Pode ter opiniao. Pode discordar do senso comum.
-6. Nunca use travessao longo. Use virgula, ponto ou dois-pontos.
-7. OBRIGATORIO: acentuacao completa do portugues brasileiro. Palavras como voce, ja, tambem, aniversario, memoria, familia, historia DEVEM sair acentuadas.
-8. Nada de listas com bullet quando prosa funciona melhor. Use markdown ## para secoes.
+3. Use "a gente" e "você".
+4. Cite situações reais brasileiras: grupo de família no WhatsApp, almoço de domingo, festa em salão de prédio, foto emoldurada na sala.
+5. Pode ter opinião. Pode discordar do senso comum.
+6. Nunca use travessão longo. Use vírgula, ponto ou dois-pontos.
+7. OBRIGATORIO: acentuação completa do português brasileiro. Palavras como voce, ja, tambem, aniversário, memoria, familia, historia DEVEM sair acentuadas.
+8. Nada de listas com bullet quando prosa funciona melhor. Use markdown ## para seções.
 
-PALAVRAS PROIBIDAS (uso = rejeicao): ${BANIDOS.join(", ")}
+PALAVRAS PROIBIDAS (uso = rejeição): ${BANIDOS.join(", ")}
 
-Voce recebe uma pauta com angulo editorial e uma lista de LINKS INTERNOS. Voce DEVE inserir todos os links internos naturalmente no meio do texto, em markdown [texto](url). Nunca despeje os links em bloco no final.
+Você recebe uma pauta com ângulo editorial e uma lista de LINKS INTERNOS. Você DEVE inserir todos os links internos naturalmente no meio do texto, em markdown [texto](url). Nunca despeje os links em bloco no final.
 
-Retorne JSON valido unico, sem markdown wrapping:
+Retorne JSON válido único, sem markdown wrapping:
 {
   "conteudo": "Artigo completo em markdown. 900 a 1400 palavras. Comeca com a resposta direta (sem titulo H1, o site ja renderiza). Usa ## para secoes. Insere todos os links internos ao longo do texto.",
   "resumo": "1 frase de 140 a 160 caracteres resumindo a resposta principal do artigo."
@@ -395,8 +393,14 @@ Escreva o artigo.`;
   if (!parsed.conteudo) return null;
 
   const viol = violacoes(parsed.conteudo);
-  const acentos = (parsed.conteudo.match(/[áàâãéêíóôõúüç]/gi) ?? []).length;
-  const semAcento = acentos / Math.max(parsed.conteudo.length, 1) < 0.015;
+  // Remove URLs e markdown antes de medir acentuacao: link longo dilui o ratio
+  // e derruba texto que na verdade esta bem acentuado.
+  const soProsa = parsed.conteudo
+    .replace(/\]\([^)]+\)/g, "]")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/[#*|`_-]/g, "");
+  const acentos = (soProsa.match(/[áàâãéêíóôõúüç]/gi) ?? []).length;
+  const semAcento = acentos / Math.max(soProsa.length, 1) < 0.015;
   const linksFaltando = p.linksInternos.filter((l) => !parsed.conteudo.includes(l.url));
   const words = parsed.conteudo.split(/\s+/).length;
 
