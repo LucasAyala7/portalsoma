@@ -19,6 +19,7 @@ import { ClusterHeroIntro } from "@/components/cluster-hero-intro";
 import { VerMensagensCTA } from "@/components/ver-mensagens-cta";
 import { GiftSuggestions } from "@/components/gift-suggestions";
 import { relatedClusterSlugs } from "@/lib/cross-links";
+import { postsParaCluster } from "@/lib/blog-cluster-map";
 import { getCategoryIcon } from "@/lib/icons";
 import {
   jsonLdScript,
@@ -837,6 +838,21 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
       })
     : [];
 
+  // Leitura relacionada no blog — fecha o ciclo de link interno (money page -> editorial)
+  const blogSlugs = postsParaCluster(cluster.slug, 3);
+  const postsRelacionados = blogSlugs.length > 0
+    ? await prisma.post.findMany({
+        where: { slug: { in: blogSlugs }, status: "PUBLISHED" },
+        select: {
+          slug: true,
+          titulo: true,
+          resumo: true,
+          tempoLeitura: true,
+          categoria: { select: { slug: true, nome: true } },
+        },
+      })
+    : [];
+
   // ItemList JSON-LD: só TOP 15 (Google reconhece carrossel até 20; mais é overkill + bloat HTML)
   const clusterArticleEntries = mensagens.slice(0, 15).map((m, i) => ({
     position: i + 1,
@@ -1179,6 +1195,38 @@ async function ClusterPage({ nicho, cluster }: { nicho: NichoData; cluster: Clus
               iconConfig: getCategoryIcon(c.slug),
             }))}
           />
+        </section>
+      )}
+
+      {/* LEITURA RELACIONADA NO BLOG — conecta money page ao editorial */}
+      {postsRelacionados.length > 0 && (
+        <section className="container-niver py-10 border-t border-warm-100">
+          <h2 className="heading-section-bar mb-6">
+            <BookOpen size={20} className="text-niver-600" strokeWidth={2.4} />
+            <span>Para entender melhor a data</span>
+          </h2>
+          <div className="grid sm:grid-cols-3 gap-4">
+            {postsRelacionados.map((p) => (
+              <a
+                key={p.slug}
+                href={`/blog/${p.categoria.slug}/${p.slug}/`}
+                className="group rounded-2xl border border-stone-100 bg-white hover:border-niver-200 hover:shadow-md transition-all p-5"
+              >
+                <span className="text-[11px] uppercase tracking-wider font-medium text-niver-600">
+                  {p.categoria.nome}
+                </span>
+                <h3 className="font-display text-base text-stone-900 group-hover:text-niver-700 transition-colors mt-1.5 leading-snug">
+                  {p.titulo}
+                </h3>
+                {p.resumo && (
+                  <p className="text-sm text-stone-600 mt-2 line-clamp-2 leading-snug">{p.resumo}</p>
+                )}
+                {p.tempoLeitura && (
+                  <span className="text-xs text-stone-400 mt-2.5 block">{p.tempoLeitura} min de leitura</span>
+                )}
+              </a>
+            ))}
+          </div>
         </section>
       )}
 

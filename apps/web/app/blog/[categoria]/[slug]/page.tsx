@@ -4,6 +4,8 @@ import { prisma } from "@nivertotal/db";
 import { Clock, ChevronRight, ArrowLeft } from "lucide-react";
 import { ShareMenu } from "@/components/share-menu";
 import { ViewTracker } from "@/components/view-tracker";
+import { RelatedClusters } from "@/components/related-clusters";
+import { clustersParaPost } from "@/lib/blog-cluster-map";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 86400;
@@ -131,6 +133,30 @@ export default async function PostBlog({ params }: PageProps) {
   const url = `https://www.portalsoma.com.br/blog/${post.categoria.slug}/${post.slug}/`;
   const html = renderMarkdown(post.conteudo);
 
+  // Ponte editorial: leva o leitor do artigo para as paginas de mensagens.
+  const clusterSlugs = clustersParaPost(post.slug, post.categoria.slug);
+  const clustersRelacionados = clusterSlugs.length
+    ? await prisma.cluster.findMany({
+        where: { slug: { in: clusterSlugs }, ativo: true },
+        select: {
+          slug: true,
+          nome: true,
+          nicho: { select: { slug: true } },
+          _count: { select: { mensagens: { where: { status: "PUBLISHED" } } } },
+        },
+      })
+    : [];
+  // Preserva a ordem de prioridade definida no mapa
+  const clustersOrdenados = clusterSlugs
+    .map((sl) => clustersRelacionados.find((c) => c.slug === sl))
+    .filter((c): c is NonNullable<typeof c> => Boolean(c))
+    .map((c) => ({
+      slug: c.slug,
+      nome: c.nome,
+      totalMensagens: c._count.mensagens,
+      nichoSlug: c.nicho.slug,
+    }));
+
   return (
     <>
       <ViewTracker mensagemId={post.id} />
@@ -251,6 +277,11 @@ export default async function PostBlog({ params }: PageProps) {
             )}
           </div>
         </section>
+
+        <RelatedClusters
+          clusters={clustersOrdenados}
+          subtitulo="Depois de entender a data, escolha a mensagem e mande em um clique."
+        />
 
         {related.length > 0 && (
           <section className="container-wide pb-16">
