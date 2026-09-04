@@ -29,13 +29,7 @@ config({ path: resolve(__d, "..", ".env") });
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const API_KEY = process.env.LLM_API_KEY ?? process.env.DEEPSEEK_API_KEY ?? "";
-const API_BASE = process.env.LLM_API_BASE ?? "https://api.deepseek.com/v1";
-const MODEL = process.env.LLM_MODEL ?? "deepseek-v4-pro";
-if (!API_KEY) throw new Error("Falta LLM_API_KEY");
-
-let TOKENS_OUT = 0;
-let TOKENS_IN = 0;
+import { llmJson, llmInfo, llmUsage } from "./lib/llm";
 
 const SITE = "https://www.portalsoma.com.br";
 
@@ -647,31 +641,14 @@ ${linksTxt}
 
 Escreva o artigo.`;
 
-  const res = await fetch(`${API_BASE}/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        { role: "system", content: SYSTEM },
-        { role: "user", content: user },
-      ],
-      response_format: { type: "json_object" },
-      temperature: 1.0,
-      max_tokens: 12000,
-    }),
+  const parsed = await llmJson<Gen>({
+    system: SYSTEM,
+    user,
+    maxTokens: 12000,
+    temperature: 1.0,
   });
-  if (!res.ok) throw new Error(`LLM ${res.status}: ${(await res.text()).slice(0, 180)}`);
-  const data = await res.json();
-  const usage = data.usage ?? {};
-  TOKENS_OUT += usage.completion_tokens ?? 0;
-  TOKENS_IN += usage.prompt_tokens ?? 0;
-  let parsed: Gen;
-  try {
-    parsed = JSON.parse(data.choices?.[0]?.message?.content ?? "{}");
-  } catch {
-    return null;
-  }
+  if (!parsed) return null;
+
   if (!parsed.conteudo) return null;
 
   const viol = violacoes(parsed.conteudo);
@@ -705,7 +682,7 @@ Escreva o artigo.`;
 }
 
 async function main() {
-  console.log(`[blog-gsc] model=${MODEL} dry=${DRY} pautas=${PAUTAS.length}`);
+  console.log(`[blog-gsc] model=${llmInfo.model} (${llmInfo.provider}) dry=${DRY} pautas=${PAUTAS.length}`);
   const base = SO_SLUG ? PAUTAS.filter((p) => p.slug === SO_SLUG) : PAUTAS;
   const alvo = LIMIT ? base.slice(0, LIMIT) : base;
 
@@ -771,7 +748,7 @@ async function main() {
 
   await Promise.all(Array.from({ length: CONCURRENCY }, (_, i) => worker(i + 1)));
   console.log(`\n[blog-gsc] done: ${ok} ok, ${fail} fail`);
-  console.log(`[tokens] in=${TOKENS_IN} out=${TOKENS_OUT}`);
+  console.log(`[tokens] in=${llmUsage.tokensIn} out=${llmUsage.tokensOut} calls=${llmUsage.calls}`);
   await prisma.$disconnect();
 }
 

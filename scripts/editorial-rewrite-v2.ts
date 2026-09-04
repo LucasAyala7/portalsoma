@@ -27,13 +27,7 @@ config({ path: resolve(__d, "..", ".env") });
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-const API_KEY = process.env.LLM_API_KEY ?? process.env.DEEPSEEK_API_KEY ?? "";
-const API_BASE = process.env.LLM_API_BASE ?? "https://api.deepseek.com/v1";
-const MODEL = process.env.LLM_MODEL ?? "deepseek-v4-pro";
-if (!API_KEY) throw new Error("Falta LLM_API_KEY / DEEPSEEK_API_KEY");
-
-let TOKENS_OUT = 0;
-let TOKENS_IN = 0;
+import { llmJson, llmInfo, llmUsage } from "./lib/llm";
 
 const args = Object.fromEntries(
   process.argv.slice(2).flatMap((a) => {
@@ -171,35 +165,13 @@ URL: portalsoma.com.br/mensagem-de-aniversario/...
 
 Escreva o editorial dessa categoria seguindo TODAS as regras. Lembre: abre com cena concreta, frases curtas, zero jargao.`;
 
-  const res = await fetch(`${API_BASE}/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${API_KEY}` },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        { role: "system", content: SYSTEM },
-        { role: "user", content: user },
-      ],
-      response_format: { type: "json_object" },
-      temperature: 1.0,
-      max_tokens: 14000,
-    }),
+  const parsed = await llmJson<Gen>({
+    system: SYSTEM,
+    user,
+    maxTokens: 14000,
+    temperature: 1.0,
   });
-  if (!res.ok) {
-    const t = await res.text();
-    throw new Error(`LLM ${res.status}: ${t.slice(0, 200)}`);
-  }
-  const data = await res.json();
-  const usage = data.usage ?? {};
-  TOKENS_OUT += usage.completion_tokens ?? 0;
-  TOKENS_IN += usage.prompt_tokens ?? 0;
-  const raw = data.choices?.[0]?.message?.content ?? "{}";
-  let parsed: Gen;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    return null;
-  }
+  if (!parsed) return null;
 
   const todo = [parsed.introHero, parsed.resumoEditorial, parsed.fechamento, parsed.faqTexto].join(" ");
   const viol = violacoes(todo);
@@ -241,7 +213,7 @@ Escreva o editorial dessa categoria seguindo TODAS as regras. Lembre: abre com c
 }
 
 async function main() {
-  console.log(`[editorial-v2] model=${MODEL} dry=${DRY} concurrency=${CONCURRENCY}`);
+  console.log(`[editorial-v2] model=${llmInfo.model} (${llmInfo.provider}) dry=${DRY} concurrency=${CONCURRENCY}`);
 
   const clusters = await prisma.cluster.findMany({
     where: {
@@ -286,7 +258,7 @@ async function main() {
               resumoEditorial: g.resumoEditorial,
               fechamento: g.fechamento,
               faqTexto: g.faqTexto,
-              modelo: MODEL,
+              modelo: llmInfo.model,
               origemConteudo: "IA",
             },
             update: {
@@ -294,7 +266,7 @@ async function main() {
               resumoEditorial: g.resumoEditorial,
               fechamento: g.fechamento,
               faqTexto: g.faqTexto,
-              modelo: MODEL,
+              modelo: llmInfo.model,
             },
           });
         }
@@ -314,7 +286,7 @@ async function main() {
 
   await Promise.all(Array.from({ length: CONCURRENCY }, (_, i) => worker(i + 1)));
   console.log(`\n[editorial-v2] done: ${ok} ok, ${fail} fail em ${((Date.now() - t0) / 60000).toFixed(1)} min`);
-  console.log(`[tokens] in=${TOKENS_IN} out=${TOKENS_OUT}`);
+  console.log(`[tokens] in=${llmUsage.tokensIn} out=${llmUsage.tokensOut} calls=${llmUsage.calls}`);
   await prisma.$disconnect();
 }
 
