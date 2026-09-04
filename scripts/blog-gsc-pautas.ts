@@ -31,8 +31,11 @@ const prisma = new PrismaClient();
 
 const API_KEY = process.env.LLM_API_KEY ?? process.env.DEEPSEEK_API_KEY ?? "";
 const API_BASE = process.env.LLM_API_BASE ?? "https://api.deepseek.com/v1";
-const MODEL = process.env.LLM_MODEL ?? "deepseek-chat";
+const MODEL = process.env.LLM_MODEL ?? "deepseek-v4-pro";
 if (!API_KEY) throw new Error("Falta LLM_API_KEY");
+
+let TOKENS_OUT = 0;
+let TOKENS_IN = 0;
 
 const SITE = "https://www.portalsoma.com.br";
 
@@ -309,6 +312,282 @@ const PAUTAS: Pauta[] = [
     angulo:
       "Resposta primeiro. Aos 50 anos de casamento quem organiza a festa quase sempre sao os filhos e netos, nao o casal. Escreva pensando em quem vai organizar. Ouro nao oxida: e o unico metal da lista que chega intacto. Fale de homenagem sem transformar em velorio antecipado.",
   },
+  {
+    slug: "bodas-de-madeira-5-anos-de-casamento",
+    titulo: "Bodas de madeira: 5 anos de casamento e o que mudou",
+    metaTitle: "Bodas de Madeira: 5 Anos de Casamento",
+    metaDescription:
+      "Bodas de madeira marcam 5 anos de casamento. Veja o significado do símbolo, ideias de comemoração e mensagens prontas para o casal.",
+    categoria: "significado-da-data",
+    queryAlvo: "bodas de madeira mensagem",
+    impressoesMes: 880,
+    respostaDireta: "Bodas de madeira marcam 5 anos de casamento.",
+    linksInternos: [
+      { label: "mensagens de bodas de madeira", url: CL("bodas-de-madeira-5-anos") },
+      { label: "bodas de flores (4 anos)", url: CL("bodas-de-flores-4-anos") },
+      { label: "mensagens de 5 anos de namoro", url: CL("de-5-anos-de-namoro") },
+      { label: "bodas de estanho (10 anos)", url: CL("bodas-de-estanho-10-anos") },
+    ],
+    angulo:
+      "Resposta primeiro. Madeira e o primeiro material duro da lista: papel, algodao, couro, flores e entao madeira. Aos 5 anos o casamento saiu do provisorio. Fale de moveis comprados juntos, da casa que virou casa. Sugira presentes de madeira que nao sejam brega.",
+  },
+  {
+    slug: "bodas-de-papel-1-ano-de-casamento",
+    titulo: "Bodas de papel: o primeiro ano de casamento",
+    metaTitle: "Bodas de Papel: 1 Ano de Casamento",
+    metaDescription:
+      "Bodas de papel marcam 1 ano de casamento. Entenda o símbolo do começo, o que muda no primeiro ano e mensagens prontas para a data.",
+    categoria: "significado-da-data",
+    queryAlvo: "bodas de papel 1 ano",
+    impressoesMes: 590,
+    respostaDireta: "Bodas de papel marcam o primeiro ano de casamento.",
+    linksInternos: [
+      { label: "mensagens de bodas de papel", url: CL("bodas-de-papel-1-ano") },
+      { label: "mensagens de 1 ano de namoro", url: CL("de-1-ano-de-namoro") },
+      { label: "bodas de flores (4 anos)", url: CL("bodas-de-flores-4-anos") },
+      { label: "mensagens para o marido", url: CL("para-marido") },
+    ],
+    angulo:
+      "Resposta primeiro. Papel rasga facil, e essa e a graca do simbolo: o primeiro ano e o mais fragil de todos. Fale do que ninguem conta sobre o primeiro ano de casados: a rotina chega rapido, a lua de mel acaba, e isso e normal. Termine falando de bilhete escrito a mao como presente de papel.",
+  },
+  {
+    slug: "bodas-de-perola-30-anos-de-casamento",
+    titulo: "Bodas de pérola: 30 anos de casamento",
+    metaTitle: "Bodas de Pérola: 30 Anos de Casamento",
+    metaDescription:
+      "Bodas de pérola celebram 30 anos de casamento. Veja o significado da pérola, como comemorar três décadas juntos e mensagens para o casal.",
+    categoria: "significado-da-data",
+    queryAlvo: "bodas de perola 30 anos",
+    impressoesMes: 480,
+    respostaDireta: "Bodas de pérola celebram 30 anos de casamento.",
+    linksInternos: [
+      { label: "mensagens de bodas de pérola", url: CL("bodas-de-perola-30-anos") },
+      { label: "bodas de prata (25 anos)", url: CL("bodas-de-prata-25-anos") },
+      { label: "bodas de pinho (32 anos)", url: CL("bodas-de-pinho-32-anos") },
+      { label: "mensagens de 30 anos", url: CL("de-30-anos") },
+    ],
+    angulo:
+      "Resposta primeiro. Perola nasce de um incomodo: um graozinho de areia entra na ostra e ela cobre de camada em camada ate virar joia. E o melhor simbolo da lista pra 30 anos de casamento. Use isso sem forcar a metafora. Fale de filhos ja adultos, casa mais vazia, casal que volta a ser dois.",
+  },
+  {
+    slug: "bodas-de-rubi-40-anos-de-casamento",
+    titulo: "Bodas de rubi: 40 anos de casamento",
+    metaTitle: "Bodas de Rubi: 40 Anos de Casamento",
+    metaDescription:
+      "Bodas de rubi marcam 40 anos de casamento. Veja o significado da pedra vermelha, ideias de homenagem e mensagens prontas para o casal.",
+    categoria: "significado-da-data",
+    queryAlvo: "bodas de rubi mensagem",
+    impressoesMes: 320,
+    respostaDireta: "Bodas de rubi marcam 40 anos de casamento.",
+    linksInternos: [
+      { label: "mensagens de bodas de rubi", url: CL("bodas-de-rubi-40-anos") },
+      { label: "bodas de esmeralda (35 anos)", url: CL("bodas-de-esmeralda-35-anos") },
+      { label: "bodas de ouro (50 anos)", url: CL("bodas-de-ouro-50-anos") },
+      { label: "mensagens de 40 anos", url: CL("de-40-anos") },
+    ],
+    angulo:
+      "Resposta primeiro. Rubi e vermelho, cor de sangue e de paixao, e isso soa estranho pra quem esta casado ha 40 anos. Explore essa contradicao: aos 40 anos o amor mudou de temperatura, nao de intensidade. Quem organiza a festa geralmente sao os filhos.",
+  },
+  {
+    slug: "bodas-de-esmeralda-35-anos-de-casamento",
+    titulo: "Bodas de esmeralda: 35 anos de casamento",
+    metaTitle: "Bodas de Esmeralda: 35 Anos de Casamento",
+    metaDescription:
+      "Bodas de esmeralda celebram 35 anos de casamento. Entenda o símbolo da pedra verde e veja mensagens prontas para homenagear o casal.",
+    categoria: "significado-da-data",
+    queryAlvo: "bodas de esmeralda mensagem",
+    impressoesMes: 250,
+    respostaDireta: "Bodas de esmeralda celebram 35 anos de casamento.",
+    linksInternos: [
+      { label: "mensagens de bodas de esmeralda", url: CL("bodas-de-esmeralda-35-anos") },
+      { label: "bodas de pinho (32 anos)", url: CL("bodas-de-pinho-32-anos") },
+      { label: "bodas de rubi (40 anos)", url: CL("bodas-de-rubi-40-anos") },
+      { label: "mensagens de 35 anos", url: CL("de-35-anos") },
+    ],
+    angulo:
+      "Resposta primeiro. Esmeralda e verde, cor de esperanca, e e uma pedra que quase sempre tem falha interna, chamada de jardim pelos joalheiros. Casamento de 35 anos tambem tem jardim: as falhas que ninguem tira e que fazem parte. Use isso.",
+  },
+  {
+    slug: "bodas-de-bronze-8-anos-de-casamento",
+    titulo: "Bodas de bronze: 8 anos de casamento",
+    metaTitle: "Bodas de Bronze: 8 Anos de Casamento",
+    metaDescription:
+      "Bodas de bronze marcam 8 anos de casamento. Veja o significado da liga de metais, ideias de comemoração e mensagens para o casal.",
+    categoria: "significado-da-data",
+    queryAlvo: "bodas de bronze",
+    impressoesMes: 140,
+    respostaDireta: "Bodas de bronze marcam 8 anos de casamento.",
+    linksInternos: [
+      { label: "mensagens de bodas de bronze", url: CL("bodas-de-bronze-8-anos") },
+      { label: "bodas de estanho (10 anos)", url: CL("bodas-de-estanho-10-anos") },
+      { label: "mensagens de 8 anos de namoro", url: CL("de-8-anos-de-namoro") },
+    ],
+    angulo:
+      "Resposta primeiro. Bronze nao e metal puro: e liga de cobre com estanho, mais forte que os dois separados. Simbolo direto pra casamento. Oito anos e uma fase pouco falada: nao e novidade nem marco redondo. Fale dessa fase invisivel com carinho.",
+  },
+  {
+    slug: "20-anos-o-que-essa-idade-representa",
+    titulo: "20 anos: o que essa idade representa de verdade",
+    metaTitle: "20 Anos: O Que Essa Idade Representa",
+    metaDescription:
+      "Fazer 20 anos marca a saída da adolescência. Veja o que muda nessa fase, a pressão que ninguém comenta e mensagens para celebrar a data.",
+    categoria: "significado-da-data",
+    queryAlvo: "mensagem de aniversario 20 anos",
+    impressoesMes: 1500,
+    respostaDireta:
+      "Aos 20 anos a pessoa deixa oficialmente a adolescência, mas quase nunca se sente adulta ainda.",
+    linksInternos: [
+      { label: "mensagens de 20 anos", url: CL("de-20-anos") },
+      { label: "mensagens de 18 anos", url: CL("de-18-anos") },
+      { label: "mensagens de 25 anos", url: CL("de-25-anos") },
+      { label: "mensagens para filha", url: CL("para-filha") },
+      { label: "mensagens para filho", url: CL("para-filho") },
+    ],
+    angulo:
+      "Fale com quem vai escrever pra alguem de 20, e tambem com quem esta fazendo 20. Aos 20 a cobranca comeca: faculdade, primeiro emprego, o que voce vai ser. Poucos se sentem prontos. Escreva contra a pressa. Evite discurso de coach.",
+  },
+  {
+    slug: "55-anos-a-idade-que-ninguem-comemora",
+    titulo: "55 anos: a idade que quase ninguém comemora",
+    metaTitle: "55 Anos: O Que Muda Nessa Idade",
+    metaDescription:
+      "Aos 55 anos a vida costuma pedir uma revisão. Veja o que essa idade representa, por que passa despercebida e mensagens para marcar a data.",
+    categoria: "significado-da-data",
+    queryAlvo: "mensagem de aniversario 55 anos",
+    impressoesMes: 900,
+    respostaDireta:
+      "Aos 55 anos, a maioria das pessoas está entre o auge da carreira e a aproximação da aposentadoria.",
+    linksInternos: [
+      { label: "mensagens de 55 anos", url: CL("de-55-anos") },
+      { label: "mensagens de 50 anos", url: CL("de-50-anos") },
+      { label: "mensagens de 60 anos", url: CL("de-60-anos") },
+      { label: "mensagens para a mãe", url: CL("para-mae") },
+    ],
+    angulo:
+      "55 nao e numero redondo, entao a festa some. Escreva sobre isso. E a idade dos filhos saindo de casa, dos pais precisando de cuidado, do corpo cobrando. Tambem e quando muita gente finalmente faz o que queria. Sem autoajuda.",
+  },
+  {
+    slug: "85-anos-como-homenagear-quem-chegou-la",
+    titulo: "85 anos: como homenagear quem chegou até aqui",
+    metaTitle: "85 Anos: Como Homenagear Nessa Idade",
+    metaDescription:
+      "Chegar aos 85 anos é raro e merece homenagem certa. Veja o que dizer, o que evitar e mensagens prontas para o aniversário.",
+    categoria: "relacoes-e-afeto",
+    queryAlvo: "mensagem de aniversario 85 anos",
+    impressoesMes: 800,
+    respostaDireta:
+      "Aos 85 anos, a homenagem que funciona é a que trata a pessoa como quem ainda tem vida, não como quem já viveu.",
+    linksInternos: [
+      { label: "mensagens de 85 anos", url: CL("de-85-anos") },
+      { label: "mensagens de 80 anos", url: CL("de-80-anos") },
+      { label: "mensagens para idoso", url: CL("para-idoso") },
+      { label: "mensagens para os avós", url: CL("para-avo") },
+    ],
+    angulo:
+      "Escreva pra quem vai homenagear. O erro classico e o tom de despedida antecipada. Diga o que evitar: falar so do passado, tratar como fragil, usar a palavra ainda o tempo todo. Traga o que funciona: lembranca especifica, agradecimento concreto, convite pro futuro proximo.",
+  },
+  {
+    slug: "18-anos-maioridade-e-o-que-dizer",
+    titulo: "18 anos: o que dizer para quem virou adulto",
+    metaTitle: "18 Anos: O Que Dizer na Maioridade",
+    metaDescription:
+      "Aos 18 anos vem a maioridade legal e a cobrança que vem junto. Veja o que escrever sem soar sermão e mensagens prontas para a data.",
+    categoria: "significado-da-data",
+    queryAlvo: "mensagem de aniversario 18 anos",
+    impressoesMes: 390,
+    respostaDireta:
+      "Aos 18 anos vem a maioridade legal: pode votar, dirigir, assinar contrato e responder pelos próprios atos.",
+    linksInternos: [
+      { label: "mensagens de 18 anos", url: CL("de-18-anos") },
+      { label: "mensagens de 15 anos", url: CL("de-15-anos") },
+      { label: "mensagens de 20 anos", url: CL("de-20-anos") },
+      { label: "mensagens para filho", url: CL("para-filho") },
+      { label: "mensagens para filha", url: CL("para-filha") },
+    ],
+    angulo:
+      "O texto de 18 anos quase sempre vira sermao disfarcado de parabens. Fale contra isso. Ninguem quer ouvir que agora e responsavel no proprio aniversario. Sugira o oposto: reconhecer quem a pessoa ja e, nao cobrar quem ela deve virar.",
+  },
+  {
+    slug: "60-anos-e-a-vida-depois-do-marco",
+    titulo: "60 anos: o marco e a vida que vem depois",
+    metaTitle: "60 Anos: O Marco e o Que Vem Depois",
+    metaDescription:
+      "Sessenta anos é um marco que mistura orgulho e receio. Veja o que essa idade representa hoje e mensagens para celebrar sem clichê.",
+    categoria: "significado-da-data",
+    queryAlvo: "mensagem de aniversario 60 anos",
+    impressoesMes: 250,
+    respostaDireta:
+      "Aos 60 anos, muita gente está perto da aposentadoria mas longe de parar.",
+    linksInternos: [
+      { label: "mensagens de 60 anos", url: CL("de-60-anos") },
+      { label: "mensagens de 55 anos", url: CL("de-55-anos") },
+      { label: "mensagens de 65 anos", url: CL("de-65-anos") },
+      { label: "mensagens para idoso", url: CL("para-idoso") },
+    ],
+    angulo:
+      "Sessenta hoje nao e o sessenta dos avos da gente. Fale disso. E a idade em que muita gente comeca coisa nova: viagem, curso, negocio. Evite o tom de encerramento de ciclo.",
+  },
+  {
+    slug: "1-ano-de-namoro-o-que-escrever",
+    titulo: "1 ano de namoro: o que escrever no primeiro aniversário",
+    metaTitle: "1 Ano de Namoro: O Que Escrever",
+    metaDescription:
+      "Um ano de namoro pede mensagem que não force. Veja o que dizer no primeiro aniversário de namoro e textos prontos para mandar.",
+    categoria: "relacoes-e-afeto",
+    queryAlvo: "mensagem de 1 ano de namoro",
+    impressoesMes: 720,
+    respostaDireta:
+      "No primeiro ano de namoro, a mensagem que funciona é a específica: cita algo que só vocês dois viveram.",
+    linksInternos: [
+      { label: "mensagens de 1 ano de namoro", url: CL("de-1-ano-de-namoro") },
+      { label: "mensagens de 2 anos de namoro", url: CL("de-2-anos-de-namoro") },
+      { label: "mensagens para namorada", url: CL("para-namorada") },
+      { label: "mensagens para namorado", url: CL("para-namorado") },
+    ],
+    angulo:
+      "Primeiro ano tem armadilha: o texto tende a prometer futuro que ninguem sabe se vem. Escreva contra isso. O que funciona e lembrar do concreto do ano que passou. De exemplos de detalhe que vale citar: a primeira briga boba, a viagem que deu errado, o apelido que pegou.",
+  },
+  {
+    slug: "2-anos-de-namoro-mensagem-e-significado",
+    titulo: "2 anos de namoro: o que muda no segundo ano",
+    metaTitle: "2 Anos de Namoro: O Que Muda",
+    metaDescription:
+      "O segundo ano de namoro é quando a relação sai do encantamento. Veja o que muda nessa fase e mensagens prontas para a data.",
+    categoria: "relacoes-e-afeto",
+    queryAlvo: "mensagem de 2 anos de namoro",
+    impressoesMes: 320,
+    respostaDireta:
+      "No segundo ano de namoro o encantamento inicial já passou e a relação começa a mostrar como realmente é.",
+    linksInternos: [
+      { label: "mensagens de 2 anos de namoro", url: CL("de-2-anos-de-namoro") },
+      { label: "mensagens de 1 ano de namoro", url: CL("de-1-ano-de-namoro") },
+      { label: "mensagens de 3 anos de namoro", url: CL("de-3-anos-de-namoro") },
+      { label: "mensagens românticas", url: CL("romantica") },
+    ],
+    angulo:
+      "Segundo ano e quando aparece a pessoa real. Fale disso sem drama: e bom sinal, nao problema. A mensagem de 2 anos pode reconhecer o que ja foi testado. Sugira citar uma briga que passou.",
+  },
+  {
+    slug: "aniversario-de-casamento-o-que-dar-em-cada-ano",
+    titulo: "Aniversário de casamento: o que dar de presente em cada ano",
+    metaTitle: "Presente de Aniversário de Casamento por Ano",
+    metaDescription:
+      "Cada ano de casamento tem um material que sugere o presente. Veja ideias práticas por boda, do papel ao ouro, sem cair no óbvio.",
+    categoria: "presentes-e-mimos",
+    queryAlvo: "presente aniversario de casamento por ano",
+    impressoesMes: 300,
+    respostaDireta:
+      "A tradição sugere presentear com o material da boda do ano: papel no primeiro, madeira no quinto, estanho no décimo, prata aos 25 e ouro aos 50.",
+    linksInternos: [
+      { label: "bodas de papel (1 ano)", url: CL("bodas-de-papel-1-ano") },
+      { label: "bodas de madeira (5 anos)", url: CL("bodas-de-madeira-5-anos") },
+      { label: "bodas de estanho (10 anos)", url: CL("bodas-de-estanho-10-anos") },
+      { label: "bodas de prata (25 anos)", url: CL("bodas-de-prata-25-anos") },
+      { label: "bodas de ouro (50 anos)", url: CL("bodas-de-ouro-50-anos") },
+    ],
+    angulo:
+      "Artigo pratico. Para cada material, de 2 ou 3 ideias reais de presente que nao sejam obvias nem caras demais. Papel: livro com dedicatoria, ingresso, carta. Madeira: tabua de corte boa, moldura. Seja util de verdade, nao encha linguica.",
+  },
 ];
 
 const SYSTEM = `Você é redator do Portal Soma, site brasileiro sobre aniversários, bodas e datas afetivas.
@@ -379,11 +658,14 @@ Escreva o artigo.`;
       ],
       response_format: { type: "json_object" },
       temperature: 1.0,
-      max_tokens: 8000,
+      max_tokens: 12000,
     }),
   });
   if (!res.ok) throw new Error(`LLM ${res.status}: ${(await res.text()).slice(0, 180)}`);
   const data = await res.json();
+  const usage = data.usage ?? {};
+  TOKENS_OUT += usage.completion_tokens ?? 0;
+  TOKENS_IN += usage.prompt_tokens ?? 0;
   let parsed: Gen;
   try {
     parsed = JSON.parse(data.choices?.[0]?.message?.content ?? "{}");
@@ -489,6 +771,7 @@ async function main() {
 
   await Promise.all(Array.from({ length: CONCURRENCY }, (_, i) => worker(i + 1)));
   console.log(`\n[blog-gsc] done: ${ok} ok, ${fail} fail`);
+  console.log(`[tokens] in=${TOKENS_IN} out=${TOKENS_OUT}`);
   await prisma.$disconnect();
 }
 
