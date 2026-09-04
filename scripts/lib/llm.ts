@@ -103,13 +103,20 @@ async function chamarOpenAiCompat(o: LlmOptions): Promise<LlmResult> {
   });
   if (!res.ok) throw new Error(`llm ${res.status}: ${(await res.text()).slice(0, 200)}`);
   const d = await res.json();
-  const msg = d.choices?.[0]?.message ?? {};
+  const choice = d.choices?.[0] ?? {};
+  const msg = choice.message ?? {};
+  const finish = choice.finish_reason;
   // Modelos de raciocinio (deepseek-v4-pro) separam reasoning_content de content.
   // Se content veio vazio, o budget de tokens acabou dentro do raciocinio.
   const texto: string = msg.content ?? "";
   const u = d.usage ?? {};
+  if (finish === "length") {
+    throw new Error(
+      `resposta truncada em maxTokens (${o.maxTokens ?? 8000}); reasoning=${u.completion_tokens_details?.reasoning_tokens ?? "?"} content=${texto.length}c`,
+    );
+  }
   if (!texto && msg.reasoning_content) {
-    throw new Error("budget de tokens consumido no raciocinio; aumente maxTokens");
+    throw new Error("budget consumido no raciocinio; aumente maxTokens");
   }
   return {
     content: o.json ? extrairJson(texto) : texto,
@@ -132,7 +139,13 @@ export async function llmJson<T>(o: Omit<LlmOptions, "json">): Promise<T | null>
   const r = await llm({ ...o, json: true });
   try {
     return JSON.parse(r.content) as T;
-  } catch {
+  } catch (e) {
+    // Sem isso o chamador so ve "null" e nao sabe se foi truncamento, cerca
+    // markdown ou JSON invalido de verdade.
+    const cauda = r.content.slice(-80).replace(/\s+/g, " ");
+    console.log(
+      `    [llm] JSON invalido (${r.content.length}c, out=${r.tokensOut}tok): ${(e as Error).message.slice(0, 60)} | fim: ...${cauda}`,
+    );
     return null;
   }
 }

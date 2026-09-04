@@ -644,7 +644,7 @@ Escreva o artigo.`;
   const parsed = await llmJson<Gen>({
     system: SYSTEM,
     user,
-    maxTokens: 12000,
+    maxTokens: 24000,
     temperature: 1.0,
   });
   if (!parsed) return null;
