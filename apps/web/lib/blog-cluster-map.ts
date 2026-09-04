@@ -78,6 +78,76 @@ const POR_POST: Record<string, string[]> = {
     "de-50-anos",
   ],
 
+  "bodas-de-madeira-5-anos-de-casamento": [
+    "bodas-de-madeira-5-anos",
+    "bodas-de-flores-4-anos",
+    "de-5-anos-de-namoro",
+    "bodas-de-estanho-10-anos",
+  ],
+  "bodas-de-papel-1-ano-de-casamento": [
+    "bodas-de-papel-1-ano",
+    "de-1-ano-de-namoro",
+    "bodas-de-flores-4-anos",
+    "para-marido",
+  ],
+  "bodas-de-perola-30-anos-de-casamento": [
+    "bodas-de-perola-30-anos",
+    "bodas-de-prata-25-anos",
+    "bodas-de-pinho-32-anos",
+    "de-30-anos",
+  ],
+  "bodas-de-rubi-40-anos-de-casamento": [
+    "bodas-de-rubi-40-anos",
+    "bodas-de-esmeralda-35-anos",
+    "bodas-de-ouro-50-anos",
+    "de-40-anos",
+  ],
+  "bodas-de-bronze-8-anos-de-casamento": [
+    "bodas-de-bronze-8-anos",
+    "bodas-de-estanho-10-anos",
+    "de-8-anos-de-namoro",
+  ],
+  "bodas-de-esmeralda-35-anos-de-casamento": [
+    "bodas-de-esmeralda-35-anos",
+    "bodas-de-pinho-32-anos",
+    "bodas-de-rubi-40-anos",
+    "de-35-anos",
+  ],
+  "aniversario-de-casamento-o-que-dar-em-cada-ano": [
+    "bodas-de-papel-1-ano",
+    "bodas-de-madeira-5-anos",
+    "bodas-de-estanho-10-anos",
+    "bodas-de-prata-25-anos",
+    "bodas-de-ouro-50-anos",
+  ],
+  "1-ano-de-namoro-o-que-escrever": [
+    "de-1-ano-de-namoro",
+    "de-2-anos-de-namoro",
+    "para-namorada",
+    "para-namorado",
+  ],
+  "2-anos-de-namoro-mensagem-e-significado": [
+    "de-2-anos-de-namoro",
+    "de-1-ano-de-namoro",
+    "de-3-anos-de-namoro",
+    "romantica",
+  ],
+  "20-anos-o-que-essa-idade-representa": [
+    "de-20-anos", "de-18-anos", "de-25-anos", "para-filha", "para-filho",
+  ],
+  "55-anos-a-idade-que-ninguem-comemora": [
+    "de-55-anos", "de-50-anos", "de-60-anos", "para-mae",
+  ],
+  "85-anos-como-homenagear-quem-chegou-la": [
+    "de-85-anos", "de-80-anos", "para-idoso", "para-avo",
+  ],
+  "18-anos-maioridade-e-o-que-dizer": [
+    "de-18-anos", "de-15-anos", "de-20-anos", "para-filho", "para-filha",
+  ],
+  "60-anos-e-a-vida-depois-do-marco": [
+    "de-60-anos", "de-55-anos", "de-65-anos", "para-idoso",
+  ],
+
   // Posts editoriais antigos
   "como-parabenizar-no-whatsapp-sem-soar-generico": ["no-whatsapp", "para-status", "curta"],
   "dar-os-parabens-ao-chefe-o-que-funciona-e-o-que-constrange": [
@@ -150,7 +220,10 @@ const POR_CATEGORIA: Record<string, string[]> = {
 function porHeuristica(slug: string): string[] {
   const out: string[] = [];
 
-  // Bodas: "bodas-de-X-N-anos" ou "N-anos-de-casamento"
+  // Bodas: o slug do post costuma trazer o ano ("bodas-de-madeira-5-anos-de-casamento"),
+  // entao tenta primeiro a forma completa e so depois o nome solto.
+  const bodasComAno = slug.match(/bodas-de-([a-z]+)-(\d+)-anos?/);
+  if (bodasComAno) out.push(`bodas-de-${bodasComAno[1]}-${bodasComAno[2]}-anos`);
   const bodasNome = slug.match(/bodas-de-([a-z]+)/);
   if (bodasNome) out.push(`bodas-de-${bodasNome[1]}`);
 
